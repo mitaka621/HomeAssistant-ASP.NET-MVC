@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeAssistant.Infrastructure.Data
 {
-    public class HomeAssistantDbContext : IdentityDbContext
+    public class HomeAssistantDbContext : IdentityDbContext<HomeAssistantUser>
     {
         public HomeAssistantDbContext(DbContextOptions<HomeAssistantDbContext> options)
             : base(options)
@@ -17,10 +17,11 @@ namespace HomeAssistant.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
             builder.Entity<NotificationUser>()
                 .HasKey(x => new { x.UserId, x.NotificationId });
 
-            base.OnModelCreating(builder);
         }
     }
 }

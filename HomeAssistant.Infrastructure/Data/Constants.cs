@@ -8,7 +8,7 @@ namespace HomeAssistant.Infrastructure.Data
 {
     public static class Constants
     {
-        public const int NameMinLenght = 4;
+        public const int NameMinLenght = 3;
         public const int NameMaxLenght = 60;
 
         public const int CountMin = 0;

@@ -36,6 +36,6 @@ namespace HomeAssistant.Infrastructure.Data.Models
         public DateTime AddedOn { get; set; }
 
         [Comment("User which added the product (optional)")]
-        public IdentityUser? User { get; set; }
+        public HomeAssistantUser? User { get; set; }
     }
 }
