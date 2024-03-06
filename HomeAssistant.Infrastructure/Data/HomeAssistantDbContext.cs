@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Infrastructure.Data.Models;
+using HomeAssistant.Infrastructure.Data.SeedDb;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,11 +18,13 @@ namespace HomeAssistant.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
 
             builder.Entity<NotificationUser>()
                 .HasKey(x => new { x.UserId, x.NotificationId });
 
+            builder.ApplyConfiguration(new RoleConfiguration());
+
+            base.OnModelCreating(builder);
         }
     }
 }
