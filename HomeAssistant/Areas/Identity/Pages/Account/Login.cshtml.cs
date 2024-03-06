@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using HomeAssistant.Infrastructure.Data.Models;
+using System.ComponentModel;
 
 namespace HomeAssistant.Areas.Identity.Pages.Account
 {
@@ -66,7 +67,7 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [EmailAddress]
+            [DisplayName("Email or Username")]
             public string Email { get; set; }
 
             /// <summary>

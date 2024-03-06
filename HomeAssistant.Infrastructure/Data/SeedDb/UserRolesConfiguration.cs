@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace HomeAssistant.Infrastructure.Data.SeedDb
 {
-    internal class RoleConfiguration : IEntityTypeConfiguration<IdentityRole>
+    internal class UserRolesConfiguration : IEntityTypeConfiguration<IdentityUserRole<string>>
     {
-        public void Configure(EntityTypeBuilder<IdentityRole> builder)
+        public void Configure(EntityTypeBuilder<IdentityUserRole<string>> builder)
         {
-            var data =new Seeder();
-            builder.HasData(data.CreateRoles());
+            var data = new Seeder();
+            builder.HasData(data.AssignRoleToAdmin());
         }
     }
 }

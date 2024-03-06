@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    [Migration("20240306195319_Seeding_Roles")]
-    partial class Seeding_Roles
+    [Migration("20240306213949_seed_adminUser")]
+    partial class seed_adminUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -117,6 +117,26 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "e2246145-9dd8-4902-ae41-68096b5ca738",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "8fa69e17-ad73-4839-8a2b-b6865a8a5c7d",
+                            Email = "admin",
+                            EmailConfirmed = false,
+                            FirstName = "",
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "admin",
+                            NormalizedUserName = "admin",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL5FvthfLwEM7M4/cw6F2JJooCYf4w1tdIu/Mw0YsyDdkD5ZGjGWrzd3gUirlXGgOw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "692597fb-6560-4177-8d99-937b769ea575",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.Notification", b =>
@@ -242,14 +262,14 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7e5459d7-6165-486a-a686-ed6dba860aff",
-                            ConcurrencyStamp = "09f30776-5688-4dd4-afe9-d228cc1ea8af",
+                            Id = "41df8142-5af6-46c7-b88f-bcfb45eaf634",
+                            ConcurrencyStamp = "ef26971d-5b5c-4568-9e48-a4dff9ecf4d2",
                             Name = "NormalUser"
                         },
                         new
                         {
-                            Id = "58dff45d-40b2-4b99-addc-f5596c443791",
-                            ConcurrencyStamp = "755081a5-ed0a-4011-9b5e-2a7738e36c8d",
+                            Id = "f23e50cd-3de0-4420-ae9b-6ce529f3128f",
+                            ConcurrencyStamp = "da16e754-7e40-476e-8875-c8994e9cc476",
                             Name = "Admin"
                         });
                 });
@@ -341,6 +361,13 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "e2246145-9dd8-4902-ae41-68096b5ca738",
+                            RoleId = "f23e50cd-3de0-4420-ae9b-6ce529f3128f"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

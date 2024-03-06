@@ -22,7 +22,9 @@ namespace HomeAssistant.Infrastructure.Data
             builder.Entity<NotificationUser>()
                 .HasKey(x => new { x.UserId, x.NotificationId });
 
+            builder.ApplyConfiguration(new AdminConfiguration());
             builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new UserRolesConfiguration());
 
             base.OnModelCreating(builder);
         }
