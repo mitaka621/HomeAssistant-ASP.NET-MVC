@@ -20,5 +20,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
         [MaxLength(Constants.NameMaxLenght)]
         public string LastName { get; set; } = string.Empty;
 
+        public DateTime CreatedOn { get; set; }
+
     }
 }

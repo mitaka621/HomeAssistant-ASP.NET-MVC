@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    [Migration("20240306213949_seed_adminUser")]
-    partial class seed_adminUser
+    [Migration("20240307183518_seed_Admin")]
+    partial class seed_Admin
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,6 +55,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -123,7 +126,8 @@ namespace HomeAssistant.Infrastructure.Migrations
                         {
                             Id = "e2246145-9dd8-4902-ae41-68096b5ca738",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8fa69e17-ad73-4839-8a2b-b6865a8a5c7d",
+                            ConcurrencyStamp = "e2246145-9dd8-4902-ae41-68096b5ca738",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin",
                             EmailConfirmed = false,
                             FirstName = "",
@@ -131,9 +135,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEL5FvthfLwEM7M4/cw6F2JJooCYf4w1tdIu/Mw0YsyDdkD5ZGjGWrzd3gUirlXGgOw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEP05RwICBZiUUXYho5eZVvAMg13mQuMlVAvfnVkFvc3wndwP1fVZhTHJ6V8jJDD5RA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "692597fb-6560-4177-8d99-937b769ea575",
+                            SecurityStamp = "f35d1659-9b27-4e92-b9d6-393bbd49484b",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -262,14 +266,14 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "41df8142-5af6-46c7-b88f-bcfb45eaf634",
-                            ConcurrencyStamp = "ef26971d-5b5c-4568-9e48-a4dff9ecf4d2",
+                            Id = "7e2d4805-c978-4600-9663-a9cafa2a54be",
+                            ConcurrencyStamp = "7e2d4805-c978-4600-9663-a9cafa2a54be",
                             Name = "NormalUser"
                         },
                         new
                         {
                             Id = "f23e50cd-3de0-4420-ae9b-6ce529f3128f",
-                            ConcurrencyStamp = "da16e754-7e40-476e-8875-c8994e9cc476",
+                            ConcurrencyStamp = "f23e50cd-3de0-4420-ae9b-6ce529f3128f",
                             Name = "Admin"
                         });
                 });

@@ -12,6 +12,7 @@ namespace HomeAssistant.Infrastructure.Data.SeedDb
     {
         string adminGUID = "e2246145-9dd8-4902-ae41-68096b5ca738";
         string adminRoleGUID = "f23e50cd-3de0-4420-ae9b-6ce529f3128f";
+        string normalUserGUID = "7e2d4805-c978-4600-9663-a9cafa2a54be";
 
         public HomeAssistantUser CreateAdminUser()
         {
@@ -20,6 +21,7 @@ namespace HomeAssistant.Infrastructure.Data.SeedDb
             var admin = new HomeAssistantUser()
             {
                 Id = adminGUID,
+                ConcurrencyStamp= adminGUID,
                 UserName = "admin",
                 Email = "admin",
                 NormalizedUserName = "admin",
@@ -33,7 +35,21 @@ namespace HomeAssistant.Infrastructure.Data.SeedDb
 
         public IdentityRole[] CreateRoles()
         {
-            return new IdentityRole[] { new IdentityRole("NormalUser"), new IdentityRole("Admin") { Id = adminRoleGUID } };
+            return new IdentityRole[] 
+            { 
+                new IdentityRole()
+                {
+                    Name="NormalUser",
+                    Id=normalUserGUID,
+                    ConcurrencyStamp=normalUserGUID,               
+                },
+                new IdentityRole() 
+                { 
+                    Id = adminRoleGUID,
+                    ConcurrencyStamp=adminRoleGUID,
+                    Name= "Admin",
+                } 
+            };
         }
 
         public IdentityUserRole<string> AssignRoleToAdmin()
@@ -42,7 +58,6 @@ namespace HomeAssistant.Infrastructure.Data.SeedDb
             {
                 UserId = adminGUID,
                 RoleId = adminRoleGUID
-
             };
         }
     }
