@@ -1,0 +1,13 @@
+﻿@using HomeAssistant.Infrastructure.Data.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<HomeAssistantUser> SignInManager
+@inject UserManager<HomeAssistantUser> UserManager
+
+<ul class="navbar-nav">
+    @if (User.IsInRole("Admin"))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="UserConfiguration">ConfigurateUsers</a>
+        </li>
+    }
+</ul>

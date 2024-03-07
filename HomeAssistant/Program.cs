@@ -11,6 +11,7 @@ builder.Services.AddDbContext<HomeAssistantDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+
 builder.Services.AddDefaultIdentity<HomeAssistantUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;

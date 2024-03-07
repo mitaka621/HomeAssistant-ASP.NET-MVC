@@ -16,3 +16,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+.container{
+    display:flex;    
+    align-items:center;
+    margin-top:3em;
+    gap:5em;
+}
+.btn-group-vertical{
+    gap:0.2em;
+}
