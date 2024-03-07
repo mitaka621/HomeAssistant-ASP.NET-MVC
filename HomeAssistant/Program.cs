@@ -1,3 +1,5 @@
+using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Services;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +12,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<HomeAssistantDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddScoped<IUserService,UserService>();
 
 
 builder.Services.AddDefaultIdentity<HomeAssistantUser>(options =>

@@ -14,9 +14,4 @@
     <ProjectReference Include="..\HomeAssistant.Infrastructure\HomeAssistant.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Constants\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

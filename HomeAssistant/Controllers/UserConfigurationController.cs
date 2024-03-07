@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using HomeAssistant.Core.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeAssistant.Controllers
@@ -6,9 +7,17 @@ namespace HomeAssistant.Controllers
     [Authorize(Roles ="Admin")]
     public class UserConfigurationController : Controller
     {
-        public IActionResult Index()
+        IUserService userService;
+        public UserConfigurationController(IUserService _userService)
         {
-            return View();
+            userService= _userService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            
+            return View(await userService.GetAllNotApprovedUsers());
         }
     }
 }

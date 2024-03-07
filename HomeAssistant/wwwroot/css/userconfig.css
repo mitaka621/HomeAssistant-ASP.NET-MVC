@@ -1,0 +1,13 @@
+﻿main{
+    width:100%;
+}
+.container {
+    display: flex;
+    align-items: center;
+    margin-top: 3em;
+    gap: 5em;
+}
+table,th,tr {
+    text-align: center;
+    vertical-align: middle;
+}
