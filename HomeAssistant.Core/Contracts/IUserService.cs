@@ -11,6 +11,14 @@ namespace HomeAssistant.Core.Contracts
     {
         Task<IEnumerable<UserDetailsViewModel>> GetAllUsers();
 
-        Task<IEnumerable<UserDetailsViewModel>> GetAllNotApprovedUsers();
-    }
+		Task<IEnumerable<UserDetailsViewModel>> GetAllDeletedUsers();
+
+		Task<IEnumerable<UserDetailsViewModel>> GetAllNotApprovedUsers();
+
+        Task<bool> ApproveById(string Id);
+
+		Task<bool> DeleteById(string Id);
+
+		Task<bool> RestoreById(string Id);
+	}
 }
