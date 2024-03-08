@@ -7,7 +7,32 @@
     margin-top: 3em;
     gap: 5em;
 }
-table,th,tr {
+table {
+    word-wrap: break-word;
+}
+table, th, tr {
     text-align: center;
     vertical-align: middle;
 }
+.toast-container{
+    margin-top:3em;
+}
+button{
+    width:6em;
+}
+.formCol{
+    display:flex;
+    height:100%;
+    padding:1em !important;
+    gap:0.5em;
+    justify-content:center;
+    align-items:center;
+}
+
+.ellipsis {
+    width:10em;
+    text-overflow: ellipsis; /* enables ellipsis */
+    white-space: nowrap; /* keeps the text in a single line */
+    overflow: hidden; /* keeps the element from overflowing its parent */
+}
+
