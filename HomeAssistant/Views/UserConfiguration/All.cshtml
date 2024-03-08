@@ -37,10 +37,7 @@
 						</td>
 						<td class="col">@user.CreatedOn</td>
 						<td class="formCol">
-							<form asp-action="EditById" asp-route-Id="@user.Id" method="post">
-
-								<button type="submit" class="btn btn-warning">Edit</button>
-							</form>
+							<a asp-action="Edit" asp-route-Id="@user.Id" class="btn btn-warning">Edit</a>
 							<form asp-action="DeleteById" asp-route-Id="@user.Id" method="post">
 
 								<button type="submit" class="btn btn-danger">Delete</button>

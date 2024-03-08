@@ -1,0 +1,98 @@
+﻿@using HomeAssistant.Core.Models
+@model UserDetailsFormViewModel
+
+<h1>Edit</h1>
+
+<partial name="/Views/UserConfiguration/Shared/_ToastPopupPartial.cshtml" />
+
+<form class="row g-3" method="post" asp-action="Edit">
+	<div class="col-md-6">
+		<label asp-for="FirstName">First Name</label>
+		<input asp-for="FirstName" class="form-control" value="@Model.FirstName">
+		<span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+	</div>
+	<div class="col-md-6">
+		<label asp-for="LastName">Last Name</label>
+		<input asp-for="LastName" class="form-control" value="@Model.LastName">
+		<span asp-validation-for="@Model.LastName" class="text-danger"></span>
+	</div>
+	<div class="col-md-6">
+		<label asp-for="Username">Username</label>
+		<input asp-for="Username" class="form-control" value="@Model.Username">
+		<span asp-validation-for="@Model.Username" class="text-danger"></span>
+	</div>
+	<div class="col-md-6">
+		<label asp-for="Email">Email</label>
+		<input asp-for="Email" class="form-control" value="@Model.Email">
+		<span asp-validation-for="@Model.Email" class="text-danger"></span>
+	</div>
+	<div class="col-12 d-flex justify-content-center mb-4">
+		<button type="submit" class="btn btn-primary">Update Information</button>
+	</div>
+</form>
+
+@{
+	int counter = 1;
+}
+@if (Model.UserRoles != null)
+{
+	@foreach (var userRole in Model.UserRoles)
+	{
+		<form class="row g-3" method="post">
+			<input type="hidden" asp-for="Id" value="@Model.Id" />
+			<div class="col-md-4">
+				<p class="roleTitle">Role @(counter++):</p>
+			</div>
+			<div class="col-md-4">
+				<select asp-for="@Model.SelectedRoleId" class="form-control" aria-required="true">
+					@if (Model.AllRoles != null)
+					@foreach (var role in Model.AllRoles)
+					{
+						if (role.Name == userRole)
+						{
+							<option selected value="@role.Id">@role.Name</option>
+						}
+						else
+						{
+							<option value="@role.Id">@role.Name</option>
+						}
+					}
+				</select>
+				<span asp-validation-for="@Model.SelectedRoleId" class="text-danger"></span>
+			</div>
+			<div class="col-md-4">
+				<button type="submit" class="btn btn-danger" asp-action="DeleteRole" asp-route-role="@userRole">Delete</button>
+			</div>
+		</form>
+	}
+}
+<hr/>
+<form class="row g-3" method="post" asp-action="AddRole">
+	<input type="hidden" asp-for="Id" value="@Model.Id" />
+	<div class="col-md-4">
+		<p class="roleTitle">Role @(counter++):</p>
+	</div>
+	<div class="col-md-4">
+		<select asp-for="@Model.SelectedRoleId" class="form-control" aria-required="true">
+			<option selected disabled value="">Select Role To Add</option>
+			@if (Model.AllRoles!=null)
+			@foreach (var role in Model.AllRoles)
+			{
+				<option value="@role.Id">@role.Name</option>
+			}
+		</select>
+		<span asp-validation-for="@Model.SelectedRoleId" class="text-danger"></span>
+	</div>
+	<div class="col-md-4">
+		<button type="submit" class="btn btn-success" >Add Role</button>
+	</div>
+</form>
+
+@section SideMenu {
+	<partial name="/Views/UserConfiguration/Shared/_SideMenuPartial.cshtml" />
+}
+
+@section Scripts {
+	<script src="~/js/toastPopup.js"></script>
+	<partial name="_ValidationScriptsPartial" />
+}

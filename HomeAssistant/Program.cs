@@ -2,6 +2,7 @@ using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Services;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
+using HomeAssistant.Middlewares;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,6 +48,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseIsDeletedCheck();
 
 app.MapControllerRoute(
     name: "default",

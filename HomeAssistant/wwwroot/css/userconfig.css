@@ -3,9 +3,22 @@
 }
 .container {
     display: flex;
-    align-items: center;
+    align-items: start;
+
     margin-top: 3em;
     gap: 5em;
+}
+aside{
+    width:18em;
+    height:50vh;
+}
+div.btn-group-vertical {
+    position: fixed;
+    top: 10em;
+    width:15em; 
+}
+div.btn-group-vertical a{
+    font-size:1.2em;
 }
 table {
     word-wrap: break-word;
@@ -17,9 +30,7 @@ table, th, tr {
 .toast-container{
     margin-top:3em;
 }
-button{
-    width:6em;
-}
+
 .formCol{
     display:flex;
     height:100%;
@@ -34,5 +45,13 @@ button{
     text-overflow: ellipsis; /* enables ellipsis */
     white-space: nowrap; /* keeps the text in a single line */
     overflow: hidden; /* keeps the element from overflowing its parent */
+}
+.roleTitle{
+    text-align:end;
+    display:flex;
+    align-items:start;
+    justify-content:end;
+    height:100%;
+    font-size:1.5em;
 }
 
