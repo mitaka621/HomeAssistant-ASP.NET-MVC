@@ -4,6 +4,7 @@ using HomeAssistant.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240308125102_NormalUserRole_Seeded_to_Admin")]
+    partial class NormalUserRole_Seeded_to_Admin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,9 +142,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDv+rDRWIbxzY+zFSMOQFad9u/nYz5Mxra/RmVRlyg0rtVVj7VCR7D80JKmE70F9xA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOIZQxDPI1uiWmFcn18kJr7apOaxKjN3x42XTXwLeZApnANn+1G8Yixm+zlceNkXhw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c0d7d2d2-527d-426c-ba11-cdbdf90a2eae",
+                            SecurityStamp = "d7d4471b-2bc8-4a66-a54d-fbb70d4714d3",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -273,8 +275,8 @@ namespace HomeAssistant.Infrastructure.Migrations
                         {
                             Id = "7e2d4805-c978-4600-9663-a9cafa2a54be",
                             ConcurrencyStamp = "7e2d4805-c978-4600-9663-a9cafa2a54be",
-                            Name = "StandardUser",
-                            NormalizedName = "StandardUser"
+                            Name = "NormalUser",
+                            NormalizedName = "NormalUser"
                         },
                         new
                         {

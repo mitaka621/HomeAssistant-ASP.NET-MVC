@@ -22,5 +22,10 @@ namespace HomeAssistant.Infrastructure.Data.Models
 
         public DateTime CreatedOn { get; set; }
 
+		public DateTime? DeletedOn { get; set; }
+
+		[Required]
+        public bool IsDeleted { get; set; } = false;
+
     }
 }

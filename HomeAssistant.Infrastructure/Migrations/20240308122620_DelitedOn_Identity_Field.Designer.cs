@@ -4,6 +4,7 @@ using HomeAssistant.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240308122620_DelitedOn_Identity_Field")]
+    partial class DelitedOn_Identity_Field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,9 +142,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "admin",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDv+rDRWIbxzY+zFSMOQFad9u/nYz5Mxra/RmVRlyg0rtVVj7VCR7D80JKmE70F9xA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENw0GYGgFQfadhBO2DWMHbB7vaBhozXFM3HYZIu/2hhd70vuxhP69gFuY5mT5ljG7A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c0d7d2d2-527d-426c-ba11-cdbdf90a2eae",
+                            SecurityStamp = "f40fa8c1-7398-492a-9660-ce610fbb0a2d",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -273,8 +275,8 @@ namespace HomeAssistant.Infrastructure.Migrations
                         {
                             Id = "7e2d4805-c978-4600-9663-a9cafa2a54be",
                             ConcurrencyStamp = "7e2d4805-c978-4600-9663-a9cafa2a54be",
-                            Name = "StandardUser",
-                            NormalizedName = "StandardUser"
+                            Name = "NormalUser",
+                            NormalizedName = "NormalUser"
                         },
                         new
                         {
@@ -378,11 +380,6 @@ namespace HomeAssistant.Infrastructure.Migrations
                         {
                             UserId = "e2246145-9dd8-4902-ae41-68096b5ca738",
                             RoleId = "f23e50cd-3de0-4420-ae9b-6ce529f3128f"
-                        },
-                        new
-                        {
-                            UserId = "e2246145-9dd8-4902-ae41-68096b5ca738",
-                            RoleId = "7e2d4805-c978-4600-9663-a9cafa2a54be"
                         });
                 });
 

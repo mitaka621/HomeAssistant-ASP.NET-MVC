@@ -4,6 +4,7 @@ using HomeAssistant.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240308094021_NormalizedNameForRole")]
+    partial class NormalizedNameForRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,9 +59,6 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -71,9 +70,6 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -135,14 +131,13 @@ namespace HomeAssistant.Infrastructure.Migrations
                             Email = "admin",
                             EmailConfirmed = false,
                             FirstName = "",
-                            IsDeleted = false,
                             LastName = "",
                             LockoutEnabled = false,
                             NormalizedEmail = "admin",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDv+rDRWIbxzY+zFSMOQFad9u/nYz5Mxra/RmVRlyg0rtVVj7VCR7D80JKmE70F9xA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELozWXVCFPiMGre6PZINoqUp26c0SKhvyn1ZuHf4b3cqk4qBzcLP8hXvoAtdwmy/XA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c0d7d2d2-527d-426c-ba11-cdbdf90a2eae",
+                            SecurityStamp = "9278c0b7-2454-4d18-8560-adda302e8a37",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -273,8 +268,8 @@ namespace HomeAssistant.Infrastructure.Migrations
                         {
                             Id = "7e2d4805-c978-4600-9663-a9cafa2a54be",
                             ConcurrencyStamp = "7e2d4805-c978-4600-9663-a9cafa2a54be",
-                            Name = "StandardUser",
-                            NormalizedName = "StandardUser"
+                            Name = "NormalUser",
+                            NormalizedName = "NormalUser"
                         },
                         new
                         {
@@ -378,11 +373,6 @@ namespace HomeAssistant.Infrastructure.Migrations
                         {
                             UserId = "e2246145-9dd8-4902-ae41-68096b5ca738",
                             RoleId = "f23e50cd-3de0-4420-ae9b-6ce529f3128f"
-                        },
-                        new
-                        {
-                            UserId = "e2246145-9dd8-4902-ae41-68096b5ca738",
-                            RoleId = "7e2d4805-c978-4600-9663-a9cafa2a54be"
                         });
                 });
 
