@@ -1,5 +1,7 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -20,7 +22,7 @@ namespace HomeAssistant.Controllers
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 
-			return View(await userService.GetAllNotApprovedUsers());
+			return View(await userService.GetAllNotApprovedUsersAsync());
 		}
 		[HttpGet]
 		public async Task<IActionResult> All(string? ToastTitle, string? ToastMessage)
@@ -28,7 +30,7 @@ namespace HomeAssistant.Controllers
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 
-			return View(await userService.GetAllUsers());
+			return View(await userService.GetAllUsersAsync());
 		}
 
 		[HttpPost]
@@ -43,7 +45,7 @@ namespace HomeAssistant.Controllers
 				});
 			}
 
-			if (!await userService.ApproveById(Id))
+			if (!await userService.ApproveByIdAsync(Id))
 			{
 				return RedirectToAction(nameof(Index), new
 				{
@@ -71,7 +73,7 @@ namespace HomeAssistant.Controllers
 				});
 			}
 
-			if (!await userService.DeleteById(Id))
+			if (!await userService.DeleteByIdAsync(Id))
 			{
 				return RedirectToAction(nameof(All), new
 				{
@@ -80,7 +82,7 @@ namespace HomeAssistant.Controllers
 				});
 			}
 
-			return RedirectToAction(nameof(All), new
+			return RedirectToAction(nameof(AllDeleted), new
 			{
 				ToastTitle = "Success",
 				ToastMessage = "User successfully deleted!"
@@ -93,13 +95,13 @@ namespace HomeAssistant.Controllers
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 
-			return View(await userService.GetAllDeletedUsers());
+			return View(await userService.GetAllDeletedUsersAsync());
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> RestoreById(string Id)
 		{
-			if (!await userService.RestoreById(Id))
+			if (!await userService.RestoreByIdAsync(Id))
 			{
 				return RedirectToAction(nameof(AllDeleted), new
 				{
@@ -115,7 +117,103 @@ namespace HomeAssistant.Controllers
 			});
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> Edit(string Id, string? ToastTitle, string? ToastMessage)
+		{
+			ViewBag.ToastTitle = ToastTitle;
+			ViewBag.ToastMessage = ToastMessage;
 
+			try
+			{
+                return View(await userService.GetUserByIdAsync(Id));
+            }
+			catch (ArgumentNullException ex) 
+			{			
+                return RedirectToAction(nameof(All), new
+                {
+                    ToastTitle = "Something went wrong",
+                    ToastMessage = "Internal server error!"
+                });
+            }			
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Edit(UserDetailsFormViewModel user)
+		{
+            if (!ModelState.IsValid)
+			{
+				user.AllRoles=await userService.GetAllRolesAsync();
+				user.UserRoles =(await userService.GetUserByIdAsync(user.Id)).UserRoles;
+				return View(user);
+			}
+
+			if (!await userService.EditUserByIdAsync(user.Id, user))
+			{
+				return RedirectToAction(nameof(All), new
+				{
+					ToastTitle = "Something went wrong",
+					ToastMessage = "Try again later!"
+				});
+			}
+
+			return RedirectToAction(nameof(Edit), new
+			{
+				user.Id,
+				ToastTitle = "Success",
+				ToastMessage = "User edited successfully!"
+			});
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> AddRole(UserDetailsFormViewModel user)
+		{
+			int result = await userService.AddRoleToUser(user.Id, user.SelectedRoleId);
+			if (result==-1)
+			{
+				return RedirectToAction(nameof(All), new
+				{
+					ToastTitle = "Something went wrong",
+					ToastMessage = "Try again later!"
+				});
+			}
+
+            if (result==0)
+            {
+				return RedirectToAction(nameof(Edit), new
+				{
+					user.Id,
+					ToastTitle = "Error",
+					ToastMessage = "The user already has that role!"
+				});
+			}
+
+            return RedirectToAction(nameof(Edit), new
+			{
+				user.Id,
+				ToastTitle = "Success",
+				ToastMessage = "The role has been added successfully!"
+			});
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> DeleteRole(UserDetailsFormViewModel user,string role)
+		{
+            if (!await userService.RemoveRoleFromUser(user.Id, role))
+            {
+				return RedirectToAction(nameof(All), new
+				{
+					ToastTitle = "Something went wrong",
+					ToastMessage = "Try again later!"
+				});
+			}
+
+			return RedirectToAction(nameof(Edit), new
+			{
+				user.Id,
+				ToastTitle = "Success",
+				ToastMessage = "The role has been removed successfully!"
+			});
+		}
 		private string GetUserId()
 		{
 			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
