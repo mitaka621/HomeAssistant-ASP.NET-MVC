@@ -1,13 +1,14 @@
 ﻿@using HomeAssistant.Core.Models
 @model IEnumerable<UserDetailsViewModel>
 
-<h1>Users waiting approval</h1>
+<h1>All Deleted Users</h1>
+
 
 <partial name="/Views/UserConfiguration/Shared/_ToastPopupPartial.cshtml" />
 
 @if (Model.Any())
 {
-	<table class="table w-100 p-3">
+	<table class="table w-100 p-3 table-striped table-hover">
 		<thead>
 			<tr>
 				<th scope="col">#</th>
@@ -15,6 +16,7 @@
 				<th scope="col">First Name</th>
 				<th scope="col">Last Name</th>
 				<th scope="col">Created on</th>
+				<th scope="col">Deleted on</th>
 				<th scope="col">Actions</th>
 			</tr>
 		</thead>
@@ -24,19 +26,15 @@
 				foreach (var user in Model)
 				{
 					<tr>
-						<th scope="row">@(counter++)</th>
-						<td>@user.Username</td>
-						<td>@user.FirstName</td>
-						<td>@user.LastName</td>
-						<td>@user.CreatedOn</td>
-						<td class="formCol">
-							<form asp-action="ApproveById" asp-route-Id="@user.Id" method="post">
-								
-								<button type="submit" class="btn btn-success">Approve</button>
-							</form>
-							<form asp-action="DeleteById" asp-route-Id="@user.Id" method="post">
-								
-								<button type="submit" class="btn btn-danger">Delete</button>
+						<th scope="row" class="col-sm-1">@(counter++)</th>
+						<td class="col">@user.Username</td>
+						<td class="col">@user.FirstName</td>
+						<td class="col">@user.LastName</td>
+						<td class="col">@user.CreatedOn</td>
+						<td class="col">@user.DeletedOn</td>
+						<td class="formCol">							
+							<form asp-action="RestoreById" asp-route-Id="@user.Id" method="post">
+								<button type="submit" class="btn btn-success">Restore</button>
 							</form>
 						</td>
 					</tr>
@@ -47,14 +45,14 @@
 }
 else
 {
-	<hr />
-	<h2>No more users waiting approval!</h2>
+	<hr>
+	<h2>There are no deleted users!</h2>
 }
 
 @section SideMenu {
 	<partial name="/Views/UserConfiguration/Shared/_SideMenuPartial.cshtml" />
 }
 
-@section Scripts{
+@section Scripts {
 	<script src="~/js/toastPopup.js"></script>
 }
