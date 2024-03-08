@@ -9,16 +9,26 @@ namespace HomeAssistant.Core.Contracts
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDetailsViewModel>> GetAllUsers();
+        Task<IEnumerable<UserDetailsViewModel>> GetAllUsersAsync();
 
-		Task<IEnumerable<UserDetailsViewModel>> GetAllDeletedUsers();
+		Task<IEnumerable<UserDetailsViewModel>> GetAllDeletedUsersAsync();
 
-		Task<IEnumerable<UserDetailsViewModel>> GetAllNotApprovedUsers();
+		Task<IEnumerable<UserDetailsViewModel>> GetAllNotApprovedUsersAsync();
 
-        Task<bool> ApproveById(string Id);
+		Task<UserDetailsFormViewModel> GetUserByIdAsync(string Id);
 
-		Task<bool> DeleteById(string Id);
+		Task<IEnumerable<RoleViewModel>> GetAllRolesAsync();
 
-		Task<bool> RestoreById(string Id);
+		Task<bool> EditUserByIdAsync(string Id, UserDetailsFormViewModel user);
+
+		Task<int> AddRoleToUser(string userId, string roleId);
+
+		Task<bool> RemoveRoleFromUser(string userId, string role);
+
+		Task<bool> ApproveByIdAsync(string Id);
+
+		Task<bool> DeleteByIdAsync(string Id);
+
+		Task<bool> RestoreByIdAsync(string Id);
 	}
 }
