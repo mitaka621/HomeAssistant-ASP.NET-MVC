@@ -1,5 +1,6 @@
 ﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Models;
+using HomeAssistant.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ namespace HomeAssistant.Controllers
 	public class UserConfigurationController : Controller
 	{
 		IUserService userService;
-		public UserConfigurationController(IUserService _userService)
+		IPFPService _pfpService;
+		public UserConfigurationController(IUserService _userService, IPFPService pfpService)
 		{
 			userService = _userService;
+			_pfpService = pfpService;
 		}
 
 		[HttpGet]
@@ -24,6 +27,7 @@ namespace HomeAssistant.Controllers
 
 			return View(await userService.GetAllNotApprovedUsersAsync());
 		}
+
 		[HttpGet]
 		public async Task<IActionResult> All(string? ToastTitle, string? ToastMessage)
 		{
@@ -34,6 +38,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
+		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> ApproveById(string Id)
 		{
 			if (Id == GetUserId())
@@ -62,6 +67,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
+		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> DeleteById(string Id)
 		{
 			if (Id == GetUserId())
@@ -99,6 +105,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
+		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> RestoreById(string Id)
 		{
 			if (!await userService.RestoreByIdAsync(Id))
@@ -123,11 +130,18 @@ namespace HomeAssistant.Controllers
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 
+			var imageData = await _pfpService.GetImage(Id);
+
+			if (imageData != null && imageData.Length > 0)
+			{
+				ViewBag.ImageData = imageData;
+			}
+
 			try
 			{
                 return View(await userService.GetUserByIdAsync(Id));
             }
-			catch (ArgumentNullException ex) 
+			catch (ArgumentNullException) 
 			{			
                 return RedirectToAction(nameof(All), new
                 {
@@ -138,6 +152,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
+		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> Edit(UserDetailsFormViewModel user)
 		{
             if (!ModelState.IsValid)
@@ -165,6 +180,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
+		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> AddRole(UserDetailsFormViewModel user)
 		{
 			int result = await userService.AddRoleToUser(user.Id, user.SelectedRoleId);
@@ -196,6 +212,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
+		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> DeleteRole(UserDetailsFormViewModel user,string role)
 		{
             if (!await userService.RemoveRoleFromUser(user.Id, role))

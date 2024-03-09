@@ -1,0 +1,48 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Profile";
+	ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<form id="profile-form" method="post" enctype="multipart/form-data">
+	<div class="row">
+		<div class="col-md-6 row justify-content-center">
+			@if (ViewBag.ImageData != null && ViewBag.ImageData.Length > 0)
+			{
+				<div class="bigpfp">
+					<img src="data:image/jpeg;base64,@Convert.ToBase64String(ViewBag.ImageData)" alt="User Image" />
+				</div>
+			}
+			<div>
+				<label class="h4 form-label m-4 row justify-content-center" asp-for="Input.ImageFile">Choose a new profile picture</label>
+				<input class="form-control row justify-content-center" asp-for="Input.ImageFile" type="file">
+			</div>
+		</div>
+		
+		<div class="formdiv col-md-6 p-5 row flex-column align-items-center justify-content-center">
+
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div >
+				<label asp-for="Username" class="form-label"></label>
+				<input asp-for="Username" class="form-control" disabled />
+			</div>
+			<div>
+				<label asp-for="Input.PhoneNumber" class="form-label"></label>
+				<input asp-for="Input.PhoneNumber" class="form-control" />
+				<span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+			</div>
+			
+			<button id="update-profile-button" type="submit" class="btn w-75 btn-lg btn-primary">Save</button>
+
+		</div>
+
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

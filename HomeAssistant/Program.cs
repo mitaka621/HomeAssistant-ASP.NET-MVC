@@ -4,7 +4,9 @@ using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using HomeAssistant.Middlewares;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +17,6 @@ builder.Services.AddDbContext<HomeAssistantDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<IUserService,UserService>();
 
-
 builder.Services.AddDefaultIdentity<HomeAssistantUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
@@ -25,7 +26,15 @@ builder.Services.AddDefaultIdentity<HomeAssistantUser>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<HomeAssistantDbContext>();
+
+
+builder.Services.AddSingleton<IMongoClient, MongoClient>(s =>
+	new MongoClient(builder.Configuration.GetConnectionString("MongoUri")));
+builder.Services.AddScoped<IPFPService, PFPService>();
+
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddMvc(options=>options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
 var app = builder.Build();
 

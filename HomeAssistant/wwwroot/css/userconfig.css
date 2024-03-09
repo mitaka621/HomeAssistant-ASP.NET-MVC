@@ -55,3 +55,14 @@ table, th, tr {
     font-size:1.5em;
 }
 
+input[type="file"]{
+    margin-top:1em;
+    width:15em;
+}
+
+form.edituser{
+    margin-top:-2em;
+}
+.bigpfp{
+    margin-top:-3em;
+}

@@ -103,7 +103,7 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
 
 			ReturnUrl = returnUrl;
 		}
-
+		
 		public async Task<IActionResult> OnPostAsync(string returnUrl = null)
 		{
 			returnUrl ??= Url.Content("~/");
@@ -120,7 +120,8 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
 				if (user!=null && user.IsDeleted)
 				{
 					_logger.LogWarning("User account is deleted.");
-					return RedirectToPage("./Lockout");
+					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+					return Page();
 				}
 
 				// This doesn't count login failures towards account lockout

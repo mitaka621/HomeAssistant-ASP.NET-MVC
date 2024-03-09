@@ -1,6 +1,8 @@
 ﻿using static HomeAssistant.Core.Constants.ErrorMessages;
 using static HomeAssistant.Core.Constants.DataValidationConstants;
 using System.ComponentModel.DataAnnotations;
+using Amazon.Util.Internal;
+using Microsoft.AspNetCore.Http;
 
 namespace HomeAssistant.Core.Models
 {
@@ -35,7 +37,5 @@ namespace HomeAssistant.Core.Models
         public IEnumerable<string>? UserRoles { get; set; }
 
         public IEnumerable<RoleViewModel>? AllRoles { get; set; }
-
-
     }
 }
