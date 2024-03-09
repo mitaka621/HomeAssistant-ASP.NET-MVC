@@ -3,25 +3,40 @@
 @inject SignInManager<HomeAssistantUser> SignInManager
 @inject UserManager<HomeAssistantUser> UserManager
 
+@{
+	byte[]? profilePicture = ViewContext.HttpContext.Items["ProfilePicture"] as byte[];
+}
+
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+	@if (SignInManager.IsSignedIn(User))
+	{
+
+
+		@if (profilePicture != null && profilePicture.Length > 0)
+		{
+			<li>
+				<div class="smallpfp">
+					<img src="data:image/jpeg;base64,@Convert.ToBase64String(profilePicture)" alt="Profile Picture" />
+				</div>
+			</li>
+		}
+
+		<li class="nav-item">
+			<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+		</li>
+		<li class="nav-item">
+			<form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+				<button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+			</form>
+		</li>
+	}
+	else
+	{
+		<li class="nav-item">
+			<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+		</li>
+	}
 </ul>

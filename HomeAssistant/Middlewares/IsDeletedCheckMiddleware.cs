@@ -20,8 +20,7 @@ namespace HomeAssistant.Middlewares
 			var user = await userManager.GetUserAsync(context.User);
 			if (user != null && user.IsDeleted)
 			{
-				// Log out the user
-					
+				// Log out the user					
 				await context.SignOutAsync(IdentityConstants.ApplicationScheme);
 			}
 

@@ -112,8 +112,7 @@ namespace HomeAssistant.Core.Services
                 return false;
             }
 
-            await userManager.AddToRoleAsync(user, "StandardUser");
-            return true;
+			return (await userManager.AddToRoleAsync(user, "StandardUser")).Succeeded;           
         }
 
         public async Task<bool> DeleteByIdAsync(string Id)
@@ -130,8 +129,8 @@ namespace HomeAssistant.Core.Services
 			user.IsDeleted = true;
             user.DeletedOn = DateTime.Now;
 
-            await userManager.UpdateAsync(user);
-            return true;
+			return (await userManager.UpdateAsync(user)).Succeeded;
+           
         }
 
         public async Task<bool> RestoreByIdAsync(string Id)
@@ -149,8 +148,7 @@ namespace HomeAssistant.Core.Services
             user.IsDeleted = false;
             user.DeletedOn = null;
 
-            await userManager.UpdateAsync(user);
-            return true;
+			return (await userManager.UpdateAsync(user)).Succeeded;           
         }
 
         public async Task<UserDetailsFormViewModel> GetUserByIdAsync(string Id)
@@ -203,9 +201,7 @@ namespace HomeAssistant.Core.Services
             dbUser.Email = user.Email;
             dbUser.UserName = user.Username;
 
-			await userManager.UpdateAsync(dbUser);
-
-			return true;
+			return (await userManager.UpdateAsync(dbUser)).Succeeded;		
 		}
 
         /// <summary>
@@ -232,8 +228,7 @@ namespace HomeAssistant.Core.Services
                 return 0;
             }
 
-           await userManager.AddToRoleAsync(user, role.Name);
-            return 1;
+			return Convert.ToInt32((await userManager.AddToRoleAsync(user, role.Name)).Succeeded);
 		}
 
 		public async Task<bool> RemoveRoleFromUser(string userId, string role)
@@ -245,8 +240,7 @@ namespace HomeAssistant.Core.Services
                 return false;
             }
 
-			await userManager.RemoveFromRoleAsync(user, role);
-            return true;
+			return (await userManager.RemoveFromRoleAsync(user, role)).Succeeded;           
 		}
 	}
 }

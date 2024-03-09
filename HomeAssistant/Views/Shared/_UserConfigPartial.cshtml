@@ -3,11 +3,10 @@
 @inject SignInManager<HomeAssistantUser> SignInManager
 @inject UserManager<HomeAssistantUser> UserManager
 
-<ul class="navbar-nav">
-    @if (User.IsInRole("Admin"))
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="UserConfiguration">ConfigurateUsers</a>
-        </li>
-    }
-</ul>
+
+@if (User.IsInRole("Admin"))
+{
+	<a class="btn btn-danger configbtn" asp-controller="UserConfiguration">ConfigurateUsers</a>
+
+}
+

@@ -59,6 +59,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseIsDeletedCheck();
+app.UseProfilePicture();
 
 app.MapControllerRoute(
     name: "default",

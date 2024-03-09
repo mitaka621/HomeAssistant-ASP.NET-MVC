@@ -62,5 +62,31 @@ footer {
     bottom: 0;
     left: 0;
     width: 100vw;
-    border-top:1px solid grey;
+    background-color:white;
+    box-shadow: inset 0px 58px 12px -65px rgba(0,0,0,0.5);
+}
+.smallpfp {
+    width: 45px;
+    height: 45px;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: -1px 1px 10px 2px rgba(0,0,0,1);
+    -webkit-box-shadow: -1px 1px 10px 2px rgba(0,0,0,1);
+    -moz-box-shadow: -1px 1px 10px 2px rgba(0,0,0,1);
+}
+.smallpfp>img{
+    width:80px;
+}
+.nav-item{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.configbtn{
+    font-size:1.1em;
+    font-weight:600;
 }
