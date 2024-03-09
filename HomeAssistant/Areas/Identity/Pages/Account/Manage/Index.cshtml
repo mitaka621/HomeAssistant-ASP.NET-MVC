@@ -25,7 +25,16 @@
 		
 		<div class="formdiv col-md-6 p-5 row flex-column align-items-center justify-content-center">
 
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div>
+				<label asp-for="Input.FirstName" class="form-label"></label>
+				<input asp-for="Input.FirstName" class="form-control" />
+				<span asp-validation-for="Input.FirstName" class="text-danger"></span>
+			</div>
+			<div>
+				<label asp-for="Input.LastName" class="form-label"></label>
+				<input asp-for="Input.LastName" class="form-control" />
+				<span asp-validation-for="Input.LastName" class="text-danger"></span>
+			</div>
 			<div >
 				<label asp-for="Username" class="form-label"></label>
 				<input asp-for="Username" class="form-control" disabled />

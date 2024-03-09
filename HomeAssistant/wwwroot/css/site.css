@@ -81,10 +81,10 @@ footer {
 .smallpfp>img{
     width:80px;
 }
-.nav-item{
-    display:flex;
-    justify-content:center;
-    align-items:center;
+ul.navbar-nav>li.nav-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .configbtn{
     font-size:1.1em;
