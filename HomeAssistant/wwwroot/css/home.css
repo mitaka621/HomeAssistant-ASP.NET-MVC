@@ -1,16 +1,56 @@
-﻿div.main-container
-{
-    display:flex;
-    justify-content:center;
-    gap:1em;
+﻿div.main-container {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
 }
+
 div.text-center {
     background-color: #535e52;
     border-radius: 30px;
     padding: 2em;
-    color:white;
+    color: white;
 }
 
 .location {
-    margin-top: -2em
+    margin-top: -2.4em;
+    margin-left: -2.5em;
 }
+
+.weather-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    margin-bottom: 0.5em;
+}
+div.left {
+    background-color: #d9f3f2;
+    padding: 2em;
+    border-radius: 30px;
+}
+.outfit-container img {
+    width: 100px;
+}
+
+div.outfit-container {
+    display: flex;
+    justify-content: center;
+    gap:1.5em; 
+}
+
+div.outfit-container > .left-side {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items:center;
+    }
+    div.outfit-container > .right-side {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        text-align:center;
+        width:6em;
+    }

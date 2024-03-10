@@ -8,10 +8,22 @@
 	<div class="left">
 		<h3>Outfit recommendations:</h3>
 		<p>You shoud wear light clothes</p>
+		<div class="outfit-container">
+			<div class="left-side">
+				<img class="hat-svg" src="~/svg/winter-hat.svg" alt="Alternate Text" />
+				<p>Winter Hat</p>
+				<img class="shirt-svg" src="~/svg/t-shirt.svg" alt="Alternate Text" />
+				<p>T-Shirt</p>
+			</div>
+			<div class="right-side">
+				<img class="umbrella-svg" src="~/svg/uumbrella-closed.svg" alt="Alternate Text" />
+				<p>No Umbrella Needed!</p>
+			</div>
+		</div>
 	</div>
 
 	<div class="text-center">
-		<h2><span class="temp">--</span> C&deg; <img class="weather-icon" src="pic_trulli.jpg"></h2>
+		<h2 class="weather-container"><span class="temp">--</span>C&deg; <img class="weather-icon" src="pic_trulli.jpg"><span class="desc"></span></h2>
 		<p class="location"></p>
 		@if (DateTime.Now.Hour < 12 && DateTime.Now.Hour > 6)
 		{
