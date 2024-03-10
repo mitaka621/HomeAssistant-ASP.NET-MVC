@@ -171,7 +171,9 @@ namespace HomeAssistant.Core.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 UserRoles = await userManager.GetRolesAsync(user),
-                AllRoles = await GetAllRolesAsync()
+                AllRoles = await GetAllRolesAsync(),
+                Latitude= user.Latitude,
+                Longitude= user.Longitude               
             };
         }
 
@@ -241,6 +243,21 @@ namespace HomeAssistant.Core.Services
             }
 
 			return (await userManager.RemoveFromRoleAsync(user, role)).Succeeded;           
+		}
+
+		public async Task<bool> AddUserLocation(string Id, double latitude, double longitude)
+		{
+			var dbUser = userManager.Users.FirstOrDefault(x => x.Id == Id && !x.IsDeleted);
+
+			if (dbUser == null)
+			{
+				return false;
+			}
+
+            dbUser.Latitude = latitude;
+			dbUser.Longitude = longitude;
+
+			return (await userManager.UpdateAsync(dbUser)).Succeeded;
 		}
 	}
 }

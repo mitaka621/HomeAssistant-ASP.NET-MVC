@@ -10,6 +10,7 @@ using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Services;
 using HomeAssistant.Infrastructure.Data.Models;
 using HomeAssistant.Infrastructure.Migrations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 {
+	[Authorize(Roles = "Admin,StandardUser")]
 	public class IndexModel : PageModel
 	{
 		private readonly UserManager<HomeAssistantUser> _userManager;
@@ -106,6 +108,7 @@ namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 			}
 		}
 
+		
 		public async Task<IActionResult> OnGetAsync()
 		{
 			var user = await _userManager.GetUserAsync(User);

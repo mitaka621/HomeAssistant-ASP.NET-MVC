@@ -27,6 +27,9 @@ builder.Services.AddDefaultIdentity<HomeAssistantUser>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<HomeAssistantDbContext>();
 
+builder.Services.Configure<SecurityStampValidatorOptions>(o =>
+o.ValidationInterval = TimeSpan.FromMinutes(1));
+
 
 builder.Services.AddSingleton<IMongoClient, MongoClient>(s =>
 	new MongoClient(builder.Configuration.GetConnectionString("MongoUri")));
@@ -35,6 +38,9 @@ builder.Services.AddScoped<IPFPService, PFPService>();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddMvc(options=>options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+
+builder.Services
+    .AddHttpClient<IWeatherService, WeatherService>();
 
 var app = builder.Build();
 

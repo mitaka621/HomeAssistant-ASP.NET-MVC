@@ -30,5 +30,7 @@ namespace HomeAssistant.Core.Contracts
 		Task<bool> DeleteByIdAsync(string Id);
 
 		Task<bool> RestoreByIdAsync(string Id);
+
+		Task<bool> AddUserLocation(string Id,double latitude, double longitude);
 	}
 }

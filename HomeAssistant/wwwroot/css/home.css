@@ -1,0 +1,16 @@
+﻿div.main-container
+{
+    display:flex;
+    justify-content:center;
+    gap:1em;
+}
+div.text-center {
+    background-color: #535e52;
+    border-radius: 30px;
+    padding: 2em;
+    color:white;
+}
+
+.location {
+    margin-top: -2em
+}

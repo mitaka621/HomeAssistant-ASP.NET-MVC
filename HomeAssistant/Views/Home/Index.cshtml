@@ -1,9 +1,41 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-    
-}
+﻿@using HomeAssistant.Core.Constants
+@using HomeAssistant.Core.Models
+@model UserDetailsFormViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+
+<div class="main-container">
+	<div class="left">
+		<h3>Outfit recommendations:</h3>
+		<p>You shoud wear light clothes</p>
+	</div>
+
+	<div class="text-center">
+		<h2><span class="temp">--</span> C&deg; <img class="weather-icon" src="pic_trulli.jpg"></h2>
+		<p class="location"></p>
+		@if (DateTime.Now.Hour < 12 && DateTime.Now.Hour > 6)
+		{
+			<h1 class="display-4">Good Morning @Model.FirstName!</h1>
+		}
+		else if (DateTime.Now.Hour < 18)
+		{
+			<h1 class="display-4">Good Afternoon @Model.FirstName!</h1>
+		}
+		else
+		{
+			<h1 class="display-4">Good Evening @Model.FirstName!</h1>
+		}
+
+		<h3>The time is @DateTime.Now.ToString("HH:mm")</h3>
+		<h3>@DateTime.Now.ToString("dd/MM/yyyy")</h3>
+	</div>
+
+	<div class="right">
+		<h3>Outfit recommendations:</h3>
+		<p>You shoud wear light clothes</p>
+	</div>
 </div>
+
+@section Scripts {
+	<script src="~/js/weather.js"></script>
+}

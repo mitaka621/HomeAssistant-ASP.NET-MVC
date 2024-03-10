@@ -37,5 +37,8 @@ namespace HomeAssistant.Core.Models
         public IEnumerable<string>? UserRoles { get; set; }
 
         public IEnumerable<RoleViewModel>? AllRoles { get; set; }
+
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }
