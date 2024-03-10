@@ -13,7 +13,7 @@ namespace HomeAssistant.Infrastructure.Migrations
                 table: "AspNetUsers",
                 type: "float",
                 nullable: false,
-                defaultValue: 42.698334);
+                defaultValue: 42.698334000000003);
 
             migrationBuilder.AddColumn<double>(
                 name: "Longitude",
@@ -27,7 +27,7 @@ namespace HomeAssistant.Infrastructure.Migrations
                 keyColumn: "Id",
                 keyValue: "e2246145-9dd8-4902-ae41-68096b5ca738",
                 columns: new[] { "PasswordHash", "SecurityStamp" },
-                values: new object[] { "AQAAAAEAACcQAAAAEGaDfwnpB6Cn4C74jU2vmrPUTsFaeWq52BJ/JbErOrOitQ3zI8l1n0RNWxiMEhuwSA==", "5158ab20-d0a9-4d5a-8b0f-77221198bdd4" });
+                values: new object[] { "AQAAAAEAACcQAAAAEB8vX8zxqtgljTu6MII0LQEqf8vGrsZ8BQonxzn/+MEMFsNKhbU6DB+eKMiAvshXxw==", "bf796b48-44cc-4f8f-b1eb-3c9ae06b7490" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

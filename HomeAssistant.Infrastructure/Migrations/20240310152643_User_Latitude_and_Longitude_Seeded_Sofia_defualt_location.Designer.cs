@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    [Migration("20240310151705_User_Latitude_and_Longitude_Seeded_Sofia_defualt_location")]
+    [Migration("20240310152643_User_Latitude_and_Longitude_Seeded_Sofia_defualt_location")]
     partial class User_Latitude_and_Longitude_Seeded_Sofia_defualt_location
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,7 +83,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .HasColumnType("nvarchar(60)");
 
                     b.Property<double>("Latitude")
-                        .HasColumnType("float");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(42.698334000000003);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -92,7 +94,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<double>("Longitude")
-                        .HasColumnType("float");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(23.319941);
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -150,9 +154,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                             Longitude = 0.0,
                             NormalizedEmail = "admin",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGaDfwnpB6Cn4C74jU2vmrPUTsFaeWq52BJ/JbErOrOitQ3zI8l1n0RNWxiMEhuwSA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEB8vX8zxqtgljTu6MII0LQEqf8vGrsZ8BQonxzn/+MEMFsNKhbU6DB+eKMiAvshXxw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5158ab20-d0a9-4d5a-8b0f-77221198bdd4",
+                            SecurityStamp = "bf796b48-44cc-4f8f-b1eb-3c9ae06b7490",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });

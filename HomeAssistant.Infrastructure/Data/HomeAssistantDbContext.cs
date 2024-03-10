@@ -22,7 +22,15 @@ namespace HomeAssistant.Infrastructure.Data
             builder.Entity<NotificationUser>()
                 .HasKey(x => new { x.UserId, x.NotificationId });
 
-            builder.ApplyConfiguration(new AdminConfiguration());
+            builder.Entity<HomeAssistantUser>()
+                .Property(b => b.Latitude)
+                .HasDefaultValue(42.698334);
+
+			builder.Entity<HomeAssistantUser>()
+			   .Property(b => b.Longitude)
+			   .HasDefaultValue(23.319941);
+
+			builder.ApplyConfiguration(new AdminConfiguration());
 
             builder.ApplyConfiguration(new RoleConfiguration());
 
