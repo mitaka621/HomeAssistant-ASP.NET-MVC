@@ -1,5 +1,5 @@
 <h1>Api keys for testing (user secrets)</h1>
-```
+<pre>
 {
   "ConnectionStrings": {
     "DefaultConnection": "Server=.;Database=HomeAssistant;Encrypt=True;Integrated Security=True;TrustServerCertificate=True",
@@ -7,4 +7,4 @@
     "weatherApi": "1a9789d617380a5921737ac607d3edbd"
   }
 }
-```
+</pre>
