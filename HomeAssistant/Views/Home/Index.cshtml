@@ -6,45 +6,116 @@
 
 <div class="main-container">
 	<div class="left">
+		<p class="location"></p>
+		<h2 class="weather-container"><span class="temp">--</span>C&deg; <img class="weather-icon"><span class="desc"></span></h2>
 		<h3>Outfit recommendations:</h3>
 		<p>You shoud wear light clothes</p>
 		<div class="outfit-container">
 			<div class="left-side">
-				<img class="hat-svg" src="~/svg/winter-hat.svg" alt="Alternate Text" />
-				<p>Winter Hat</p>
-				<img class="shirt-svg" src="~/svg/t-shirt.svg" alt="Alternate Text" />
-				<p>T-Shirt</p>
+				<img class="hat-svg" src="~/svg/winter-hat.svg" />
+				<p class="hat-desc">Winter Hat</p>
+				<img class="shirt-svg" src="~/svg/t-shirt.svg" />
+				<p class="shirt-desc">T-Shirt</p>
 			</div>
 			<div class="right-side">
-				<img class="umbrella-svg" src="~/svg/uumbrella-closed.svg" alt="Alternate Text" />
-				<p>No Umbrella Needed!</p>
+				<img class="umbrella-svg" src="~/svg/uumbrella-closed.svg" />
+				<p class="umbrella-desc">No Umbrella Needed!</p>
 			</div>
 		</div>
 	</div>
 
 	<div class="text-center">
-		<h2 class="weather-container"><span class="temp">--</span>C&deg; <img class="weather-icon" src="pic_trulli.jpg"><span class="desc"></span></h2>
-		<p class="location"></p>
-		@if (DateTime.Now.Hour < 12 && DateTime.Now.Hour > 6)
-		{
-			<h1 class="display-4">Good Morning @Model.FirstName!</h1>
-		}
-		else if (DateTime.Now.Hour < 18)
-		{
-			<h1 class="display-4">Good Afternoon @Model.FirstName!</h1>
-		}
-		else
-		{
-			<h1 class="display-4">Good Evening @Model.FirstName!</h1>
-		}
+		<div class="greeting">
+			@if (DateTime.Now.Hour < 12 && DateTime.Now.Hour > 6)
+			{
+				<h1 class="display-4">Good Morning @Model.FirstName!</h1>
+			}
+			else if (DateTime.Now.Hour < 18)
+			{
+				<h1 class="display-4">Good Afternoon @Model.FirstName!</h1>
+			}
+			else
+			{
+				<h1 class="display-4">Good Evening @Model.FirstName!</h1>
+			}
 
-		<h3>The time is @DateTime.Now.ToString("HH:mm")</h3>
-		<h3>@DateTime.Now.ToString("dd/MM/yyyy")</h3>
+			<h3>The time is @DateTime.Now.ToString("HH:mm")</h3>
+			<h3>@DateTime.Now.ToString("dd/MM/yyyy")</h3>
+		</div>
+		<div class="main-menu">
+			<a class="btn btn-success">
+				<img src="~/svg/fridge.svg"/>
+				<span>Fridge</span>
+			</a>
+			<a class="btn btn-success">Shopping Cart</a>
+			<a class="btn btn-success">Recepies</a>
+			<a class="btn btn-success">Where is Nola?</a>
+		</div>
 	</div>
 
 	<div class="right">
-		<h3>Outfit recommendations:</h3>
-		<p>You shoud wear light clothes</p>
+		<h3>Notifications:</h3>
+		<div class="card">
+			<div class="card-header">
+				Featured
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
+				<span>3 seconds ago</span>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header">
+				Featured
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
+				<span>3 seconds ago</span>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header">
+				Featured
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
+				<span>3 seconds ago</span>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header">
+				Featured
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
+				<span>3 seconds ago</span>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header">
+				Featured
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
+				<span>3 seconds ago</span>
+			</div>
+			<div class="card">
+			<div class="card-header">
+				Featured
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
+				<span>3 seconds ago</span>
+			</div>
+
+		</div>
+		</div>
 	</div>
 </div>
 

@@ -5,15 +5,33 @@
 }
 
 div.text-center {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    gap:2em;
+    width:fit-content;
+    padding:0;
+}
+
+div.greeting {
     background-color: #535e52;
     border-radius: 30px;
     padding: 2em;
     color: white;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
 }
 
+div.main-container>div.left{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    height:fit-content;
+}
 .location {
-    margin-top: -2.4em;
-    margin-left: -2.5em;
+   margin:0;
 }
 
 .weather-container {
@@ -47,10 +65,45 @@ div.outfit-container > .left-side {
         align-items:center;
     }
     div.outfit-container > .right-side {
-        display: flex;
+        display: none;
         justify-content: center;
         flex-direction: column;
         align-items: center;
         text-align:center;
         width:6em;
     }
+
+div.main-menu {
+    display: flex;
+    flex-wrap: wrap;
+    width:80%;
+    gap:1em;
+    justify-content: space-evenly;
+}
+
+div.main-menu a{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    width:12em;
+    height:12em;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+div.main-menu img{
+    height:10em;
+}
+
+
+div.right {
+    background-color: #dcc8a0;
+    padding: 1em;
+    border-radius: 20px;
+    overflow: auto;
+    height:35em;
+    display:flex;
+    gap:1em;
+    flex-direction:column;
+}
+

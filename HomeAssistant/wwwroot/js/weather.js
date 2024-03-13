@@ -29,32 +29,53 @@ fetch('/api/Weather/Weather')
         document.querySelector(".desc").innerHTML = json.weather[0].main;
 
         let hatSvg = document.querySelector(".hat-svg");
+        let hatDesc = document.querySelector(".hat-desc");
         let shirtSvg = document.querySelector(".shirt-svg");
+        let shirtDesc = document.querySelector(".shirt-desc");
         let umbrella = document.querySelector(".umbrella-svg");
+        let umbrellaDesc = document.querySelector(".umbrella-desc");
+
+        if (json.weather[0].id<=531) {
+            document.querySelector("div.outfit-container > .right-side").style.display = "flex";
+            umbrella.src = "/svg/umbrella-opened.svg";
+            umbrellaDesc.innerHTML = "Bring an umbrella";
+        }
 
         if (json.main.temp < 0) {
             hatSvg.src = "/svg/winter-hat.svg";
             shirtSvg.src = "/svg/heavy-jacket.svg";
+            hatDesc.innerHTML = "Winter Hat"
+            shirtDesc.innerHTML = "Heavy Jacket"
         }
         else if (json.main.temp < 10) {
             hatSvg.src = "/svg/winter-hat-light.svg";
             shirtSvg.src = "/svg/jacket.svg";
+            hatDesc.innerHTML = "Light Winter Hat"
+            shirtDesc.innerHTML = "Jacket"
         }
         else if (json.main.temp < 20) {
             hatSvg.src = "/svg/winter-hat-light.svg";
             shirtSvg.src = "/svg/Sweater.svg";
+            hatDesc.innerHTML = "Light Winter Hat"
+            shirtDesc.innerHTML = "Sweater"
         }
         else if (json.main.temp < 25) {
             hatSvg.src = "/svg/cap.svg";
             shirtSvg.src = "/svg/shirt.svg";
+            hatDesc.innerHTML = "Cap"
+            shirtDesc.innerHTML = "Shirt"
         }
         else if (json.main.temp < 30) {
             hatSvg.src = "~/svg/cap.svg";
             shirtSvg.src = "/svg/t-shirt.svg";
+            hatDesc.innerHTML = "Cap"
+            shirtDesc.innerHTML = "T-Shirt"
         }
         else {
             hatSvg.src = "";
             shirtSvg.src = "/svg/tank-top.svg";
+            hatDesc.innerHTML = ""
+            shirtDesc.innerHTML = "Tank-Top"
         }
     });
     
