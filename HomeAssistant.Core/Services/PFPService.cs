@@ -71,9 +71,7 @@ namespace HomeAssistant.Core.Services
                     await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
                     return stream.ToArray();
                 }
-            }
-
-            return null;
+            }        
         }
     }
 }

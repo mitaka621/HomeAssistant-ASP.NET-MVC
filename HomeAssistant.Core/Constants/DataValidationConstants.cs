@@ -11,6 +11,9 @@ namespace HomeAssistant.Core.Constants
         public const int NameMinLenght = 3;
         public const int NameMaxLenght = 60;
 
-        public static string DateTimeFormat = "dd-MM-yyyy HH:mm:ss";
+        public const int QuantityMin = 0;
+		public const int QuantityMax = 100;
+
+		public static string DateTimeFormat = "dd-MM-yyyy HH:mm:ss";
     }
 }
