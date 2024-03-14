@@ -27,9 +27,6 @@ table, th, tr {
     text-align: center;
     vertical-align: middle;
 }
-.toast-container{
-    margin-top:3em;
-}
 
 .formCol{
     display:flex;

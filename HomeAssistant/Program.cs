@@ -15,7 +15,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<HomeAssistantDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddDefaultIdentity<HomeAssistantUser>(options =>
 {
@@ -34,6 +36,8 @@ o.ValidationInterval = TimeSpan.FromMinutes(1));
 builder.Services.AddSingleton<IMongoClient, MongoClient>(s =>
 	new MongoClient(builder.Configuration.GetConnectionString("MongoUri")));
 builder.Services.AddScoped<IPFPService, PFPService>();
+
+
 
 builder.Services.AddControllersWithViews();
 

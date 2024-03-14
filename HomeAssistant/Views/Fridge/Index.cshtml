@@ -1,0 +1,108 @@
+﻿@using HomeAssistant.Core.Models
+@model IEnumerable<ProductViewModel>
+
+<link rel="stylesheet" href="~/css/fridge.css" asp-append-version="true" />
+
+<partial name="/Views/Shared/_ToastPopupPartial.cshtml" />
+
+@if (ViewBag.Available)
+{
+	<h1>Available Products</h1>
+}
+else
+{
+	<h1>Products Out of Stock</h1>
+}
+<div class="filter-btns">
+	<div>
+		<a asp-route-isAvailable="true" asp-route-categoryId="@ViewBag.CategoryId" class="btn @(ViewBag.Available ? "btn-info" : "btn-outline-info")">Available</a>
+		<a asp-route-isAvailable="false" asp-route-categoryId="@ViewBag.CategoryId" class="btn @(ViewBag.Available ?"btn-outline-info" : "btn-info" )">Unavailable</a>
+	</div>
+	<div class="dropdown">
+		<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+			@if (ViewBag.CategoryId != null)
+			{
+				@(((IEnumerable<CategoryViewModel>)ViewBag.Categories).First(x => x.Id == ViewBag.CategoryId).Name)
+			}
+			else
+			{
+				@("All Categories")
+			}
+		</button>
+		<ul class="dropdown-menu">
+			<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available">All Categories</a></li>
+			@foreach (var category in (IEnumerable<CategoryViewModel>)ViewBag.Categories)
+			{
+				<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available" asp-route-categoryId="@category.Id">@category.Name</a></li>
+			}
+		</ul>
+	</div>
+</div>
+<div class="main-container">
+	<div class="product-container">
+		@foreach (var product in Model)
+		{
+			<div class="product">
+				<div class="left">
+					<p class="product-name">@product.Name</p>
+					@{
+						var duration = DateTime.Now - product.AddedOn;
+
+						string convertedDuration;
+						if (duration.TotalDays >= 1)
+						{
+							convertedDuration = Math.Round(duration.TotalDays) + (duration.TotalDays == 1 ? " day" : " days") + " ago";
+						}
+						else if (duration.TotalHours >= 1)
+						{
+							convertedDuration = Math.Round(duration.TotalHours) + (duration.TotalHours == 1 ? " hour" : " hours") + " ago";
+						}
+						else if (duration.TotalMinutes >= 1)
+						{
+							convertedDuration = Math.Round(duration.TotalMinutes) + (duration.TotalMinutes == 1 ? " minute" : " minutes") + " ago";
+						}
+						else
+						{
+							convertedDuration = "Less than a minute ago";
+						}
+						<p class="text-muted">@convertedDuration</p>
+					}
+
+					<figcaption class="blockquote-footer">
+						@product.ProductCategory.Name
+					</figcaption>
+				</div>
+				<div class="right">
+					<form method="post" asp-action="DecreaseProductQuantity" asp-route-productId="@product.Id">
+						<button class="btn">
+							<img src="~/svg/minus-circle.svg" />
+						</button>
+					</form>
+					<p class="product-count">@product.Count</p>
+					<form method="post" asp-action="IncreaseProductQuantity" asp-route-productId="@product.Id">
+						<button class="btn">
+							<img src="~/svg/plus-Circle.svg" />
+						</button>
+					</form>
+				</div>
+			</div>
+		}
+
+	</div>
+	<div class="input-form">
+		<h2>Add/Edit Products</h2>
+		<div class="form-outline" data-mdb-input-init>
+			<input onkeyup="onInput(this)" type="search" id="form1" class="form-control" placeholder="Type query" aria-label="Search" />
+		</div>
+		<table class="table table-striped table-hover table-info">
+			<tbody class="search-results">
+				
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="~/js/toastPopup.js"></script>
+	<script src="~/js/productSearch.js"></script>
+}

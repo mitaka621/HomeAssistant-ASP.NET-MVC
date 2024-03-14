@@ -90,3 +90,8 @@ ul.navbar-nav>li.nav-item {
     font-size:1.1em;
     font-weight:600;
 }
+
+.toast-container {
+    margin-top: 3em;
+}
+
