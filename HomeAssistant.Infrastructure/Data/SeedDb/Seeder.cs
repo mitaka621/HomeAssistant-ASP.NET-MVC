@@ -70,5 +70,65 @@ namespace HomeAssistant.Infrastructure.Data.SeedDb
 				}
 			};
 		}
+
+		public Category[] CreateCategories()
+		{
+			return new Category[]
+			{
+				new Category()
+				{
+					Id = 1,
+					Name = "Dairy"
+				},
+				new Category()
+				{
+					Id = 2,
+					Name = "Fruits"
+				},
+				new Category()
+				{
+					Id = 3,
+					Name = "Meat and Poultry"
+				},
+				new Category()
+				{
+					Id = 4,
+					Name = "Beverages"
+				},
+				new Category()
+				{
+					Id = 5,
+					Name = "Vegetables"
+				},
+				new Category()
+				{
+					Id = 6,
+					Name = "Baking Supplies"
+				}
+			};
+		}
+
+		public Product[] CreateProducts()
+		{
+			return new Product[]
+			{
+				new Product()
+				{
+					Id = 1,
+					Name="Steak",
+					CategoryId=3,
+					Count=3,
+					AddedOn=new DateTime(2024,3,14)
+				},
+				new Product()
+				{
+					Id = 2,
+					Name="Apple",
+					CategoryId=2,
+					Count=10,
+					AddedOn=new DateTime(2024,3,14)
+				},
+			};
+		}
 	}
 }

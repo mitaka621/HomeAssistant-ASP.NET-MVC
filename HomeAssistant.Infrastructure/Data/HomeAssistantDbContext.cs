@@ -36,7 +36,11 @@ namespace HomeAssistant.Infrastructure.Data
 
             builder.ApplyConfiguration(new UserRolesConfiguration());
 
-            base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new CategoryConfiguration());
+
+			builder.ApplyConfiguration(new ProductsConfiguration());
+
+			base.OnModelCreating(builder);
         }
     }
 }

@@ -4,6 +4,7 @@ using HomeAssistant.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240314142054_seed_categories")]
+    partial class seed_categories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,9 +186,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                             Longitude = 0.0,
                             NormalizedEmail = "admin",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEO1Cvf3NVuu9IyZds37Yx3m1i/4m2fWv+5xHcVMnND+xWSs7biyZhVuaRrgk2aAuEA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBBITStPTVBoPYKox8Z5S+xCn7EKq+wCRsEEdoyvlMKww9Dh5POj4NYtBv1Im8lErQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cd92f982-f417-47bf-90b7-f9a04b644ff1",
+                            SecurityStamp = "9ea857f1-8abc-4719-a333-b4291066884d",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -285,24 +287,6 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.ToTable("Products");
 
                     b.HasComment("Product");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AddedOn = new DateTime(2024, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = 3,
-                            Count = 3,
-                            Name = "Steak"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AddedOn = new DateTime(2024, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CategoryId = 2,
-                            Count = 10,
-                            Name = "Apple"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

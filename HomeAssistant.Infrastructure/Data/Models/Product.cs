@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,9 @@ namespace HomeAssistant.Infrastructure.Data.Models
         public string Name { get; set; }=string.Empty;
 
         [Required]
-        [Comment("Prouct category")]
+        [Comment("Product category")]
+        public int CategoryId { get; set; }
+        [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; } = null!;
 
         [Required]
