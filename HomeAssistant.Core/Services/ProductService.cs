@@ -1,5 +1,6 @@
 ﻿using HomeAssistant.Core.Constants;
 using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Models;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
@@ -17,7 +18,10 @@ namespace HomeAssistant.Core.Services
 			_dbContext = dbContext;
 		}
 
-		public async Task<IEnumerable<ProductViewModel>> GetProducts(bool available, int? categoryId)
+		public async Task<IEnumerable<ProductViewModel>> GetProducts(
+			bool available,
+			int? categoryId,
+			OrderBy orderBy)
 		{
 			var prodToReturn = _dbContext.Products
 				.AsNoTracking()
@@ -30,6 +34,22 @@ namespace HomeAssistant.Core.Services
 			else
 			{
 				prodToReturn = prodToReturn.Where(x => x.Count == 0);
+			}
+
+			switch (orderBy)
+			{
+				case OrderBy.Recent:
+					prodToReturn = prodToReturn.OrderByDescending(x=>x.AddedOn)
+						.ThenBy(x=>x.Id);
+					break;
+				case OrderBy.Oldest:
+					prodToReturn = prodToReturn.OrderBy(x => x.AddedOn)
+						.ThenBy(x => x.Id);
+					break;
+				case OrderBy.Name:
+					prodToReturn = prodToReturn.OrderBy(x => x.Name)
+						.ThenBy(x => x.Id);
+					break;
 			}
 
 			return await prodToReturn.Select(x => new ProductViewModel()
@@ -54,7 +74,6 @@ namespace HomeAssistant.Core.Services
 					CreatedOn = x.User.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
 				} : null
 			})
-			.AsNoTracking()
 			.ToListAsync();
 		}
 

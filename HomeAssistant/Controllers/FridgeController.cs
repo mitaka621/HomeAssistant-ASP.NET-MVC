@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,8 @@ namespace HomeAssistant.Controllers
 			(string? ToastTitle = null,
 			string? ToastMessage = null,
 			bool isAvailable = true,
-			int? categoryId = null
+			int? categoryId = null,
+			string orderBy="0"
 			)
 		{
 			ViewBag.ToastTitle = ToastTitle;
@@ -37,8 +39,16 @@ namespace HomeAssistant.Controllers
 				ViewBag.CategoryId = categoryId;
 			}
 
+			OrderBy parsedEnum;
 
-			return View(await _productService.GetProducts(isAvailable, categoryId));
+			if (!Enum.TryParse<OrderBy>(orderBy, true, out parsedEnum))
+			{
+				parsedEnum = OrderBy.Recent;
+			}
+
+			ViewBag.OrderBy= parsedEnum;
+
+			return View(await _productService.GetProducts(isAvailable, categoryId, parsedEnum));
 		}
 
 		[HttpPost]
@@ -65,11 +75,7 @@ namespace HomeAssistant.Controllers
 				});
 			}
 
-			return RedirectToAction(nameof(Index), new
-			{
-				ToastTitle = "Success",
-				ToastMessage = "Product quantity decreased!"
-			});
+			return Redirect(Request.Headers["Referer"].ToString());
 		}
 
 		[HttpPost]
@@ -96,11 +102,7 @@ namespace HomeAssistant.Controllers
 				});
 			}
 
-			return RedirectToAction(nameof(Index), new
-			{
-				ToastTitle = "Success",
-				ToastMessage = "Product quantity increased!"
-			});
+			return Redirect(Request.Headers["Referer"].ToString());
 		}
 
 		[HttpGet]

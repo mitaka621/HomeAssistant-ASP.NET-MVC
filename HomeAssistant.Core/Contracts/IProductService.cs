@@ -1,4 +1,5 @@
-﻿using HomeAssistant.Core.Models;
+﻿using HomeAssistant.Core.Enums;
+using HomeAssistant.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace HomeAssistant.Core.Contracts
 {
 	public interface IProductService
 	{
-		Task<IEnumerable<ProductViewModel>> GetProducts(bool available, int? categoryId);
+		Task<IEnumerable<ProductViewModel>> GetProducts(bool available, int? categoryId,OrderBy orderBy);
 
 		Task<IEnumerable<CategoryViewModel>> GetAllCategories();
 

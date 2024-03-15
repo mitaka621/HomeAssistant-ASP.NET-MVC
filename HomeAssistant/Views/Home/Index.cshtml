@@ -26,7 +26,7 @@
 
 	<div class="text-center">
 		<div class="greeting">
-			@if (DateTime.Now.Hour < 12 && DateTime.Now.Hour > 6)
+			@if (DateTime.Now.Hour < 12)
 			{
 				<h1 class="display-4">Good Morning @Model.FirstName!</h1>
 			}

@@ -1,4 +1,5 @@
-﻿@using HomeAssistant.Core.Models
+﻿@using HomeAssistant.Core.Enums
+@using HomeAssistant.Core.Models
 @model IEnumerable<ProductViewModel>
 
 <link rel="stylesheet" href="~/css/fridge.css" asp-append-version="true" />
@@ -15,27 +16,66 @@ else
 }
 <div class="filter-btns">
 	<div>
-		<a asp-route-isAvailable="true" asp-route-categoryId="@ViewBag.CategoryId" class="btn @(ViewBag.Available ? "btn-info" : "btn-outline-info")">Available</a>
-		<a asp-route-isAvailable="false" asp-route-categoryId="@ViewBag.CategoryId" class="btn @(ViewBag.Available ?"btn-outline-info" : "btn-info" )">Unavailable</a>
+		<a asp-route-isAvailable="true"
+		   asp-route-categoryId="@ViewBag.CategoryId"
+		   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
+		   class="btn @(ViewBag.Available ? "btn-info" : "btn-outline-info")">
+			Available
+		</a>
+		<a asp-route-isAvailable="false"
+		   asp-route-categoryId="@ViewBag.CategoryId"
+		   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
+		   class="btn @(ViewBag.Available ?"btn-outline-info" : "btn-info" )">
+			Unavailable
+		</a>
 	</div>
-	<div class="dropdown">
-		<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-			@if (ViewBag.CategoryId != null)
-			{
-				@(((IEnumerable<CategoryViewModel>)ViewBag.Categories).First(x => x.Id == ViewBag.CategoryId).Name)
-			}
-			else
-			{
-				@("All Categories")
-			}
-		</button>
-		<ul class="dropdown-menu">
-			<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available">All Categories</a></li>
-			@foreach (var category in (IEnumerable<CategoryViewModel>)ViewBag.Categories)
-			{
-				<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available" asp-route-categoryId="@category.Id">@category.Name</a></li>
-			}
-		</ul>
+	<div>
+		<div class="dropdown">
+			<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				@if (ViewBag.CategoryId != null)
+				{
+					@(((IEnumerable<CategoryViewModel>)ViewBag.Categories).First(x => x.Id == ViewBag.CategoryId).Name)
+				}
+				else
+				{
+					@("All Categories")
+				}
+			</button>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available" asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">All Categories</a></li>
+				@foreach (var category in (IEnumerable<CategoryViewModel>)ViewBag.Categories)
+				{
+					<li>
+						<a class="dropdown-item"
+						   asp-action="Index"
+						   asp-route-isAvailable="@ViewBag.Available"
+						   asp-route-categoryId="@category.Id"
+						   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">
+							@category.Name
+						</a>
+					</li>
+				}
+			</ul>
+		</div>
+		<div class="dropdown">
+			<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				Order By: @(((OrderBy)ViewBag.OrderBy).ToString())
+			</button>
+			<ul class="dropdown-menu">
+				@foreach (var option in Enum.GetValues(typeof(OrderBy)))
+				{
+					<li>
+						<a class="dropdown-item"
+						   asp-action="Index"
+						   asp-route-isAvailable="@ViewBag.Available"
+						   asp-route-categoryId="@ViewBag.CategoryId"
+						   asp-route-orderBy="@option">
+							@option
+						</a>
+					</li>
+				}
+			</ul>
+		</div>
 	</div>
 </div>
 <div class="main-container">
@@ -73,13 +113,17 @@ else
 					</figcaption>
 				</div>
 				<div class="right">
-					<form method="post" asp-action="DecreaseProductQuantity" asp-route-productId="@product.Id">
+					<form method="post"
+						  asp-action="DecreaseProductQuantity"
+						  asp-route-productId="@product.Id">
 						<button class="btn">
 							<img src="~/svg/minus-circle.svg" />
 						</button>
 					</form>
 					<p class="product-count">@product.Count</p>
-					<form method="post" asp-action="IncreaseProductQuantity" asp-route-productId="@product.Id">
+					<form method="post"
+						  asp-action="IncreaseProductQuantity"
+						  asp-route-productId="@product.Id">
 						<button class="btn">
 							<img src="~/svg/plus-Circle.svg" />
 						</button>
@@ -92,11 +136,10 @@ else
 	<div class="input-form">
 		<h2>Add/Edit Products</h2>
 		<div class="form-outline" data-mdb-input-init>
-			<input onkeyup="onInput(this)" type="search" id="form1" class="form-control" placeholder="Type query" aria-label="Search" />
+			<input onkeyup="onInput(this)" type="search" id="form1" class="form-control" placeholder="Add/Search products by name" aria-label="Search" />
 		</div>
 		<table class="table table-striped table-hover table-info">
 			<tbody class="search-results">
-				
 			</tbody>
 		</table>
 	</div>
