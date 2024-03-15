@@ -104,6 +104,11 @@ namespace HomeAssistant.Infrastructure.Data.SeedDb
 				{
 					Id = 6,
 					Name = "Baking Supplies"
+				},
+				new Category()
+				{
+					Id = 7,
+					Name = "Condiments and Sauces"
 				}
 			};
 		}
