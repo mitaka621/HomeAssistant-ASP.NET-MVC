@@ -38,7 +38,9 @@ namespace HomeAssistant.Infrastructure.Data.Models
         [Comment("Date and time for when the product was added")]
         public DateTime AddedOn { get; set; }
 
-        [Comment("User which added the product (optional)")]
+        [Comment("UserId who added the product (optional)")]
+        public string? UserId { get; set; }
+        [ForeignKey(nameof(UserId))]
         public HomeAssistantUser? User { get; set; }
     }
 }
