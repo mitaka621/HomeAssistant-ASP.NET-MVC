@@ -1,0 +1,38 @@
+﻿@using HomeAssistant.Core.Constants
+@using HomeAssistant.Core.Models
+@model ProductFormViewModel
+
+<h1>Add Product</h1>
+
+<form method="post">
+	<div class="mb-3">
+		<label asp-for="Name">Product Name</label>
+		<input class="form-control" asp-for="Name" value="@ViewBag.ProductName">
+		<span asp-validation-for="Name" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Count">Product Quantity</label>
+		<input class="form-control" asp-for="Count">
+		<span asp-validation-for="Count" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Weight"></label>
+		<input class="form-control" asp-for="Weight">
+		<span asp-validation-for="Weight" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<select asp-for="@Model.SelectedCategoryId" class="form-control" aria-required="true">
+			@foreach (var category in Model.AllCategories)
+			{
+				<option value="@category.Id">@category.Name</option>
+			}
+		</select>
+		<span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
+	</div>
+	<button type="submit" class="btn btn-primary">Add Product</button>
+</form>
+
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

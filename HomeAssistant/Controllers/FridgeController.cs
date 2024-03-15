@@ -1,42 +1,44 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HomeAssistant.Controllers
 {
-	[Authorize(Roles ="StandardUser")]
+	[Authorize(Roles = "StandardUser")]
 	public class FridgeController : Controller
 	{
-        private readonly IProductService _productService;
+		private readonly IProductService _productService;
 
-        public FridgeController(IProductService productService)
-        {
-			_productService=productService;
+		public FridgeController(IProductService productService)
+		{
+			_productService = productService;
 
 		}
 
 		[HttpGet]
-        public async Task<IActionResult> Index
-			(string? ToastTitle=null,
+		public async Task<IActionResult> Index
+			(string? ToastTitle = null,
 			string? ToastMessage = null,
 			bool isAvailable = true,
-			int? categoryId=null
+			int? categoryId = null
 			)
 		{
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 			ViewBag.Available = isAvailable;
 
-			var categories= await _productService.GetAllCategories();
-			ViewBag.Categories= categories;
+			var categories = await _productService.GetAllCategories();
+			ViewBag.Categories = categories;
 
-            if (categories.Any(x=>x.Id==categoryId))
-            {
+			if (categories.Any(x => x.Id == categoryId))
+			{
 				ViewBag.CategoryId = categoryId;
-			}    
-			
-            
-            return View(await _productService.GetProducts(isAvailable,categoryId));
+			}
+
+
+			return View(await _productService.GetProducts(isAvailable, categoryId));
 		}
 
 		[HttpPost]
@@ -104,7 +106,7 @@ namespace HomeAssistant.Controllers
 		[HttpGet]
 		public async Task<IActionResult> ProductSearch(string keyphrase)
 		{
-			var products=await _productService.SearchProducts(keyphrase);
+			var products = await _productService.SearchProducts(keyphrase);
 
 			return Json(products);
 		}
@@ -124,6 +126,79 @@ namespace HomeAssistant.Controllers
 					ToastMessage = "Internal server error!"
 				});
 			}
+		}
+		[HttpPost]
+		public async Task<IActionResult> EditProduct(ProductFormViewModel product)
+		{
+			try
+			{
+				await _productService.EditProduct(GetUserId(), product);
+			}
+			catch (ArgumentNullException)
+			{
+				return RedirectToAction(nameof(Index), new
+				{
+					ToastTitle = "Error",
+					ToastMessage = "Internal server error!"
+				});
+			}
+
+			return RedirectToAction(nameof(Index), new
+			{
+				ToastTitle = "Success",
+				ToastMessage = "Product added!"
+			});
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> AddProduct(string prodName = "")
+		{
+			ViewBag.ProductName = prodName;
+			return View(new ProductFormViewModel()
+			{
+				AllCategories = await _productService.GetAllCategories()
+			});
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> AddProduct(ProductFormViewModel product)
+		{
+			await _productService.AddProduct(GetUserId(), product);
+
+			return RedirectToAction(nameof(Index), new
+			{
+				ToastTitle = "Success",
+				ToastMessage = "Product added!"
+			});
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> DeleteProduct(int productId)
+		{
+			try
+			{
+				await _productService.DeleteProduct(productId);
+			}
+			catch (ArgumentNullException)
+			{
+				return RedirectToAction(nameof(Index), new
+				{
+					ToastTitle = "Error",
+					ToastMessage = "Internal server error!"
+				});
+			}
+			
+			return RedirectToAction(nameof(Index), new
+			{
+				ToastTitle = "Success",
+				ToastMessage = "Product added!"
+			});
+		}
+
+
+		private string GetUserId()
+		{
+			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 		}
 	}
 }

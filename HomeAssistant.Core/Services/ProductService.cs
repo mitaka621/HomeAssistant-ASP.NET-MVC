@@ -4,16 +4,7 @@ using HomeAssistant.Core.Models;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Services
 {
@@ -28,60 +19,43 @@ namespace HomeAssistant.Core.Services
 
 		public async Task<IEnumerable<ProductViewModel>> GetProducts(bool available, int? categoryId)
 		{
+			var prodToReturn = _dbContext.Products
+				.AsNoTracking()
+				.Where(x => (categoryId ?? x.CategoryId) == x.CategoryId);
+
 			if (available)
 			{
-				return await _dbContext.Products
-					.Where(x => x.Count > 0 && ((categoryId ?? x.CategoryId) == x.CategoryId))
-					.Select(x => new ProductViewModel()
-					{
-						Id = x.Id,
-						Name = x.Name,
-						AddedOn = x.AddedOn,
-						ProductCategory = new CategoryViewModel()
-						{
-							Id = x.CategoryId,
-							Name = x.Category.Name,
-						},
-						Count = x.Count,
-						Weight = x.Weight,
-						User = x.User != null ? new UserDetailsViewModel()
-						{
-							Id = x.User.Id,
-							FirstName = x.User.FirstName,
-							LastName = x.User.LastName,
-							Username = x.User.UserName,
-							Email = x.User.Email,
-							CreatedOn = x.User.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
-						} : null
-					}).AsNoTracking()
-					.ToListAsync();
+				prodToReturn = prodToReturn.Where(x => x.Count > 0);
+			}
+			else
+			{
+				prodToReturn = prodToReturn.Where(x => x.Count == 0);
 			}
 
-			return await _dbContext.Products
-					.Where(x => x.Count == 0 && ((categoryId ?? x.CategoryId) == x.CategoryId))
-					.Select(x => new ProductViewModel()
-					{
-						Id = x.Id,
-						Name = x.Name,
-						AddedOn = x.AddedOn,
-						ProductCategory = new CategoryViewModel()
-						{
-							Id = x.CategoryId,
-							Name = x.Category.Name,
-						},
-						Count = x.Count,
-						Weight = x.Weight,
-						User = x.User != null ? new UserDetailsViewModel()
-						{
-							Id = x.User.Id,
-							FirstName = x.User.FirstName,
-							LastName = x.User.LastName,
-							Username = x.User.UserName,
-							Email = x.User.Email,
-							CreatedOn = x.User.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
-						} : null
-					}).AsNoTracking()
-					.ToListAsync();
+			return await prodToReturn.Select(x => new ProductViewModel()
+			{
+				Id = x.Id,
+				Name = x.Name,
+				AddedOn = x.AddedOn,
+				ProductCategory = new CategoryViewModel()
+				{
+					Id = x.CategoryId,
+					Name = x.Category.Name,
+				},
+				Count = x.Count,
+				Weight = x.Weight,
+				User = x.User != null ? new UserDetailsViewModel()
+				{
+					Id = x.User.Id,
+					FirstName = x.User.FirstName,
+					LastName = x.User.LastName,
+					Username = x.User.UserName,
+					Email = x.User.Email,
+					CreatedOn = x.User.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
+				} : null
+			})
+			.AsNoTracking()
+			.ToListAsync();
 		}
 
 
@@ -137,7 +111,9 @@ namespace HomeAssistant.Core.Services
 		public async Task<IEnumerable<ProductViewModel>> SearchProducts(string keyphrase)
 		{
 			var products = await _dbContext.Products
+				.AsNoTracking()
 				.Where(x => x.Name.Contains(keyphrase))
+				.Take(10)
 				.Select(x => new ProductViewModel()
 				{
 					Id = x.Id,
@@ -159,15 +135,14 @@ namespace HomeAssistant.Core.Services
 						Email = x.User.Email,
 						CreatedOn = x.User.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
 					} : null
-				}).AsNoTracking()
-					.ToListAsync();
+				}).ToListAsync();
 
 			return products;
 		}
 
 		public async Task<ProductFormViewModel> GetProduct(int id)
 		{
-			var product = await _dbContext.Products.Include(x=>x.Category)
+			var product = await _dbContext.Products.Include(x => x.Category)
 				.FirstOrDefaultAsync(x => x.Id == id);
 
 			if (product == null)
@@ -189,6 +164,58 @@ namespace HomeAssistant.Core.Services
 				Weight = product.Weight,
 
 			};
+		}
+
+		public async Task AddProduct(string userId, ProductFormViewModel product)
+		{
+			_dbContext.Products.Add(new Product()
+			{
+				Name = product.Name,
+				AddedOn = DateTime.Now,
+				CategoryId = product.SelectedCategoryId,
+				Count = product.Count,
+				Weight = product.Weight,
+				UserId = userId
+
+			});
+
+			await _dbContext.SaveChangesAsync();
+		}
+
+		public async Task DeleteProduct(int prodId)
+		{
+			var product = await _dbContext.Products
+				.FirstOrDefaultAsync(x => x.Id == prodId);
+
+			if (product == null)
+			{
+				throw new ArgumentNullException();
+			}
+
+			_dbContext.Products.Remove(product);
+
+			await _dbContext.SaveChangesAsync();
+
+		}
+
+		public async Task EditProduct(string userId, ProductFormViewModel productViewModel)
+		{
+			var product = await _dbContext.Products
+				.FirstOrDefaultAsync(x => x.Id == productViewModel.Id);
+
+			if (product == null)
+			{
+				throw new ArgumentNullException();
+			}
+
+			product.Name = productViewModel.Name;
+			product.Weight = productViewModel.Weight;
+			product.UserId = userId;
+			product.Count = productViewModel.Count;
+			product.AddedOn = DateTime.Now;
+			product.CategoryId = productViewModel.SelectedCategoryId;
+
+			await _dbContext.SaveChangesAsync();
 		}
 	}
 }

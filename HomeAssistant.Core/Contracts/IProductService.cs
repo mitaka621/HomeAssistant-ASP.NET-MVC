@@ -10,7 +10,7 @@ namespace HomeAssistant.Core.Contracts
 {
 	public interface IProductService
 	{
-		Task<IEnumerable<ProductViewModel>> GetProducts(bool available,int? categoryId);
+		Task<IEnumerable<ProductViewModel>> GetProducts(bool available, int? categoryId);
 
 		Task<IEnumerable<CategoryViewModel>> GetAllCategories();
 
@@ -22,5 +22,10 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<ProductFormViewModel> GetProduct(int id);
 
+		Task AddProduct(string userId, ProductFormViewModel productViewModel);
+
+		Task DeleteProduct(int prodId);
+
+		Task EditProduct(string userId, ProductFormViewModel productViewModel);
 	}
 }

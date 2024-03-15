@@ -4,6 +4,12 @@ function onInput(e) {
         .then(r =>
 		{
 			document.querySelector(".search-results").innerHTML = "";
+
+			if (r.length === 0 && e.value!=="") {
+				document.querySelector(".search-results")
+					.innerHTML = `<a class="btn btn-primary" href="/Fridge/addProduct?prodName=${e.value}">Add Product</a>`;
+			}
+
             r.forEach(product => {
 				document.querySelector(".search-results").innerHTML +=
 				`<tr id="${product.id}" onClick="ViewProductDetails(this)">

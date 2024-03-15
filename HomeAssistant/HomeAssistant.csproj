@@ -29,4 +29,11 @@
     <Folder Include="wwwroot\svg\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Fridge\AddProduct.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

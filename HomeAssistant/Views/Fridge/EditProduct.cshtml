@@ -1,7 +1,37 @@
-﻿@using HomeAssistant.Core.Models
+﻿@using HomeAssistant.Core.Constants
+@using HomeAssistant.Core.Models
 @model ProductFormViewModel
 
 <h1>Edit Product</h1>
+
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteModal">
+	Delete Product
+</button>
+
+<div class="modal fade" id="DeleteModal" tabindex="-1" aria-labelledby="DeleteModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="DeleteModalLabel">Are you sure you want to proceed?</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<h4>You are about to delete the following product:</h4>
+				<p><strong>Product Name:</strong> @Model.Name</p>
+				<p><strong>Category:</strong> @Model.ProductCategory.Name</p>
+				<p><strong>Quantity:</strong> @Model.Count</p>
+				<p><strong>Product Weight (g):</strong> @Model.Weight</p>
+				<p><strong>Added on:</strong> @Model.AddedOn.ToString(DataValidationConstants.DateTimeFormat)</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<form method="post">
+					<button class="btn btn-danger" asp-controller="Fridge" asp-action="DeleteProduct" asp-route-productId="@Model.Id">Delete</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 
 <form method="post">
 	<div class="mb-3">
@@ -35,7 +65,7 @@
 		</select>
 		<span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
 	</div>
-	<button type="submit" class="btn btn-primary">Submit</button>
+	<button type="submit" class="btn btn-primary">Edit Product</button>
 </form>
 
 
