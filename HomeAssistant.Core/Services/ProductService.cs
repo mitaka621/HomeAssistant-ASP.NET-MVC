@@ -21,7 +21,8 @@ namespace HomeAssistant.Core.Services
 		public async Task<IEnumerable<ProductViewModel>> GetProducts(
 			bool available,
 			int? categoryId,
-			OrderBy orderBy)
+			OrderBy orderBy,
+			int page)
 		{
 			var prodToReturn = _dbContext.Products
 				.AsNoTracking()
@@ -39,8 +40,8 @@ namespace HomeAssistant.Core.Services
 			switch (orderBy)
 			{
 				case OrderBy.Recent:
-					prodToReturn = prodToReturn.OrderByDescending(x=>x.AddedOn)
-						.ThenBy(x=>x.Id);
+					prodToReturn = prodToReturn.OrderByDescending(x => x.AddedOn)
+						.ThenBy(x => x.Id);
 					break;
 				case OrderBy.Oldest:
 					prodToReturn = prodToReturn.OrderBy(x => x.AddedOn)
@@ -52,29 +53,38 @@ namespace HomeAssistant.Core.Services
 					break;
 			}
 
-			return await prodToReturn.Select(x => new ProductViewModel()
-			{
-				Id = x.Id,
-				Name = x.Name,
-				AddedOn = x.AddedOn,
-				ProductCategory = new CategoryViewModel()
+			return await prodToReturn
+				.Skip((page - 1) * 10)
+				.Take(10)
+				.Select(x => new ProductViewModel()
 				{
-					Id = x.CategoryId,
-					Name = x.Category.Name,
-				},
-				Count = x.Count,
-				Weight = x.Weight,
-				User = x.User != null ? new UserDetailsViewModel()
-				{
-					Id = x.User.Id,
-					FirstName = x.User.FirstName,
-					LastName = x.User.LastName,
-					Username = x.User.UserName,
-					Email = x.User.Email,
-					CreatedOn = x.User.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
-				} : null
-			})
+					Id = x.Id,
+					Name = x.Name,
+					AddedOn = x.AddedOn,
+					ProductCategory = new CategoryViewModel()
+					{
+						Id = x.CategoryId,
+						Name = x.Category.Name,
+					},
+					Count = x.Count,
+					Weight = x.Weight,
+					User = x.User != null ? new UserDetailsViewModel()
+					{
+						Id = x.User.Id,
+						FirstName = x.User.FirstName,
+						LastName = x.User.LastName,
+						Username = x.User.UserName,
+						Email = x.User.Email,
+						CreatedOn = x.User.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
+					} : null
+				})
 			.ToListAsync();
+		}
+
+
+		public async Task<double> GetNumberPages()
+		{
+			return Math.Ceiling((await _dbContext.Products.CountAsync()) / (double)10);
 		}
 
 
@@ -236,5 +246,6 @@ namespace HomeAssistant.Core.Services
 
 			await _dbContext.SaveChangesAsync();
 		}
+
 	}
 }

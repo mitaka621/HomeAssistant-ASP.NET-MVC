@@ -24,12 +24,25 @@ namespace HomeAssistant.Controllers
 			string? ToastMessage = null,
 			bool isAvailable = true,
 			int? categoryId = null,
-			string orderBy="0"
+			string orderBy="0",
+			int page=1
 			)
 		{
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 			ViewBag.Available = isAvailable;
+			ViewBag.NumberPages = await _productService.GetNumberPages();
+
+            if (page<1)
+            {
+				page = 1;
+			}
+
+            if (page > (int)ViewBag.NumberPages&& ViewBag.NumberPages!=0)
+            {
+				page= (int)ViewBag.NumberPages;
+			}
+            ViewBag.CurrentPage = page;
 
 			var categories = await _productService.GetAllCategories();
 			ViewBag.Categories = categories;
@@ -48,7 +61,7 @@ namespace HomeAssistant.Controllers
 
 			ViewBag.OrderBy= parsedEnum;
 
-			return View(await _productService.GetProducts(isAvailable, categoryId, parsedEnum));
+			return View(await _productService.GetProducts(isAvailable, categoryId, parsedEnum,page));
 		}
 
 		[HttpPost]

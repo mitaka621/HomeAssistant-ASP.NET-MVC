@@ -80,58 +80,99 @@ else
 </div>
 <div class="main-container">
 	<div class="product-container">
-		@foreach (var product in Model)
+		<div>
+			@foreach (var product in Model)
+			{
+				<div class="product">
+					<div class="left">
+						<p class="product-name">@product.Name</p>
+						@{
+							var duration = DateTime.Now - product.AddedOn;
+
+							string convertedDuration = "Added ";
+							if (duration.TotalDays >= 1)
+							{
+								convertedDuration += Math.Round(duration.TotalDays) + (Math.Round(duration.TotalDays) == 1 ? " day" : " days") + " ago";
+							}
+							else if (duration.TotalHours >= 1)
+							{
+								convertedDuration += Math.Round(duration.TotalHours) + (Math.Round(duration.TotalHours) == 1 ? " hour" : " hours") + " ago";
+							}
+							else if (duration.TotalMinutes >= 1)
+							{
+								convertedDuration += Math.Round(duration.TotalMinutes) + (Math.Round(duration.TotalMinutes) == 1 ? " minute" : " minutes") + " ago";
+							}
+							else
+							{
+								convertedDuration += " less than a minute ago";
+							}
+							<p class="text-muted">@convertedDuration</p>
+						}
+
+						<figcaption class="blockquote-footer">
+							@product.ProductCategory.Name
+						</figcaption>
+					</div>
+					<div class="right">
+						<form method="post"
+							  asp-action="DecreaseProductQuantity"
+							  asp-route-productId="@product.Id">
+							<button class="btn">
+								<img src="~/svg/minus-circle.svg" />
+							</button>
+						</form>
+						<p class="product-count">@product.Count</p>
+						<form method="post"
+							  asp-action="IncreaseProductQuantity"
+							  asp-route-productId="@product.Id">
+							<button class="btn">
+								<img src="~/svg/plus-Circle.svg" />
+							</button>
+						</form>
+					</div>
+				</div>
+			}
+		</div>
+		@if (ViewBag.NumberPages != 0)
 		{
-			<div class="product">
-				<div class="left">
-					<p class="product-name">@product.Name</p>
-					@{
-						var duration = DateTime.Now - product.AddedOn;
-
-						string convertedDuration;
-						if (duration.TotalDays >= 1)
-						{
-							convertedDuration = Math.Round(duration.TotalDays) + (duration.TotalDays == 1 ? " day" : " days") + " ago";
-						}
-						else if (duration.TotalHours >= 1)
-						{
-							convertedDuration = Math.Round(duration.TotalHours) + (duration.TotalHours == 1 ? " hour" : " hours") + " ago";
-						}
-						else if (duration.TotalMinutes >= 1)
-						{
-							convertedDuration = Math.Round(duration.TotalMinutes) + (duration.TotalMinutes == 1 ? " minute" : " minutes") + " ago";
-						}
-						else
-						{
-							convertedDuration = "Less than a minute ago";
-						}
-						<p class="text-muted">@convertedDuration</p>
+			<nav aria-label="Page navigation example">
+				<ul class="pagination">
+					<li class="page-item">
+						<a class="page-link"
+						   asp-action="Index"
+						   asp-route-isAvailable="@ViewBag.Available"
+						   asp-route-categoryId="@ViewBag.CategoryId"
+						   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
+						   asp-route-page="@(((int)ViewBag.CurrentPage)-1)">
+							Previous
+						</a>
+					</li>
+					@for (int i = 1; i <= ViewBag.NumberPages; i++)
+					{
+						<li class="page-item">
+							<a class="page-link"
+							   asp-action="Index"
+							   asp-route-isAvailable="@ViewBag.Available"
+							   asp-route-categoryId="@ViewBag.CategoryId"
+							   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
+							   asp-route-page="@i">
+								@i
+							</a>
+						</li>
 					}
-
-					<figcaption class="blockquote-footer">
-						@product.ProductCategory.Name
-					</figcaption>
-				</div>
-				<div class="right">
-					<form method="post"
-						  asp-action="DecreaseProductQuantity"
-						  asp-route-productId="@product.Id">
-						<button class="btn">
-							<img src="~/svg/minus-circle.svg" />
-						</button>
-					</form>
-					<p class="product-count">@product.Count</p>
-					<form method="post"
-						  asp-action="IncreaseProductQuantity"
-						  asp-route-productId="@product.Id">
-						<button class="btn">
-							<img src="~/svg/plus-Circle.svg" />
-						</button>
-					</form>
-				</div>
-			</div>
+					<li class="page-item">
+						<a class="page-link"
+						   asp-action="Index"
+						   asp-route-isAvailable="@ViewBag.Available"
+						   asp-route-categoryId="@ViewBag.CategoryId"
+						   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
+						   asp-route-page="@(((int)ViewBag.CurrentPage)+1)">
+							Next
+						</a>
+					</li>
+				</ul>
+			</nav>
 		}
-
 	</div>
 	<div class="input-form">
 		<h2>Add/Edit Products</h2>
@@ -143,6 +184,7 @@ else
 			</tbody>
 		</table>
 	</div>
+
 </div>
 
 @section Scripts {
