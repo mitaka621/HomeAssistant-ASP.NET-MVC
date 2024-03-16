@@ -18,7 +18,7 @@ namespace HomeAssistant.Core.Services
 			_dbContext = dbContext;
 		}
 
-		public async Task<IEnumerable<ProductViewModel>> GetProducts(
+		public async Task<FridgeViewModel> GetProducts(
 			bool available,
 			int? categoryId,
 			OrderBy orderBy,
@@ -52,10 +52,24 @@ namespace HomeAssistant.Core.Services
 						.ThenBy(x => x.Id);
 					break;
 			}
+			FridgeViewModel finalModel = new();
 
-			return await prodToReturn
+			finalModel.PageCount = (int)Math.Ceiling((await prodToReturn.CountAsync()) / (double)10);
+
+			if (page < 1)
+			{
+				page = 1;
+			}
+			else if (page > finalModel.PageCount && finalModel.PageCount != 0)
+			{
+				page = finalModel.PageCount;
+			}
+
+			prodToReturn = prodToReturn
 				.Skip((page - 1) * 10)
-				.Take(10)
+				.Take(10);
+
+			finalModel.Products = await prodToReturn
 				.Select(x => new ProductViewModel()
 				{
 					Id = x.Id,
@@ -79,12 +93,8 @@ namespace HomeAssistant.Core.Services
 					} : null
 				})
 			.ToListAsync();
-		}
 
-
-		public async Task<double> GetNumberPages()
-		{
-			return Math.Ceiling((await _dbContext.Products.CountAsync()) / (double)10);
+			return finalModel;
 		}
 
 

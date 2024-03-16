@@ -28,20 +28,22 @@ namespace HomeAssistant.Controllers
 			int page=1
 			)
 		{
+			OrderBy parsedEnum;
+
+			if (!Enum.TryParse<OrderBy>(orderBy, true, out parsedEnum))
+			{
+				parsedEnum = OrderBy.Recent;
+			}
+			
+			var fridgeViewModel = await _productService.GetProducts(isAvailable, categoryId, parsedEnum, page);
+
+			ViewBag.OrderBy = parsedEnum;
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 			ViewBag.Available = isAvailable;
-			ViewBag.NumberPages = await _productService.GetNumberPages();
 
-            if (page<1)
-            {
-				page = 1;
-			}
+			
 
-            if (page > (int)ViewBag.NumberPages&& ViewBag.NumberPages!=0)
-            {
-				page= (int)ViewBag.NumberPages;
-			}
             ViewBag.CurrentPage = page;
 
 			var categories = await _productService.GetAllCategories();
@@ -50,18 +52,8 @@ namespace HomeAssistant.Controllers
 			if (categories.Any(x => x.Id == categoryId))
 			{
 				ViewBag.CategoryId = categoryId;
-			}
-
-			OrderBy parsedEnum;
-
-			if (!Enum.TryParse<OrderBy>(orderBy, true, out parsedEnum))
-			{
-				parsedEnum = OrderBy.Recent;
-			}
-
-			ViewBag.OrderBy= parsedEnum;
-
-			return View(await _productService.GetProducts(isAvailable, categoryId, parsedEnum,page));
+			}		
+			return View(fridgeViewModel);
 		}
 
 		[HttpPost]

@@ -1,10 +1,22 @@
 ﻿@using HomeAssistant.Core.Enums
 @using HomeAssistant.Core.Models
-@model IEnumerable<ProductViewModel>
+@model FridgeViewModel
 
 <link rel="stylesheet" href="~/css/fridge.css" asp-append-version="true" />
 
 <partial name="/Views/Shared/_ToastPopupPartial.cshtml" />
+
+<div class="input-form">
+	<h2>Add/Edit Products</h2>
+	<div class="form-outline" data-mdb-input-init>
+		<input onkeyup="onInput(this)" type="search" id="form1" class="form-control" placeholder="Add/Search products by name" aria-label="Search" />
+	</div>
+	<table class="table table-striped table-hover table-info">
+		<tbody class="search-results">
+		</tbody>
+	</table>
+</div>
+
 
 @if (ViewBag.Available)
 {
@@ -29,63 +41,70 @@ else
 			Unavailable
 		</a>
 	</div>
-	<div>
-		<div class="dropdown">
-			<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-				@if (ViewBag.CategoryId != null)
-				{
-					@(((IEnumerable<CategoryViewModel>)ViewBag.Categories).First(x => x.Id == ViewBag.CategoryId).Name)
-				}
-				else
-				{
-					@("All Categories")
-				}
-			</button>
-			<ul class="dropdown-menu">
-				<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available" asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">All Categories</a></li>
-				@foreach (var category in (IEnumerable<CategoryViewModel>)ViewBag.Categories)
-				{
-					<li>
-						<a class="dropdown-item"
-						   asp-action="Index"
-						   asp-route-isAvailable="@ViewBag.Available"
-						   asp-route-categoryId="@category.Id"
-						   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">
-							@category.Name
-						</a>
-					</li>
-				}
-			</ul>
-		</div>
-		<div class="dropdown">
-			<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-				Order By: @(((OrderBy)ViewBag.OrderBy).ToString())
-			</button>
-			<ul class="dropdown-menu">
-				@foreach (var option in Enum.GetValues(typeof(OrderBy)))
-				{
-					<li>
-						<a class="dropdown-item"
-						   asp-action="Index"
-						   asp-route-isAvailable="@ViewBag.Available"
-						   asp-route-categoryId="@ViewBag.CategoryId"
-						   asp-route-orderBy="@option">
-							@option
-						</a>
-					</li>
-				}
-			</ul>
-		</div>
-	</div>
+
 </div>
 <div class="main-container">
 	<div class="product-container">
 		<div>
-			@foreach (var product in Model)
+			<div class="dropdown">
+				<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					@if (ViewBag.CategoryId != null)
+					{
+						@(((IEnumerable<CategoryViewModel>)ViewBag.Categories).First(x => x.Id == ViewBag.CategoryId).Name)
+					}
+					else
+					{
+						@("All Categories")
+					}
+				</button>
+				<ul class="dropdown-menu">
+					<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available" asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">All Categories</a></li>
+					@foreach (var category in (IEnumerable<CategoryViewModel>)ViewBag.Categories)
+					{
+						<li>
+							<a class="dropdown-item"
+							   asp-action="Index"
+							   asp-route-isAvailable="@ViewBag.Available"
+							   asp-route-categoryId="@category.Id"
+							   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">
+								@category.Name
+							</a>
+						</li>
+					}
+				</ul>
+			</div>
+			<div class="dropdown">
+				<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					Order By: @(((OrderBy)ViewBag.OrderBy).ToString())
+				</button>
+				<ul class="dropdown-menu">
+					@foreach (var option in Enum.GetValues(typeof(OrderBy)))
+					{
+						<li>
+							<a class="dropdown-item"
+							   asp-action="Index"
+							   asp-route-isAvailable="@ViewBag.Available"
+							   asp-route-categoryId="@ViewBag.CategoryId"
+							   asp-route-orderBy="@option">
+								@option
+							</a>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+		<div>
+			@foreach (var product in Model.Products)
 			{
 				<div class="product">
 					<div class="left">
-						<p class="product-name">@product.Name</p>
+						<p class="product-name">
+							@product.Name
+							@if (product.Weight == null)
+								@("-- g")
+							else
+								@(product.Weight +" g")
+						</p>
 						@{
 							var duration = DateTime.Now - product.AddedOn;
 
@@ -133,7 +152,7 @@ else
 				</div>
 			}
 		</div>
-		@if (ViewBag.NumberPages != 0)
+		@if (Model.PageCount != 0)
 		{
 			<nav aria-label="Page navigation example">
 				<ul class="pagination">
@@ -147,7 +166,7 @@ else
 							Previous
 						</a>
 					</li>
-					@for (int i = 1; i <= ViewBag.NumberPages; i++)
+					@for (int i = 1; i <= Model.PageCount; i++)
 					{
 						<li class="page-item">
 							<a class="page-link"
@@ -174,17 +193,7 @@ else
 			</nav>
 		}
 	</div>
-	<div class="input-form">
-		<h2>Add/Edit Products</h2>
-		<div class="form-outline" data-mdb-input-init>
-			<input onkeyup="onInput(this)" type="search" id="form1" class="form-control" placeholder="Add/Search products by name" aria-label="Search" />
-		</div>
-		<table class="table table-striped table-hover table-info">
-			<tbody class="search-results">
-			</tbody>
-		</table>
-	</div>
-
+	
 </div>
 
 @section Scripts {

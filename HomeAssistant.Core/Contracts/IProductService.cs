@@ -11,9 +11,7 @@ namespace HomeAssistant.Core.Contracts
 {
 	public interface IProductService
 	{
-		Task<IEnumerable<ProductViewModel>> GetProducts(bool available, int? categoryId,OrderBy orderBy,int page);
-
-		Task<double> GetNumberPages();
+		Task<FridgeViewModel> GetProducts(bool available, int? categoryId,OrderBy orderBy,int page);
 
 		Task<IEnumerable<CategoryViewModel>> GetAllCategories();
 

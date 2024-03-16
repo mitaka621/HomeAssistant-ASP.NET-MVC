@@ -1,19 +1,21 @@
 ﻿.product-container {
     background-color: #9edc2a;
-    width: fit-content;
+    width: 60em;
     height: fit-content;
-    padding: 5em;
+    padding: 2em;
     display: flex;
     gap:2em;
     flex-direction: column;
     justify-content: space-between;
+
 }
 
-.product-container > div {
-    display: flex;
-    flex-direction:column;
-    gap:0.5em
-}
+    .product-container > div {
+        display: flex;
+        gap: 0.5em;
+        flex-wrap: wrap;
+        justify-content:center
+    }
 
 .product {
     border: 1px solid black;
@@ -56,4 +58,24 @@ div.product > div.right {
 
 tr:hover {
     cursor: pointer;
+}
+
+div.input-form{
+   width:30em;
+   margin: 1em auto;
+   text-align:center;
+}
+
+table.table-striped {
+    position: absolute;
+    z-index: 3;
+    width: 30em;
+}
+input {
+    text-align: center;
+}
+.pagination{
+    display:flex;
+    justify-content:center;
+
 }
