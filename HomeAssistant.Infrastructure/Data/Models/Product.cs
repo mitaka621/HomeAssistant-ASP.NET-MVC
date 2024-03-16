@@ -42,5 +42,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
         public string? UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public HomeAssistantUser? User { get; set; }
+
+        public IEnumerable<ShoppingListProduct> ProductShoppingLists { get; set; } = new List<ShoppingListProduct>();
     }
 }

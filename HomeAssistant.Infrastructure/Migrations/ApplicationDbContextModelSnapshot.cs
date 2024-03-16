@@ -37,7 +37,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasComment("Product category");
 
@@ -223,7 +223,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
 
                     b.HasComment("Notification");
                 });
@@ -242,7 +242,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasIndex("NotificationId");
 
-                    b.ToTable("NotificationsUsers");
+                    b.ToTable("NotificationsUsers", (string)null);
 
                     b.HasComment("Which user has seen what notification");
                 });
@@ -288,7 +288,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasComment("Product");
 

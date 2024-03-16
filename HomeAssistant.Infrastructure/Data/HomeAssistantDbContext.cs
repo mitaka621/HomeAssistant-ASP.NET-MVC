@@ -15,9 +15,13 @@ namespace HomeAssistant.Infrastructure.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<NotificationUser> NotificationsUsers { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ShoppingList> ShoppingLists { get; set; }
+        public DbSet<ShoppingListProduct> ShoppingListsProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<ShoppingListProduct>()
+                .HasKey(x => new { x.ShoppingListId, x.ProductId });
 
             builder.Entity<NotificationUser>()
                 .HasKey(x => new { x.UserId, x.NotificationId });
