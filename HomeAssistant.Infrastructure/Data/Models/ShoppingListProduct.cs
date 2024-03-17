@@ -16,5 +16,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
         public int ShoppingListId { get; set; }
         [ForeignKey(nameof(ShoppingListId))]
         public ShoppingList ShoppingList { get; set; } = null!;
+
+        public bool IsBought { get; set; }
     }
 }
