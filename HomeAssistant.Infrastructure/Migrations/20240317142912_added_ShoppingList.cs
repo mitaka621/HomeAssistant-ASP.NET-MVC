@@ -4,7 +4,7 @@
 
 namespace HomeAssistant.Infrastructure.Migrations
 {
-    public partial class ShoppingList_and_ShoppingListProduct_added : Migration
+    public partial class added_ShoppingList : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,15 +12,13 @@ namespace HomeAssistant.Infrastructure.Migrations
                 name: "ShoppingLists",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsStarted = table.Column<bool>(type: "bit", nullable: false),
-                    IsFinished = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    IsFinished = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShoppingLists", x => x.Id);
+                    table.PrimaryKey("PK_ShoppingLists", x => x.UserId);
                     table.ForeignKey(
                         name: "FK_ShoppingLists_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -34,7 +32,7 @@ namespace HomeAssistant.Infrastructure.Migrations
                 columns: table => new
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    ShoppingListId = table.Column<int>(type: "int", nullable: false),
+                    ShoppingListId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsBought = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -50,7 +48,7 @@ namespace HomeAssistant.Infrastructure.Migrations
                         name: "FK_ShoppingListsProducts_ShoppingLists_ShoppingListId",
                         column: x => x.ShoppingListId,
                         principalTable: "ShoppingLists",
-                        principalColumn: "Id",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -59,12 +57,7 @@ namespace HomeAssistant.Infrastructure.Migrations
                 keyColumn: "Id",
                 keyValue: "e2246145-9dd8-4902-ae41-68096b5ca738",
                 columns: new[] { "PasswordHash", "SecurityStamp" },
-                values: new object[] { "AQAAAAEAACcQAAAAED9YMtUvLxkmRbOV+i1kCDJHEFPKtXPxTgrNVN3rxS/b/PTBDrcl7bGN9/D/3OWhZA==", "c7971149-21a1-43a7-b077-0305110e0f93" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShoppingLists_UserId",
-                table: "ShoppingLists",
-                column: "UserId");
+                values: new object[] { "AQAAAAEAACcQAAAAEAF4Kai2uL14VOWrUZxyqHo5HEW76gDK2R0g3jB6kFNAOQuSORP4PsyXqNEw4u8ngw==", "280936f2-438d-4417-a2d5-836006b10247" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingListsProducts_ProductId",

@@ -11,16 +11,13 @@ namespace HomeAssistant.Infrastructure.Data.Models
 	public class ShoppingList
 	{
 		[Key]
-        public int Id { get; set; }
+		public string UserId { get; set; } = string.Empty;
+		[ForeignKey(nameof(UserId))]
+		public HomeAssistantUser User { get; set; } = null!;
 
-        public bool IsStarted { get; set; }
+		public bool IsStarted { get; set; }
 
         public bool IsFinished { get; set; }
-
-        [Required]
-        public string UserId { get; set; }=string.Empty;
-        [ForeignKey(nameof(UserId))]
-        public HomeAssistantUser User { get; set; } = null!;
 
         public IEnumerable<ShoppingListProduct> ShoppingListProducts { get; set; } = new List<ShoppingListProduct>();
     }

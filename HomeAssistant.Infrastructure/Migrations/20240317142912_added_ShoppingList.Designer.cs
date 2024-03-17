@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    [Migration("20240317104258_ShoppingList_and_ShoppingListProduct_added")]
-    partial class ShoppingList_and_ShoppingListProduct_added
+    [Migration("20240317142912_added_ShoppingList")]
+    partial class added_ShoppingList
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -191,9 +191,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                             Longitude = 0.0,
                             NormalizedEmail = "admin",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAED9YMtUvLxkmRbOV+i1kCDJHEFPKtXPxTgrNVN3rxS/b/PTBDrcl7bGN9/D/3OWhZA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAF4Kai2uL14VOWrUZxyqHo5HEW76gDK2R0g3jB6kFNAOQuSORP4PsyXqNEw4u8ngw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c7971149-21a1-43a7-b077-0305110e0f93",
+                            SecurityStamp = "280936f2-438d-4417-a2d5-836006b10247",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -315,11 +315,8 @@ namespace HomeAssistant.Infrastructure.Migrations
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingList", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
@@ -327,21 +324,15 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.Property<bool>("IsStarted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
+                    b.HasKey("UserId");
 
                     b.ToTable("ShoppingLists");
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingListProduct", b =>
                 {
-                    b.Property<int>("ShoppingListId")
-                        .HasColumnType("int");
+                    b.Property<string>("ShoppingListId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -560,8 +551,8 @@ namespace HomeAssistant.Infrastructure.Migrations
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingList", b =>
                 {
                     b.HasOne("HomeAssistant.Infrastructure.Data.Models.HomeAssistantUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("ShoppingList")
+                        .HasForeignKey("HomeAssistant.Infrastructure.Data.Models.ShoppingList", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -635,6 +626,12 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.HomeAssistantUser", b =>
+                {
+                    b.Navigation("ShoppingList")
                         .IsRequired();
                 });
 

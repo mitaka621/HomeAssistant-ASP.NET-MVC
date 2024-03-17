@@ -37,5 +37,6 @@ namespace HomeAssistant.Infrastructure.Data.Models
 		[DefaultValue(23.319941)]
 		public double Longitude { get; set; }
 
-	}
+        public ShoppingList ShoppingList { get; set; } = null!;
+    }
 }

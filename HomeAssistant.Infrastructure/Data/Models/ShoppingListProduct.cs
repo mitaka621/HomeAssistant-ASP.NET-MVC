@@ -13,7 +13,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
         [ForeignKey(nameof(ProductId))]
         public Product Product { get; set; } = null!;
 
-        public int ShoppingListId { get; set; }
+        public string ShoppingListId { get; set; }=string.Empty;
         [ForeignKey(nameof(ShoppingListId))]
         public ShoppingList ShoppingList { get; set; } = null!;
 
