@@ -1,5 +1,7 @@
 ﻿using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Models;
+using HomeAssistant.Core.Models.Fridge;
+using HomeAssistant.Core.Models.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Contracts
 {
-	public interface IProductService
+    public interface IProductService
 	{
 		Task<FridgeViewModel> GetProducts(bool available, int? categoryId,OrderBy orderBy,int page);
 

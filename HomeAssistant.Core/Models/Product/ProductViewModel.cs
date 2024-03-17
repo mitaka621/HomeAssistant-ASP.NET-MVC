@@ -7,10 +7,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HomeAssistant.Core.Models.Product;
 
 namespace HomeAssistant.Core.Models
 {
-	public class ProductViewModel
+    public class ProductViewModel
 	{
 		public int Id { get; set; }
 

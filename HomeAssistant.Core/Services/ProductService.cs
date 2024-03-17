@@ -2,6 +2,8 @@
 using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Models;
+using HomeAssistant.Core.Models.Fridge;
+using HomeAssistant.Core.Models.Product;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +11,7 @@ using System.Data;
 
 namespace HomeAssistant.Core.Services
 {
-	public class ProductService : IProductService
+    public class ProductService : IProductService
 	{
 		private readonly HomeAssistantDbContext _dbContext;
 

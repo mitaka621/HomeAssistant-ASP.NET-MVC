@@ -1,13 +1,13 @@
 ﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Enums;
-using HomeAssistant.Core.Models;
+using HomeAssistant.Core.Models.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace HomeAssistant.Controllers
 {
-	[Authorize(Roles = "StandardUser")]
+    [Authorize(Roles = "StandardUser")]
 	public class FridgeController : Controller
 	{
 		private readonly IProductService _productService;
@@ -137,7 +137,11 @@ namespace HomeAssistant.Controllers
 		[HttpPost]
 		public async Task<IActionResult> EditProduct(ProductFormViewModel product)
 		{
-			try
+            if (!ModelState.IsValid)
+            {
+				return View(product);
+			}
+            try
 			{
 				await _productService.EditProduct(GetUserId(), product);
 			}
@@ -170,6 +174,11 @@ namespace HomeAssistant.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddProduct(ProductFormViewModel product)
 		{
+			if (!ModelState.IsValid)
+			{
+				return View(product);
+			}
+
 			await _productService.AddProduct(GetUserId(), product);
 
 			return RedirectToAction(nameof(Index), new

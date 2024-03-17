@@ -1,6 +1,7 @@
 ﻿using HomeAssistant.Core.Constants;
 using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Models;
+using HomeAssistant.Core.Models.User;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using System.Data;
 
 namespace HomeAssistant.Core.Services
 {
-	public class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly UserManager<HomeAssistantUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;

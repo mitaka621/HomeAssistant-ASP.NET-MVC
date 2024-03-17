@@ -38,7 +38,6 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
-		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> ApproveById(string Id)
 		{
 			if (Id == GetUserId())

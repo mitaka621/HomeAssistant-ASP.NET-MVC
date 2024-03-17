@@ -1,5 +1,6 @@
 ﻿@using HomeAssistant.Core.Enums
-@using HomeAssistant.Core.Models
+@using HomeAssistant.Core.Models.Fridge
+@using HomeAssistant.Core.Models.Product
 @model FridgeViewModel
 
 <link rel="stylesheet" href="~/css/fridge.css" asp-append-version="true" />
@@ -31,13 +32,13 @@ else
 		<a asp-route-isAvailable="true"
 		   asp-route-categoryId="@ViewBag.CategoryId"
 		   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
-		   class="btn @(ViewBag.Available ? "btn-info" : "btn-outline-info")">
+		   class="btn @(ViewBag.Available ? "btn-success" : "btn-outline-success")">
 			Available
 		</a>
 		<a asp-route-isAvailable="false"
 		   asp-route-categoryId="@ViewBag.CategoryId"
 		   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
-		   class="btn @(ViewBag.Available ?"btn-outline-info" : "btn-info" )">
+		   class="btn @(ViewBag.Available ?"btn-outline-success" : "btn-success" )">
 			Unavailable
 		</a>
 	</div>
@@ -140,7 +141,7 @@ else
 								<img src="~/svg/minus-circle.svg" />
 							</button>
 						</form>
-						<p class="product-count">@product.Count</p>
+						<p class="product-count @(product.Count==0?"text-danger fw-bold":"")">@product.Count</p>
 						<form method="post"
 							  asp-action="IncreaseProductQuantity"
 							  asp-route-productId="@product.Id">

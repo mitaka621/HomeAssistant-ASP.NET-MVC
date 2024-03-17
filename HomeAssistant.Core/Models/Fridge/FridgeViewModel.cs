@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeAssistant.Core.Models
+namespace HomeAssistant.Core.Models.Fridge
 {
-	public class FridgeViewModel
-	{
+    public class FridgeViewModel
+    {
         public int PageCount { get; set; }
 
         public IEnumerable<ProductViewModel> Products { get; set; } = null!;

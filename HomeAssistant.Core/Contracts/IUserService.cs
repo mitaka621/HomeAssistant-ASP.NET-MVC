@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Models;
+using HomeAssistant.Core.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;

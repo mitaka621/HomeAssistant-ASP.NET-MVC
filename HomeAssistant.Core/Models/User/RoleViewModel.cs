@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeAssistant.Core.Models
+namespace HomeAssistant.Core.Models.User
 {
     public class RoleViewModel
     {

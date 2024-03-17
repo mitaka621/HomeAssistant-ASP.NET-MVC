@@ -3,6 +3,7 @@ using static HomeAssistant.Core.Constants.DataValidationConstants;
 using System.ComponentModel.DataAnnotations;
 using Amazon.Util.Internal;
 using Microsoft.AspNetCore.Http;
+using HomeAssistant.Core.Models.User;
 
 namespace HomeAssistant.Core.Models
 {
