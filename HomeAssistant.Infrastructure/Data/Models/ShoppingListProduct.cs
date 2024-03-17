@@ -18,5 +18,9 @@ namespace HomeAssistant.Infrastructure.Data.Models
         public ShoppingList ShoppingList { get; set; } = null!;
 
         public bool IsBought { get; set; }
+
+        public double? StorePrice { get; set; }
+
+        public int QuantityToBuy { get; set; }
     }
 }
