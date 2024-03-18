@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Contracts
 {
-    public interface IProductService
+	public interface IProductService
 	{
-		Task<FridgeViewModel> GetProducts(bool available, int? categoryId,OrderBy orderBy,int page);
+		Task<FridgeViewModel> GetProducts(bool available, int? categoryId, OrderBy orderBy, int page);
 
 		Task<IEnumerable<CategoryViewModel>> GetAllCategories();
 
@@ -25,10 +25,11 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<ProductFormViewModel> GetProduct(int id);
 
-		Task AddProduct(string userId, ProductFormViewModel productViewModel);
+		Task<int> AddProduct(string userId, ProductFormViewModel productViewModel);
 
 		Task DeleteProduct(int prodId);
 
 		Task EditProduct(string userId, ProductFormViewModel productViewModel);
+
 	}
 }

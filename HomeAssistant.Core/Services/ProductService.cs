@@ -207,9 +207,9 @@ namespace HomeAssistant.Core.Services
 			};
 		}
 
-		public async Task AddProduct(string userId, ProductFormViewModel product)
+		public async Task<int> AddProduct(string userId, ProductFormViewModel product)
 		{
-			_dbContext.Products.Add(new Product()
+			var p = new Product()
 			{
 				Name = product.Name,
 				AddedOn = DateTime.Now,
@@ -218,9 +218,12 @@ namespace HomeAssistant.Core.Services
 				Weight = product.Weight,
 				UserId = userId
 
-			});
+			};
+			_dbContext.Products.Add(p);
 
 			await _dbContext.SaveChangesAsync();
+
+			return p.Id;
 		}
 
 		public async Task DeleteProduct(int prodId)

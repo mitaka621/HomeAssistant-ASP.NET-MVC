@@ -52,3 +52,9 @@ table.table-striped {
 input{
     text-align:center;
 }
+
+.modal-input{
+   display:flex;
+   justify-content:center;
+   gap:2em;
+}

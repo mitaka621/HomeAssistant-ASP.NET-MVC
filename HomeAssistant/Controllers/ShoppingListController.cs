@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Models.Product;
 using HomeAssistant.Core.Models.ShoppingList;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -77,8 +78,46 @@ namespace HomeAssistant.Controllers
 			return RedirectToAction(nameof(ShoppingList));
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> NewProduct(ShoppingListProductViewModel product)
+		{
+			if (!ModelState.IsValid)
+			{
+				RedirectToAction(nameof(Index));
+			}
+			try
+			{
+				await _shoppingListService.AddNewProductToFridgeAndShoppingList(GetUserId(),product);
+			}
+			catch (ArgumentNullException)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+			catch (ArgumentException)
+			{
+				return RedirectToAction(nameof(Index));
+			}
 
-		private string GetUserId()
+			return RedirectToAction(nameof(ShoppingList));
+		}
+
+        [HttpPost]
+        public async Task<IActionResult> StartShopping()
+		{
+			try
+			{
+				await _shoppingListService.StartShopping(GetUserId());
+			}
+			catch (ArgumentNullException)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
+
+
+        private string GetUserId()
 		{
 			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 		}

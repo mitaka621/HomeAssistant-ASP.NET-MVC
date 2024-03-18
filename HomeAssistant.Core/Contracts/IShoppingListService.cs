@@ -1,4 +1,5 @@
-﻿using HomeAssistant.Core.Models.ShoppingList;
+﻿using HomeAssistant.Core.Models.Product;
+using HomeAssistant.Core.Models.ShoppingList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,9 @@ namespace HomeAssistant.Core.Contracts
 		public Task AddProductToShoppingList(string userId, ShoppingListProductViewModel product);
 
 		public Task DeleteProductFromShoppingList(string userId, int productId);
-    }
+
+		public Task AddNewProductToFridgeAndShoppingList(string userId, ShoppingListProductViewModel product);
+
+		public Task StartShopping(string userId);
+	}
 }

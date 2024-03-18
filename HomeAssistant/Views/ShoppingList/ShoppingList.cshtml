@@ -71,12 +71,14 @@
 				}
 			</tbody>
 		</table>
-		
+		<form method="post">
+			<button type="submit" class="btn btn-info" asp-controller="ShoppingList" asp-action="StartShopping">Start Shopping</button>
+		</form>
 	</div>
 </div>
 
 
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="addExistingProductModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -88,11 +90,16 @@
 					<input class="form-control" type="hidden" name="Id" id="productId" />
 					<label for="productName">Product Name</label>
 					<input class="form-control" disabled type="text" name="Name" id="productName" />
-					<label for="price">Price</label>
-					<input class="form-control" type="number" name="Price" id="price" placeholder="Price" min="0" step="any" value="0" autocomplete="off" />
-					<label for="quantity">Number of products</label>
-					<input class="form-control" type="number" name="QuantityToBuy" id="quantity" placeholder="Quantity" min="1" step="1" required value="1" autocomplete="off" />
-
+					<div class="modal-input">
+						<div>
+							<label for="quantity">Number of products</label>
+							<input class="form-control" type="number" name="QuantityToBuy" id="quantity" placeholder="Quantity" min="1" step="1" required value="1" autocomplete="off" />
+						</div>
+						<div>
+							<label for="price">Price</label>
+							<input class="form-control" type="number" name="Price" id="price" placeholder="Price" min="0" step="any" value="0" autocomplete="off" />
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -102,6 +109,46 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="addNonExistentProductModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="staticBackdropLabel">Add Product to Shopping List</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form method="post" asp-controller="ShoppingList" asp-action="NewProduct">
+				<div class="modal-body">
+					<input class="form-control" type="hidden" name="Id" id="productId" value="-1" />
+					<label for="productName">Product Name</label>
+					<input class="form-control" type="text" name="Name" id="productNametoAdd" />
+					<select name="CategoryName" class="form-control" aria-required="true">
+						@foreach (var category in Model.AllCategories)
+						{
+							<option value="@category.Name">@category.Name</option>
+						}
+					</select>
+					<div class="modal-input">
+						<div>
+							<label for="quantity">Number of products to buy</label>
+							<input class="form-control" type="number" name="QuantityToBuy" id="quantity" placeholder="Quantity" min="1" step="1" required value="1" autocomplete="off" />
+						</div>
+						<div>
+							<label for="price">Price</label>
+							<input class="form-control" type="number" name="Price" id="price" placeholder="Price" min="0" step="any" value="0" autocomplete="off" />
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-primary">Add Product</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
 
 
 @section Scripts {

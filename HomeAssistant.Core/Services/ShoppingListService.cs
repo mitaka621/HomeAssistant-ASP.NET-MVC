@@ -1,6 +1,8 @@
-﻿using HomeAssistant.Core.Contracts;
+﻿using Amazon.Runtime.Internal;
+using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Models;
+using HomeAssistant.Core.Models.Product;
 using HomeAssistant.Core.Models.ShoppingList;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
@@ -62,6 +64,7 @@ namespace HomeAssistant.Core.Services
 				return new ShoppingListViewModel
 				{
 					OutOfStockProducts = (await _productService.GetProducts(false, null, OrderBy.Oldest, 0)).Products,
+					AllCategories = await _productService.GetAllCategories()
 				};
 			}
 
@@ -81,7 +84,8 @@ namespace HomeAssistant.Core.Services
 			{
 				OutOfStockProducts = (await _productService.GetProducts(false, null, OrderBy.Oldest, 0))
 					.Products.Where(x=>!products.Any(y=>y.Id==x.Id)),
-				Products = products
+				Products = products,
+				AllCategories = await _productService.GetAllCategories()
 			};
 		}
 
@@ -146,5 +150,40 @@ namespace HomeAssistant.Core.Services
 
 			await _dbcontext.SaveChangesAsync();
         }
+
+		public async Task AddNewProductToFridgeAndShoppingList(string userId, ShoppingListProductViewModel product)
+		{
+			var category = (await _productService.GetAllCategories()).FirstOrDefault(x => x.Name == product.CategoryName);
+
+            if (category==null)
+            {
+				throw new ArgumentNullException();
+            }
+
+            var prodId=await _productService.AddProduct(userId, new ProductFormViewModel
+			{
+				Name = product.Name,
+				SelectedCategoryId = category.Id,
+				Count = 0,
+				Weight = 0,
+			});
+
+			product.Id = prodId;
+
+			await AddProductToShoppingList(userId, product);
+		}
+
+		public async Task StartShopping(string userId)
+		{
+			var shoppingList = await _dbcontext.ShoppingLists.FirstOrDefaultAsync(x => x.UserId == userId);
+			if (shoppingList==null)
+			{
+				throw new ArgumentNullException();
+			}
+
+			shoppingList.IsStarted = true;
+
+			await _dbcontext.SaveChangesAsync();
+		}
 	}
 }

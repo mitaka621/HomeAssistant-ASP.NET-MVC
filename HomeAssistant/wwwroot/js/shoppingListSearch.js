@@ -5,8 +5,14 @@ function onInput(e) {
             document.querySelector(".search-results").innerHTML = "";
 
             if (r.length === 0 && e.value !== "") {
+
+                document.querySelector("#productNametoAdd").value = e.value;
+
                 document.querySelector(".search-results")
-                    .innerHTML = `<a class="btn btn-primary" href="/Fridge/addProduct?prodName=${e.value}">Add Product</a>`;
+                    .innerHTML =
+                    `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNonExistentProductModal">
+	                    Add New Product to Fridge and Shopping List
+                    </button>`;
 
                 return;
             }
@@ -40,7 +46,7 @@ function onInput(e) {
 }
 
 function OpenModal(e) {
-    var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'), {
+    var myModal = new bootstrap.Modal(document.getElementById('addExistingProductModal'), {
         keyboard: false
     })
 
@@ -58,6 +64,6 @@ function OpenModal(e) {
         document.querySelector("#quantity").value = 1;
     }
 
-    let m = document.querySelector("#staticBackdrop");
+    let m = document.querySelector("#addExistingProductModal");
     myModal.show(m);
 }
