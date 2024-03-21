@@ -13,8 +13,8 @@ namespace HomeAssistant.Core.Services
 {
     public class PFPService : IPFPService
     {
-        IMongoClient _client;
-        private IGridFSBucket _gridFS;
+        private readonly IMongoClient _client;
+        private readonly IGridFSBucket _gridFS;
 
         public PFPService(IMongoClient client)
         {
@@ -29,7 +29,7 @@ namespace HomeAssistant.Core.Services
         {
 
             var existingImageFilter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
-            var existingImage = await _gridFS.Find(existingImageFilter).FirstOrDefaultAsync();
+            var existingImage = (await _gridFS.FindAsync(existingImageFilter)).FirstOrDefault();
 
             if (existingImage != null)
             {
@@ -52,7 +52,7 @@ namespace HomeAssistant.Core.Services
         public async Task<byte[]> GetImage(string userId)
         {
             var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
-            var fileInfo = _gridFS.Find(filter).FirstOrDefault();
+            var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
 
             if (fileInfo != null)
             {
@@ -65,8 +65,8 @@ namespace HomeAssistant.Core.Services
             else
             {
                 filter = Builders<GridFSFileInfo>.Filter.Eq("filename", "defaultpfp");
-                fileInfo = _gridFS.Find(filter).FirstOrDefault();
-                using (var stream = new MemoryStream())
+                fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
+				using (var stream = new MemoryStream())
                 {
                     await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
                     return stream.ToArray();
