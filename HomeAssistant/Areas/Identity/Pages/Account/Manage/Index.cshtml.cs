@@ -94,18 +94,6 @@ namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 				FirstName = user.FirstName,
 				LastName = user.LastName
 			};
-
-			var imageData = await _pfpService.GetImage(user.Id);
-
-			if (imageData != null && imageData.Length > 0)
-			{
-
-				ViewData["ImageData"] = imageData;
-			}
-			else
-			{
-				ViewData["ImageData"] = null;
-			}
 		}
 
 		
