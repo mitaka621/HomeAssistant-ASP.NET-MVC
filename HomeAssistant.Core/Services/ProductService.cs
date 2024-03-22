@@ -24,7 +24,8 @@ namespace HomeAssistant.Core.Services
 			bool available,
 			int? categoryId,
 			OrderBy orderBy,
-			int page)
+			int page,
+			int productsOnPage=10)
 		{
 			var prodToReturn = _dbContext.Products
 				.AsNoTracking()
@@ -56,7 +57,7 @@ namespace HomeAssistant.Core.Services
 			}
 			FridgeViewModel finalModel = new();
 
-			finalModel.PageCount = (int)Math.Ceiling((await prodToReturn.CountAsync()) / (double)10);
+			finalModel.PageCount = (int)Math.Ceiling((await prodToReturn.CountAsync()) / (double)productsOnPage);
 
 			if (page < 1)
 			{
@@ -68,8 +69,8 @@ namespace HomeAssistant.Core.Services
 			}
 
 			prodToReturn = prodToReturn
-				.Skip((page - 1) * 10)
-				.Take(10);
+				.Skip((page - 1) * productsOnPage)
+				.Take(productsOnPage);
 
 			finalModel.Products = await prodToReturn
 				.Select(x => new ProductViewModel()
