@@ -207,7 +207,7 @@ namespace HomeAssistant.Controllers
 			return RedirectToAction(nameof(Index), new
 			{
 				ToastTitle = "Success",
-				ToastMessage = "Product added!"
+				ToastMessage = "Product deleted!"
 			});
 		}
 

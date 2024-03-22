@@ -18,24 +18,25 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpGet]
-        public async Task< IActionResult> Index()
+		public async Task<IActionResult> Index(int page = 1)
 		{
 			var userId = GetUserId();
 			if (!await _shoppingListService.IsStarted(userId))
 			{
-				return RedirectToAction(nameof(ShoppingList));
+				return RedirectToAction(nameof(ShoppingListCreation));
 			}
 
-            if (!await _shoppingListService.AnyUnboughtProducts(userId))
+            if (await _shoppingListService.IsFinished(userId))
             {
 				await _shoppingListService.DeleteShoppingList(userId);
-				return RedirectToAction(nameof(ShoppingList));
+				return RedirectToAction(nameof(ShoppingListCreation));
 			}
-            return View();
+
+            return View(await _shoppingListService.GetProductsByCategory(GetUserId(), page));
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> ShoppingList()
+		public async Task<IActionResult> ShoppingListCreation()
 		{
 			return View(await _shoppingListService.GetShoppingList(GetUserId()));
 		}
@@ -53,14 +54,14 @@ namespace HomeAssistant.Controllers
 			}
 			catch (ArgumentNullException)
 			{
-				return RedirectToAction(nameof(Index));
+				return BadRequest();
 			}
 			catch (ArgumentException)
 			{
-				return RedirectToAction(nameof(Index));
+				return BadRequest();
 			}
 
-			return RedirectToAction(nameof(ShoppingList));
+			return RedirectToAction(nameof(ShoppingListCreation));
 		}
 
 		[HttpPost]
@@ -72,10 +73,10 @@ namespace HomeAssistant.Controllers
 			}
 			catch (ArgumentNullException)
 			{
-				return RedirectToAction(nameof(Index));
+				return BadRequest();
 			}
 
-			return RedirectToAction(nameof(ShoppingList));
+			return RedirectToAction(nameof(Index));
 		}
 
 		[HttpPost]
@@ -91,14 +92,14 @@ namespace HomeAssistant.Controllers
 			}
 			catch (ArgumentNullException)
 			{
-				return RedirectToAction(nameof(Index));
+				return BadRequest();
 			}
 			catch (ArgumentException)
 			{
-				return RedirectToAction(nameof(Index));
+				return BadRequest();
 			}
 
-			return RedirectToAction(nameof(ShoppingList));
+			return RedirectToAction(nameof(ShoppingListCreation	));
 		}
 
         [HttpPost]
@@ -110,14 +111,74 @@ namespace HomeAssistant.Controllers
 			}
 			catch (ArgumentNullException)
 			{
-				return RedirectToAction(nameof(Index));
+				return BadRequest();
 			}
 
 			return RedirectToAction(nameof(Index));
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> CancelShopping()
+		{
+			try
+			{
+				await _shoppingListService.CancelShopping(GetUserId());
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
 
-        private string GetUserId()
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> BuyProduct(int prodId)
+		{
+			try
+			{
+				await _shoppingListService.MarkAsBought(GetUserId(), prodId);
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> RestoreProduct(int prodId)
+		{
+			try
+			{
+				await _shoppingListService.MarkAsUnbought(GetUserId(), prodId);
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> FinishShoppingList()
+		{
+			try
+			{
+				await _shoppingListService.SaveBoughtProducts(GetUserId());	
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+
+			return RedirectToAction("Index", "Fridge");
+		}
+
+
+		private string GetUserId()
 		{
 			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 		}
