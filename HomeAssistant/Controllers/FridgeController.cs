@@ -42,10 +42,6 @@ namespace HomeAssistant.Controllers
 			ViewBag.ToastMessage = ToastMessage;
 			ViewBag.Available = isAvailable;
 
-			
-
-            ViewBag.CurrentPage = page;
-
 			var categories = await _productService.GetAllCategories();
 			ViewBag.Categories = categories;
 

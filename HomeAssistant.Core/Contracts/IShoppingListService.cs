@@ -36,5 +36,7 @@ namespace HomeAssistant.Core.Contracts
 
 		public Task SaveBoughtProducts(string userId);
 
+		public Task<IEnumerable<ShoppingListViewModel>> GetTop20StartedShoppingListsExceptCurrentUser(string userId);
+
 	}
 }

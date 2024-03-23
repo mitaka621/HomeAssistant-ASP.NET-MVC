@@ -8,7 +8,7 @@ namespace HomeAssistant.Core.Models.ShoppingList
 {
 	public class ShoppingListProductsByCategoryViewModel
 	{
-		public Dictionary<string, List<ShoppingListProductViewModel>> UnboughtProductsByCategory { get; set; } = new();
+        public Dictionary<string, List<ShoppingListProductViewModel>> UnboughtProductsByCategory { get; set; } = new();
 
         public List<ShoppingListProductViewModel> BoughtProducts { get; set; } = new();
 

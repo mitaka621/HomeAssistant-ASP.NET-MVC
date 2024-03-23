@@ -10,6 +10,8 @@ namespace HomeAssistant.Core.Models.Fridge
     {
         public int PageCount { get; set; }
 
+        public int CurrentPage { get; set; }
+
         public IEnumerable<ProductViewModel> Products { get; set; } = null!;
     }
 }

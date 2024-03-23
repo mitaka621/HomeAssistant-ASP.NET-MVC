@@ -2,22 +2,61 @@
 @using HomeAssistant.Core.Models.ShoppingList
 @model ShoppingListViewModel
 
+@{
+	var shoppingLists = (IEnumerable<ShoppingListViewModel>)ViewBag.ActiveShoppingLists;
+	int count = 0;
+}
+
 <link rel="stylesheet" href="~/css/shoplist.css" asp-append-version="true" />
 
-<div class="main-container">
-	@if (Model.OutOfStockProducts.Any())
+<div class="main-container main-create">
+	@if (shoppingLists.Any())
 	{
-		<div class="recommended">
-
-			<div>
-				<h2>Products Out Of Stock</h2>
-				@foreach (var prod in Model.OutOfStockProducts)
-				{
-					<a class="btn product" onclick="OpenModal(this)" id="@prod.Id">
-						<p>@prod.Name <span>-@prod.ProductCategory.Name</span></p>
-						<p>Last added: @prod.AddedOn</p>
-					</a>
-				}
+		<div class="info-container info-container-left">
+			<div class="left">
+				<h2>Active Shopping Lists</h2>
+				<div class="bought-products-container">
+					@foreach (var list in shoppingLists)
+					{
+						<div class="accordion" id="m@(count)">
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="headingOne">
+									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s@(count)" aria-expanded="false" aria-controls="collapseOne">
+										<p class="total-products">Total Products: @list.Products.Count()</p>
+										<div class="small-info">
+											@if (list.ProfilePicture != null)
+											{
+												<p class="smallpfp">
+													<img src="data:image/jpeg;base64,@Convert.ToBase64String(list.ProfilePicture)" alt="Profile Picture" />
+												</p>
+											}
+											<p class="name">@list.FirstName @list.LastName</p>
+										</div>
+										<p>Progress:</p>
+										<div class="progress small-progress">
+											<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: @list.Progress%">@list.Progress%</div>
+										</div>
+										@if (list.StartedOn != null)
+										{
+											<p>Elapsed time: @((DateTime.Now - list.StartedOn).Value.ToString("hh\\:mm"))</p>
+										}
+									</button>
+								</h2>
+								<div id="s@(count++)" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#m@(count)">
+									<div class="accordion-body">
+										<h3>Products:</h3>
+										<ul>
+											@foreach (var item in list.Products)
+											{
+												<li>@item.Name</li>
+											}
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
 			</div>
 		</div>
 	}
@@ -45,12 +84,12 @@
 			</thead>
 			<tbody class="added-products">
 				@{
-					int count = 1;
+					count = 1;
 					foreach (var prod in Model.Products)
 					{
 						<tr id="@prod.Id">
 							<th scope="row">@(count++)</th>
-							<td>@prod.Name</td>
+							<td class="fs-5"><b>@prod.Name</b></td>
 							<td>@prod.CategoryName</td>
 							<td>@prod.QuantityToBuy</td>
 							<td>@($"{prod.Price:f2} lv")</td>
@@ -70,6 +109,26 @@
 			<button type="submit" class="btn btn-info" asp-controller="ShoppingList" asp-action="StartShopping">Start Shopping</button>
 		</form>
 	</div>
+	@if (Model.OutOfStockProducts.Any())
+	{
+		<div class="info-container">
+			<div class="right out-of-stock-right">
+				<h2>Products Out Of Stock</h2>
+				<div class="bought-products-container out-of-stock-container">
+					@foreach (var prod in Model.OutOfStockProducts)
+					{
+						<form>
+							<a class="btn out-of-stock" onclick="OpenModal(this)" id="@prod.Id" name="@prod.Name">
+								<p><b>Name:</b> <span class="fs-5">@prod.Name</span></p>
+								<p><b>Category:</b> @prod.ProductCategory.Name</p>
+								<p><b>Last added:</b> @(String.Format("{0:dd} days {0:hh} hours ago", (DateTime.Now - prod.AddedOn)))</p>
+							</a>
+						</form>
+					}
+				</div>
+			</div>
+		</div>
+	}
 </div>
 
 

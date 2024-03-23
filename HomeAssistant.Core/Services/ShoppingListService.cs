@@ -19,10 +19,12 @@ namespace HomeAssistant.Core.Services
 	{
 		private readonly HomeAssistantDbContext _dbcontext;
 		private readonly IProductService _productService;
-		public ShoppingListService(HomeAssistantDbContext dbContext, IProductService productService)
+		private readonly IPFPService _pfpService;
+		public ShoppingListService(HomeAssistantDbContext dbContext, IProductService productService, IPFPService pfpService)
 		{
 			_dbcontext = dbContext;
 			_productService = productService;
+			_pfpService = pfpService;
 		}
 
 		public async Task<bool> IsStarted(string userId)
@@ -191,6 +193,7 @@ namespace HomeAssistant.Core.Services
 			if (shoppingList.ShoppingListProducts.Any())
 			{
 				shoppingList.IsStarted = true;
+				shoppingList.StartedOn = DateTime.Now;
 				await _dbcontext.SaveChangesAsync();
 			}
 
@@ -239,7 +242,7 @@ namespace HomeAssistant.Core.Services
 
 			model.Progress = model.BoughtProducts.Count * 100 / totalProducts;
 
-			model.TotalPages = (int)Math.Ceiling(totalProducts / (double)prodOnPage);
+			model.TotalPages = (int)Math.Ceiling((totalProducts-model.BoughtProducts.Count) / (double)prodOnPage);
 
 			if (page < 1)
 			{
@@ -250,16 +253,19 @@ namespace HomeAssistant.Core.Services
 				page = model.TotalPages;
 			}
 
+			model.PageNumber = page;
+
 			var extractedProd = await products
 				.Include(x => x.Product)
 				.ThenInclude(x => x.Category)
 				.OrderBy(x => x.Product.Category.Id)
+				.Where(x => !x.IsBought)
 				.Skip((page - 1) * prodOnPage)
 				.Take(prodOnPage)
 				.ToListAsync();
 
 
-			foreach (var p in extractedProd.Where(x => !x.IsBought))
+			foreach (var p in extractedProd)
 			{
 				if (!model.UnboughtProductsByCategory.ContainsKey(p.Product.Category.Name))
 				{
@@ -332,6 +338,37 @@ namespace HomeAssistant.Core.Services
 
 			await _dbcontext.SaveChangesAsync();
 
+		}
+
+		public async Task<IEnumerable<ShoppingListViewModel>>
+			GetTop20StartedShoppingListsExceptCurrentUser(string userId)
+		{
+			var shoppingLists = await _dbcontext.ShoppingLists
+				.AsNoTracking()
+				.Take(20)
+				.Where(x => x.UserId != userId && x.IsStarted)
+				.Select(sl=>new ShoppingListViewModel()
+				{
+					UserId=sl.UserId,
+					StartedOn=sl.StartedOn,
+					FirstName = sl.User.FirstName,
+					LastName= sl.User.LastName,
+					Products = sl.ShoppingListProducts.Select(x => new ShoppingListProductViewModel()
+					{
+						Id = x.ProductId,
+						Name = x.Product.Name
+					}),
+					Progress = sl.ShoppingListProducts.Where(x => x.IsBought).Count() * 100 / sl.ShoppingListProducts.Count()
+					
+				}).ToListAsync();
+
+
+            for (int i = 0; i < shoppingLists.Count; i++)
+            {
+				shoppingLists[i].ProfilePicture = await _pfpService.GetImage(shoppingLists[i].UserId);
+			}
+
+			return shoppingLists;
 		}
 	}
 }

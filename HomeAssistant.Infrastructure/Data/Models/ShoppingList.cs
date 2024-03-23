@@ -17,6 +17,8 @@ namespace HomeAssistant.Infrastructure.Data.Models
 
 		public bool IsStarted { get; set; }
 
+        public DateTime? StartedOn { get; set; }
+
         public bool IsFinished { get; set; }
 
         public IEnumerable<ShoppingListProduct> ShoppingListProducts { get; set; } = new List<ShoppingListProduct>();

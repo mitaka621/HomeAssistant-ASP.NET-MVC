@@ -15,9 +15,9 @@
 		@if (profilePicture != null && profilePicture.Length > 0)
 		{
 			<li>
-				<div class="smallpfp">
+				<a class="smallpfp" asp-area="Identity" asp-page="/Account/Manage/Index">
 					<img src="data:image/jpeg;base64,@Convert.ToBase64String(profilePicture)" alt="Profile Picture" />
-				</div>
+				</a>
 			</li>
 		}
 

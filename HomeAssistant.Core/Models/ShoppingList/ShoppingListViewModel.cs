@@ -9,6 +9,18 @@ namespace HomeAssistant.Core.Models.ShoppingList
 {
     public class ShoppingListViewModel
     {
+        public string UserId { get; set; } = string.Empty;
+
+		public byte[]? ProfilePicture { get; set; }
+
+        public string FirstName { get; set; } = string.Empty;
+
+		public string LastName { get; set; } = string.Empty;
+
+        public DateTime? StartedOn { get; set; }
+
+		public int? Progress { get; set; }
+
         public IEnumerable<ShoppingListProductViewModel> Products { get; set; } = new List<ShoppingListProductViewModel>();
 
         public IEnumerable<ProductViewModel> OutOfStockProducts { get; set; } = new List<ProductViewModel>();

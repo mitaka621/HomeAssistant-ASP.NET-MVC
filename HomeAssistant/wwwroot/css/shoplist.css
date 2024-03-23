@@ -7,14 +7,17 @@
     justify-content:center;
     gap:3em;
 }
-.center{
-    width:80%;
+div.main-create:first-child:only-child {
+    justify-content: flex-end;
+}
+.center {
+    width: 60%;
 }
 .product {
     display: block;
 }
 .recommended{
-    margin-top:4em
+    margin-top:4em;
 }
 .recommended > h2 {
     margin-top: 20em;
@@ -23,14 +26,11 @@
 .recommended>div {
     text-align: center;
     gap: 1em;
-    background-color: #f6f6f6;
+    background-color: #d8e2f2;
     padding: 1em;
     height: 40em;
     overflow: auto;
     scrollbar-width: thin;
-    -webkit-box-shadow: inset 0px 0px 9px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: inset 0px 0px 9px 0px rgba(0,0,0,0.75);
-    box-shadow: inset 0px 0px 9px 0px rgba(0,0,0,0.75);
 }
 
 .product{
@@ -90,6 +90,7 @@ input{
 }
 
 .middle {
+    height:fit-content;
     width: fit-content;
     display: flex;
     flex-direction: column;
@@ -116,9 +117,10 @@ div.right {
     width: fit-content;
     text-align: center;
     height: 25em;
-    width:13em;
-    position:fixed;
-    z-index:3;
+    width: 13em;
+    position: fixed;
+    z-index: 3;
+    box-shadow: -2px 0px 20px 0px rgba(0,0,0,0.7);
 }
 .bought-products-container {
     background-color: #e8dddd;
@@ -146,7 +148,7 @@ h2{
 }
 
 
-.progress {
+.actual-progress {
     position: fixed;
     width: 20em;
     background-color: #d8e2f2;
@@ -163,6 +165,8 @@ h2{
 }
 button.bought-product{
     width:100%;
+    display:flex;
+    flex-direction:column;
 }
 .info-container{
     display:flex;
@@ -176,9 +180,9 @@ button.bought-product{
     transform: rotate(180deg);
     margin: 0;
 }
-div.progress-bar{
-    background-color:#9edc2a !important;
-    color:black;
+div.actual-progress-bar {
+    background-color: #9edc2a !important;
+    color: black;
 }
 button.delete{
     position:absolute;
@@ -194,3 +198,95 @@ button.delete{
         width: 1em;
         fill: red;
     }
+
+th,td{
+    vertical-align:middle;
+}
+
+button.accordion-button{
+    display:flex;
+    flex-direction:column;
+}
+
+.small-progress{
+    width:60%;
+    background-color:#ff00001e;
+}
+
+.small-info{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:1em;
+}
+
+.total-products{
+    background-color:#9edc2a;
+    color:black !important;
+    padding:0.3em 0.6em;
+    border-radius:20px;
+    margin-bottom:1.5em;
+}
+
+.left {
+    position: relative;
+    margin-left: -20em;
+    background-color:#535e52;
+    color:white;
+    padding:1em;
+    border-radius:20px;
+    width:20em;
+    text-align:center;
+}
+
+div.left > div.bought-products-container {
+    background-color: #535e52;
+    padding: 0.5em;
+    height: 40em;
+}
+
+div.small-info>p.smallpfp{
+    width:5em;
+    height:5em;
+}
+div.small-info>p.smallpfp>img{
+    width:8em;
+}
+
+.name{
+    font-size:1.2em;
+    color:black !important;
+}
+.accordion-body{
+    color:black;
+}
+.accordion-body ul{
+    text-align:center;
+}
+.accordion-body li{
+    font-size:1.3em;
+    width:fit-content;
+
+}
+
+.out-of-stock{
+    display:flex;
+    flex-direction:column;
+    background-color:#9edc2a;
+}
+a.out-of-stock p{
+    margin:0;
+}
+.out-of-stock-container{
+
+}
+
+div.out-of-stock-right {
+    width: 18em;
+    height:45em;
+    position:relative;
+    margin-top:10em;
+}
+.info-container-left {
+    margin-top: 9em;
+}

@@ -61,7 +61,7 @@ footer {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100vw;
+    width: 99vw;
     background-color:white;
     box-shadow: inset 0px 58px 12px -65px rgba(0,0,0,0.5);
 }

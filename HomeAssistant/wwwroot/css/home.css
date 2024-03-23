@@ -4,13 +4,22 @@
     gap: 1em;
 }
 
-div.text-center {
+footer>div.text-center {
     display: flex;
     flex-direction: column;
     align-items:center;
     gap:2em;
-    width:fit-content;
+    width:100%;
     padding:0;
+}
+
+div.text-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+    width: fit-content;
+    padding: 0;
 }
 
 div.greeting {

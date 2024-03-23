@@ -68,6 +68,8 @@ namespace HomeAssistant.Core.Services
 				page = finalModel.PageCount;
 			}
 
+			finalModel.CurrentPage = page;
+
 			prodToReturn = prodToReturn
 				.Skip((page - 1) * productsOnPage)
 				.Take(productsOnPage);

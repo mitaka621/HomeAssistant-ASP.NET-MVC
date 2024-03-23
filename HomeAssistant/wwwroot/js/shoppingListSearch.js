@@ -26,7 +26,7 @@ function onInput(e) {
 
 
                     document.querySelector(".search-results").innerHTML +=
-                        `<tr id="${product.id}" onClick="OpenModal(this)">
+                        `<tr name="${product.name}" id="${product.id}" onClick="OpenModal(this)">
 					<td>
 						<p>${product.name}</p>
 					</td>
@@ -39,7 +39,24 @@ function onInput(e) {
 					<td>
 						<p>Quantity: ${product.count}</p>
 					</td>
-				</tr>`
+				</tr>`;
+                }
+                else {
+                    document.querySelector(".search-results").innerHTML +=
+                        `<tr name="${product.name}" id="${product.id}" class="table-dark">
+					<td>
+						<p>${product.name}</p>
+					</td>
+					<td>
+						<p>Weight: ${product.weight ? product.weight : "--"} g</p>
+					</td>
+					<td>
+						<p>Category: ${product.productCategory.name}</p>
+					</td>
+					<td>
+						<p>Quantity: ${product.count}</p>
+					</td>
+				</tr>`;
                 }
             });
         });
@@ -50,19 +67,11 @@ function OpenModal(e) {
         keyboard: false
     })
 
-    if (e.classList.contains("product")) {
-        console.log();
-        document.querySelector("#productId").value = e.id;
-        document.querySelector("#productName").value = e.childNodes[1].childNodes[0].data;
-        document.querySelector("#price").value = 0;
-        document.querySelector("#quantity").value = 1;
-    }
-    else {
-        document.querySelector("#productId").value = e.id;
-        document.querySelector("#productName").value = e.childNodes[1].childNodes[1].innerHTML;
-        document.querySelector("#price").value = 0;
-        document.querySelector("#quantity").value = 1;
-    }
+    document.querySelector("#productId").value = e.id;
+    document.querySelector("#productName").value = e.getAttribute("name");;
+    document.querySelector("#price").value = 0;
+    document.querySelector("#quantity").value = 1;
+
 
     let m = document.querySelector("#addExistingProductModal");
     myModal.show(m);

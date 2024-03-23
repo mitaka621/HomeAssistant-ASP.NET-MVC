@@ -32,12 +32,21 @@ namespace HomeAssistant.Controllers
 				return RedirectToAction(nameof(ShoppingListCreation));
 			}
 
-            return View(await _shoppingListService.GetProductsByCategory(GetUserId(), page));
+			ViewBag.ActiveShoppingLists=await _shoppingListService.GetTop20StartedShoppingListsExceptCurrentUser(userId);
+            return View(await _shoppingListService.GetProductsByCategory(userId, page));
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> ShoppingListCreation()
 		{
+			if (await _shoppingListService.IsStarted(GetUserId()))
+			{
+				return RedirectToAction(nameof(Index));
+			}
+
+			ViewBag.ActiveShoppingLists = await _shoppingListService
+				.GetTop20StartedShoppingListsExceptCurrentUser(GetUserId());
+
 			return View(await _shoppingListService.GetShoppingList(GetUserId()));
 		}
 
