@@ -38,5 +38,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
 		public double Longitude { get; set; }
 
         public ShoppingList ShoppingList { get; set; } = null!;
+
+        public IEnumerable<UserStep> UserRecipeSteps { get; set; } = new List<UserStep>();
     }
 }

@@ -1,17 +1,10 @@
-﻿using Amazon.Runtime.Internal;
-using HomeAssistant.Core.Contracts;
+﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Enums;
-using HomeAssistant.Core.Models;
 using HomeAssistant.Core.Models.Product;
 using HomeAssistant.Core.Models.ShoppingList;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Services
 {

@@ -44,5 +44,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
         public HomeAssistantUser? User { get; set; }
 
         public IEnumerable<ShoppingListProduct> ProductShoppingLists { get; set; } = new List<ShoppingListProduct>();
-    }
+
+		public IEnumerable<RecipeProduct> ProductRecipes { get; set; } = new List<RecipeProduct>();
+	}
 }

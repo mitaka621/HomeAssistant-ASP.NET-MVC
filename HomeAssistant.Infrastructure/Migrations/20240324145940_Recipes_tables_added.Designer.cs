@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    [Migration("20240305205649_First_and_Last_name_Identity_Fields")]
-    partial class First_and_Last_name_Identity_Fields
+    [Migration("20240324145940_Recipes_tables_added")]
+    partial class Recipes_tables_added
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,6 +41,43 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.ToTable("Categories");
 
                     b.HasComment("Product category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Dairy"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Fruits"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Meat and Poultry"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Beverages"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Vegetables"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Baking Supplies"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Condiments and Sauces"
+                        });
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.HomeAssistantUser", b =>
@@ -55,6 +92,12 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -67,16 +110,29 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
+
+                    b.Property<double>("Latitude")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(42.698334000000003);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<double>("Longitude")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(23.319941);
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -116,6 +172,30 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "e2246145-9dd8-4902-ae41-68096b5ca738",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e2246145-9dd8-4902-ae41-68096b5ca738",
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin",
+                            EmailConfirmed = false,
+                            FirstName = "",
+                            IsDeleted = false,
+                            LastName = "",
+                            Latitude = 0.0,
+                            LockoutEnabled = false,
+                            Longitude = 0.0,
+                            NormalizedEmail = "admin",
+                            NormalizedUserName = "admin",
+                            PasswordHash = "AQAAAAEAACcQAAAAECesmfOwNZwis0Dhed51IDaRQ1JtMzHYQmkF7A+14XZZ5VHuhi+kWYKar3RjlDmspQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "91532d95-9226-4f0a-941c-40018dcf0738",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.Notification", b =>
@@ -182,7 +262,8 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .HasComment("Date and time for when the product was added");
 
                     b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasComment("Product category");
 
                     b.Property<int>("Count")
                         .HasColumnType("int")
@@ -195,7 +276,8 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .HasComment("Product name");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasComment("UserId who added the product (optional)");
 
                     b.Property<int?>("Weight")
                         .HasColumnType("int")
@@ -210,6 +292,134 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.ToTable("Products");
 
                     b.HasComment("Product");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AddedOn = new DateTime(2024, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = 3,
+                            Count = 3,
+                            Name = "Steak"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AddedOn = new DateTime(2024, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CategoryId = 2,
+                            Count = 10,
+                            Name = "Apple"
+                        });
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.Recipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.RecipeProduct", b =>
+                {
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RecipeId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("RecipesProducts");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingList", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsStarted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("StartedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("ShoppingLists");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingListProduct", b =>
+                {
+                    b.Property<string>("ShoppingListId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsBought")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QuantityToBuy")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("StorePrice")
+                        .HasColumnType("float");
+
+                    b.HasKey("ShoppingListId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ShoppingListsProducts");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.Step", b =>
+                {
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StepNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int?>("DurationInMin")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<int>("StepType")
+                        .HasColumnType("int");
+
+                    b.HasKey("RecipeId", "StepNumber");
+
+                    b.ToTable("Steps");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -237,6 +447,22 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "7e2d4805-c978-4600-9663-a9cafa2a54be",
+                            ConcurrencyStamp = "7e2d4805-c978-4600-9663-a9cafa2a54be",
+                            Name = "StandardUser",
+                            NormalizedName = "StandardUser"
+                        },
+                        new
+                        {
+                            Id = "f23e50cd-3de0-4420-ae9b-6ce529f3128f",
+                            ConcurrencyStamp = "f23e50cd-3de0-4420-ae9b-6ce529f3128f",
+                            Name = "Admin",
+                            NormalizedName = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -326,6 +552,18 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "e2246145-9dd8-4902-ae41-68096b5ca738",
+                            RoleId = "f23e50cd-3de0-4420-ae9b-6ce529f3128f"
+                        },
+                        new
+                        {
+                            UserId = "e2246145-9dd8-4902-ae41-68096b5ca738",
+                            RoleId = "7e2d4805-c978-4600-9663-a9cafa2a54be"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -385,6 +623,66 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.RecipeProduct", b =>
+                {
+                    b.HasOne("HomeAssistant.Infrastructure.Data.Models.Product", "Product")
+                        .WithMany("ProductRecipes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HomeAssistant.Infrastructure.Data.Models.Recipe", "Recipe")
+                        .WithMany("RecipeProducts")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingList", b =>
+                {
+                    b.HasOne("HomeAssistant.Infrastructure.Data.Models.HomeAssistantUser", "User")
+                        .WithOne("ShoppingList")
+                        .HasForeignKey("HomeAssistant.Infrastructure.Data.Models.ShoppingList", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingListProduct", b =>
+                {
+                    b.HasOne("HomeAssistant.Infrastructure.Data.Models.Product", "Product")
+                        .WithMany("ProductShoppingLists")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HomeAssistant.Infrastructure.Data.Models.ShoppingList", "ShoppingList")
+                        .WithMany("ShoppingListProducts")
+                        .HasForeignKey("ShoppingListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ShoppingList");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.Step", b =>
+                {
+                    b.HasOne("HomeAssistant.Infrastructure.Data.Models.Recipe", "Recipe")
+                        .WithMany("Steps")
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -436,9 +734,34 @@ namespace HomeAssistant.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.HomeAssistantUser", b =>
+                {
+                    b.Navigation("ShoppingList")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.Notification", b =>
                 {
                     b.Navigation("NotificationsUsers");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.Product", b =>
+                {
+                    b.Navigation("ProductRecipes");
+
+                    b.Navigation("ProductShoppingLists");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.Recipe", b =>
+                {
+                    b.Navigation("RecipeProducts");
+
+                    b.Navigation("Steps");
+                });
+
+            modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingList", b =>
+                {
+                    b.Navigation("ShoppingListProducts");
                 });
 #pragma warning restore 612, 618
         }
