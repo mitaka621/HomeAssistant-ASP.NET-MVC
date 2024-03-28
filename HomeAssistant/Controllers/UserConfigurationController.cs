@@ -12,11 +12,11 @@ namespace HomeAssistant.Controllers
 	public class UserConfigurationController : Controller
 	{
 		IUserService userService;
-		IPFPService _pfpService;
-		public UserConfigurationController(IUserService _userService, IPFPService pfpService)
+		IimageService _ImageService;
+		public UserConfigurationController(IUserService _userService, IimageService ImageService)
 		{
 			userService = _userService;
-			_pfpService = pfpService;
+			_ImageService = ImageService;
 		}
 
 		[HttpGet]
@@ -129,7 +129,7 @@ namespace HomeAssistant.Controllers
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 
-			var imageData = await _pfpService.GetImage(Id);
+			var imageData = await _ImageService.GetPFP(Id);
 
 			if (imageData != null && imageData.Length > 0)
 			{

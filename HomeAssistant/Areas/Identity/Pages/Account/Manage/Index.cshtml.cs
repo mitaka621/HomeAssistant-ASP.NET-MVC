@@ -23,16 +23,16 @@ namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 	{
 		private readonly UserManager<HomeAssistantUser> _userManager;
 		private readonly SignInManager<HomeAssistantUser> _signInManager;
-		private readonly IPFPService _pfpService;
+		private readonly IimageService _ImageService;
 
 		public IndexModel(
 			UserManager<HomeAssistantUser> userManager,
 			SignInManager<HomeAssistantUser> signInManager,
-			IPFPService ipFPService)
+			IimageService IimageService)
 		{
 			_userManager = userManager;
 			_signInManager = signInManager;
-			_pfpService = ipFPService;
+			_ImageService = IimageService;
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 
 					var userId = _userManager.GetUserId(User);
 
-					uploadPfpTask = _pfpService.SaveImage(userId, imageData);
+					uploadPfpTask = _ImageService.SavePFP(userId, imageData);
 				}
 
 			}

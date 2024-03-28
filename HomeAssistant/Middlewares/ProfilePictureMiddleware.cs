@@ -14,7 +14,7 @@ namespace HomeAssistant.Middlewares
 			_next = next;	
 		}
 
-		public async Task Invoke(HttpContext context, UserManager<HomeAssistantUser> userManager, IPFPService _pfpService)
+		public async Task Invoke(HttpContext context, UserManager<HomeAssistantUser> userManager, IimageService _ImageService)
 		{
 			// Fetch the profile picture
 			var user = await userManager.GetUserAsync(context.User);
@@ -24,7 +24,7 @@ namespace HomeAssistant.Middlewares
 				return;
 			}
 
-            byte[] profilePicture = await _pfpService.GetImage(user.Id);
+            byte[] profilePicture = await _ImageService.GetPFP(user.Id);
 
 			// Store the profile picture in the HttpContext.Items
 			context.Items["ProfilePicture"] = profilePicture;

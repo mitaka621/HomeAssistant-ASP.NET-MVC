@@ -37,7 +37,7 @@ o.ValidationInterval = TimeSpan.FromMinutes(1));
 
 builder.Services.AddSingleton<IMongoClient, MongoClient>(s =>
 	new MongoClient(builder.Configuration.GetConnectionString("MongoUri")));
-builder.Services.AddScoped<IPFPService, PFPService>();
+builder.Services.AddScoped<IimageService, ImageService>();
 
 
 
