@@ -1,3 +1,6 @@
+<h1>Default Admin User</h1>
+<p>Username: <b>admin</b></p>
+<p>Password: <b>admin123</b></p>
 <h1>Api keys for testing (user secrets)</h1>
 <pre>
 {
