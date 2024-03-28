@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HomeAssistant.Core.Models.Recipe;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Contracts
 {
-	public interface IimageService
+	public interface IRecipeService
 	{
-		Task SavePFP(string userId, byte[] imageData);
-
-		Task<byte[]> GetPFP(string userId);
+		Task AddRecipe(RecipeFormViewModel recipe);
 	}
 }

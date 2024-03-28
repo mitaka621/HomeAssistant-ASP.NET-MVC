@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Services
 {
-    public class PFPService : IPFPService
+    public class ImageService : IimageService
     {
         private readonly IMongoClient _client;
         private readonly IGridFSBucket _gridFS;
 
-        public PFPService(IMongoClient client)
+		public ImageService(IMongoClient client)
         {
             _client = client;
             _gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
@@ -25,7 +25,7 @@ namespace HomeAssistant.Core.Services
             });
         }
 
-        public async Task SaveImage(string userId, byte[] imageData)
+        public async Task SavePFP(string userId, byte[] imageData)
         {
 
             var existingImageFilter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
@@ -49,7 +49,7 @@ namespace HomeAssistant.Core.Services
 
         }
 
-        public async Task<byte[]> GetImage(string userId)
+        public async Task<byte[]> GetPFP(string userId)
         {
             var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
             var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
@@ -73,5 +73,6 @@ namespace HomeAssistant.Core.Services
                 }
             }        
         }
+
     }
 }

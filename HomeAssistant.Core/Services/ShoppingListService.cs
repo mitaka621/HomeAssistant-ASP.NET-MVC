@@ -12,12 +12,12 @@ namespace HomeAssistant.Core.Services
 	{
 		private readonly HomeAssistantDbContext _dbcontext;
 		private readonly IProductService _productService;
-		private readonly IPFPService _pfpService;
-		public ShoppingListService(HomeAssistantDbContext dbContext, IProductService productService, IPFPService pfpService)
+		private readonly IimageService _ImageService;
+		public ShoppingListService(HomeAssistantDbContext dbContext, IProductService productService, IimageService ImageService)
 		{
 			_dbcontext = dbContext;
 			_productService = productService;
-			_pfpService = pfpService;
+			_ImageService = ImageService;
 		}
 
 		public async Task<bool> IsStarted(string userId)
@@ -358,7 +358,7 @@ namespace HomeAssistant.Core.Services
 
             for (int i = 0; i < shoppingLists.Count; i++)
             {
-				shoppingLists[i].ProfilePicture = await _pfpService.GetImage(shoppingLists[i].UserId);
+				shoppingLists[i].ProfilePicture = await _ImageService.GetPFP(shoppingLists[i].UserId);
 			}
 
 			return shoppingLists;
