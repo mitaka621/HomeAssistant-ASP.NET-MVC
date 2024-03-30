@@ -24,6 +24,6 @@ namespace HomeAssistant.Core.Models.Recipe
 			ErrorMessage = InvalidStringLength)]
 		public string Description { get; set; } = string.Empty;
 
-		public IEnumerable<int> ProductsIds { get; set; } = new List<int>();
+        public IEnumerable<int> ProductsIds { get; set; } = new List<int>();
     }
 }

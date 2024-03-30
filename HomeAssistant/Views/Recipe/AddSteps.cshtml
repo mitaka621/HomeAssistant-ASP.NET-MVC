@@ -1,2 +1,55 @@
-﻿
-<h1>hi</h1>
+﻿@using HomeAssistant.Core.Models.Recipe
+@using HomeAssistant.Infrastructure.Data.Enums
+@model RecipeDetaislViewModel
+
+<div class="recipe-img">
+	@if (Model.Photo != null && Model.Photo.Length > 0)
+	{
+		<img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Photo)" />
+	}
+	else
+	{
+		<p>No image!</p>
+	}
+</div>
+
+<h2>@Model.Name</h2>
+<p>@Model.Description</p>
+<h3>Ingredients:</h3>
+<ul>
+	@foreach (var product in Model.Products)
+	{
+		<li>@product</li>
+	}
+</ul>
+<h3>Add steps for preparing the dish:</h3>
+<div class="steps">
+	@{
+		int counter = 1;
+		foreach (var step in Model.Steps)
+		{
+			<div class="step">
+				<p>Step @(counter++):</p>
+				<p>@step.Name</p>
+				<p>@step.Type</p>
+				<a class="btn btn-warning" asp-controller="Recipe" asp-action="EditStep">Edit</a>
+			</div>
+		}
+	}
+</div>
+<div class="dropdown">
+	<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+		Add Recipe Step
+	</button>
+		<ul class="dropdown-menu">
+			@foreach (var option in Enum.GetValues(typeof(StepType)))
+			{
+				<li>
+					<a class="dropdown-item" asp-controller="Recipe" asp-action="Add@(option.ToString())" asp-route-recipeId="@Model.Id">
+						@option.ToString()
+					</a>
+				</li>
+			}
+		</ul>
+
+</div>

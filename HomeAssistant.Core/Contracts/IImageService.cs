@@ -14,6 +14,6 @@ namespace HomeAssistant.Core.Contracts
 
 		Task SaveRecipeImage(int RecipeId, byte[] imageData);
 
-		Task<byte[]> GetRecipeImage(int RecipeId);
+		Task<byte[]> GetRecipeImage(int RecipeId, CancellationToken cancellationToken=new());
 	}
 }

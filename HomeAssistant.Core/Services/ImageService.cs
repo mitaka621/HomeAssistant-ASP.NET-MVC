@@ -1,17 +1,11 @@
 ﻿using HomeAssistant.Core.Contracts;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Operations;
 using MongoDB.Driver.GridFS;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Services
 {
-    public class ImageService : IimageService
+	public class ImageService : IimageService
     {
         private readonly IMongoClient _client;
         private IGridFSBucket _gridFS;
@@ -106,18 +100,20 @@ namespace HomeAssistant.Core.Services
 
 		}
 
-		public async Task<byte[]> GetRecipeImage(int RecipeId)
+		public async Task<byte[]> GetRecipeImage(int recipeId, CancellationToken cancellationToken=new())
 		{
+			cancellationToken.ThrowIfCancellationRequested();
 			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
 			{
 				BucketName = "RecipePictures"
 			});
 
-			var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", RecipeId);
+			var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", recipeId.ToString());
 			var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
 
 			if (fileInfo != null)
 			{
+				cancellationToken.ThrowIfCancellationRequested();
 				using (var stream = new MemoryStream())
 				{
 					await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);

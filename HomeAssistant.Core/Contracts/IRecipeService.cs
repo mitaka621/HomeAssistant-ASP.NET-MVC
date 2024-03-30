@@ -10,5 +10,13 @@ namespace HomeAssistant.Core.Contracts
 	public interface IRecipeService
 	{
 		Task<int> AddRecipe(RecipeFormViewModel recipe);
+
+		Task<RecipeDetaislViewModel> GetRecipe(int recipeId);
+
+		Task<Dictionary<int,string>> GetProductsForRecipe(int recipeId);
+
+		Task<StepDetailsViewModel?> GetLastStepDetails(int recipeId);
+
+		Task AddStep(int recipeId,int[] productId,StepFormViewModel step);
 	}
 }
