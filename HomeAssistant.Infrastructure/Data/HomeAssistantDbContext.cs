@@ -22,6 +22,7 @@ namespace HomeAssistant.Infrastructure.Data
         public DbSet<RecipeProduct> RecipesProducts { get; set; }
         public DbSet<Step> Steps { get; set; }
 		public DbSet<UserStep> UsersSteps { get; set; }
+        public DbSet<RecipeProductStep> RecipesProductsSteps { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -39,6 +40,9 @@ namespace HomeAssistant.Infrastructure.Data
 
             builder.Entity<UserStep>()
                 .HasKey(x => new { x.UserId,x.RecipeId});
+
+            builder.Entity<RecipeProductStep>()
+                .HasKey(x => new { x.StepNumber,x.RecipeId,x.ProductId});
 
             builder.Entity<HomeAssistantUser>()
                 .Property(b => b.Latitude)
