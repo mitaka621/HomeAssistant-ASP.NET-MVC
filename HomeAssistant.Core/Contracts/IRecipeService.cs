@@ -9,6 +9,6 @@ namespace HomeAssistant.Core.Contracts
 {
 	public interface IRecipeService
 	{
-		Task AddRecipe(RecipeFormViewModel recipe);
+		Task<int> AddRecipe(RecipeFormViewModel recipe);
 	}
 }

@@ -1,5 +1,5 @@
-document.querySelector("input#search").addEventListener("focusout", clear);
-document.querySelector("input#search").addEventListener("focus", (e) => onInput(e.target));
+document.querySelector("#search").addEventListener("focusout", clear);
+document.querySelector("#search").addEventListener("focus", (e) => onInput(e.target));
 
 function onInput(e) {
 	
@@ -10,11 +10,10 @@ function onInput(e) {
 
             if (r.length === 0 && e.value !== "") {
                 document.querySelector(".search-results")
-                    .innerHTML = `<a class="btn btn-primary" href="/Fridge/addProduct?prodName=${e.value}">Add Product</a>`;
+					.innerHTML = `<a class="btn btn-primary" onmousedown="redirect()">Add Product</a>`;
 			}
-
-			let existingProductsIds = (Array.from(document.querySelectorAll("form>ul>li"))).map(x => x.id);
-
+			
+			let existingProductsIds = (Array.from(document.querySelectorAll("div.products>input"))).map(x => x.id);
             r.forEach(product => {
                 if (!existingProductsIds.includes(product.id.toString())) {
 
@@ -57,22 +56,28 @@ function onInput(e) {
 }
 
 function ViewProductDetails(e) {
-	
-	document.querySelector(`form[action="/Recipe/Add"]`).innerHTML +=
-        `<input type="hidden" asp-for="ProductsIds" class="form-control" value="${e.id}">`;
-	document.querySelector("form>ul").innerHTML +=
-	`<li id="${e.id}"><p>${e.getAttribute("name")} </p>
-	<a id="${e.id}" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
-	</li>`;
+	document.querySelector(`div.products`).innerHTML +=
+		`<input disabled class="form-control" value="${e.getAttribute("name")}">
+		<input type="hidden" name="ProductsIds" class="form-control" id="${e.id}" value="${e.id}">
+		<a id="${e.id}" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
+		`;
 
+	document.querySelector("#search").addEventListener("focusout", clear);
+	document.querySelector("#search").addEventListener("focus", (e) => onInput(e.target));
+	clear();
 	e.parentElement.innerHTML = "";
 	document.querySelector("#search").value = "";
 }
 
 function removeProduct(e) {
-	document.querySelector(`li[id="${e.id}"]`).remove();
+	document.querySelector(`input[id="${e.id}"]`).remove();
+	e.remove();
 }
 
 function clear() {
 		document.querySelector("tbody.search-results").innerHTML = "";
+}
+
+function redirect() {
+	window.location.href = `/Fridge/addProduct`;
 }

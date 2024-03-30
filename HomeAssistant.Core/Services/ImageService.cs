@@ -14,21 +14,21 @@ namespace HomeAssistant.Core.Services
     public class ImageService : IimageService
     {
         private readonly IMongoClient _client;
-        private readonly IGridFSBucket _gridFS;
+        private IGridFSBucket _gridFS;
 
 		public ImageService(IMongoClient client)
         {
             _client = client;
-            _gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
-            {
-                BucketName = "ProfilePictures"
-            });
         }
 
         public async Task SavePFP(string userId, byte[] imageData)
         {
+			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+			{
+				BucketName = "ProfilePictures"
+			});
 
-            var existingImageFilter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
+			var existingImageFilter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
             var existingImage = (await _gridFS.FindAsync(existingImageFilter)).FirstOrDefault();
 
             if (existingImage != null)
@@ -51,7 +51,12 @@ namespace HomeAssistant.Core.Services
 
         public async Task<byte[]> GetPFP(string userId)
         {
-            var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
+			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+			{
+				BucketName = "ProfilePictures"
+			});
+
+			var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
             var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
 
             if (fileInfo != null)
@@ -74,5 +79,53 @@ namespace HomeAssistant.Core.Services
             }        
         }
 
-    }
+		public async Task SaveRecipeImage(int recipeId, byte[] imageData)
+		{
+			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+			{
+				BucketName = "RecipePictures"
+			});
+
+			var existingImageFilter = Builders<GridFSFileInfo>.Filter.Eq("filename", recipeId);
+			var existingImage = (await _gridFS.FindAsync(existingImageFilter)).FirstOrDefault();
+
+			if (existingImage != null)
+			{
+				await _gridFS.DeleteAsync(existingImage.Id);
+			}
+
+			using (var stream = new MemoryStream(imageData))
+			{
+				var options = new GridFSUploadOptions
+				{
+					Metadata = new BsonDocument("recipeId", recipeId)
+				};
+
+				await _gridFS.UploadFromStreamAsync(recipeId.ToString(), stream, options);
+			}
+
+		}
+
+		public async Task<byte[]> GetRecipeImage(int RecipeId)
+		{
+			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+			{
+				BucketName = "RecipePictures"
+			});
+
+			var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", RecipeId);
+			var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
+
+			if (fileInfo != null)
+			{
+				using (var stream = new MemoryStream())
+				{
+					await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
+					return stream.ToArray();
+				}
+			}
+
+			return new byte[0];
+		}
+	}
 }

@@ -22,7 +22,6 @@ if (navigator.geolocation) {
 fetch('/api/Weather/Weather')
     .then(r => r.json())
     .then(json => {
-        console.log(json);
         document.querySelector(".temp").innerHTML = Math.round(json.main.temp);
         document.querySelector(".weather-icon").src = `https://openweathermap.org/img/wn/${json.weather[0].icon}@2x.png`
         document.querySelector(".location").innerHTML = json.name;
@@ -66,7 +65,7 @@ fetch('/api/Weather/Weather')
             shirtDesc.innerHTML = "Shirt"
         }
         else if (json.main.temp < 30) {
-            hatSvg.src = "~/svg/cap.svg";
+            hatSvg.src = "/svg/cap.svg";
             shirtSvg.src = "/svg/t-shirt.svg";
             hatDesc.innerHTML = "Cap"
             shirtDesc.innerHTML = "T-Shirt"
@@ -79,7 +78,3 @@ fetch('/api/Weather/Weather')
         }
     });
     
-
-fetch('/api/Weather/UserLocation')
-    .then(r => r.json())
-    .then(json => console.log(json));

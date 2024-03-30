@@ -11,5 +11,9 @@ namespace HomeAssistant.Core.Contracts
 		Task SavePFP(string userId, byte[] imageData);
 
 		Task<byte[]> GetPFP(string userId);
+
+		Task SaveRecipeImage(int RecipeId, byte[] imageData);
+
+		Task<byte[]> GetRecipeImage(int RecipeId);
 	}
 }

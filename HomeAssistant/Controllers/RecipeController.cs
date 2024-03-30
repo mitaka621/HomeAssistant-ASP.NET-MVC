@@ -1,10 +1,19 @@
-﻿using HomeAssistant.Core.Models.Recipe;
+﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Models.Recipe;
+using HomeAssistant.Core.Services;
+using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeAssistant.Controllers
 {
 	public class RecipeController : Controller
 	{
+		private readonly IRecipeService _recipeService;
+		public RecipeController(IRecipeService recipeService)
+		{
+			_recipeService = recipeService;
+		}
+
 		public IActionResult Index()
 		{
 			return View();
@@ -17,7 +26,15 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Add(RecipeFormViewModel r)
+		public async Task<IActionResult> Add(RecipeFormViewModel r)
+		{
+			var id=await _recipeService.AddRecipe(r);
+
+			return RedirectToAction(nameof(AddSteps),new { recipeId=id });
+		}
+
+		[HttpGet]
+		public IActionResult AddSteps(int recipeId)
 		{
 			return View();
 		}

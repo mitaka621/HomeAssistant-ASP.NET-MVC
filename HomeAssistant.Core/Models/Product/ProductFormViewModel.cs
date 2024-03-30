@@ -19,7 +19,7 @@ namespace HomeAssistant.Core.Models.Product
         [Comment("Product name")]
         public string Name { get; set; } = string.Empty;
 
-        public CategoryViewModel ProductCategory { get; set; } = null!;
+        public CategoryViewModel? ProductCategory { get; set; }
 
         public int SelectedCategoryId { get; set; }
 
