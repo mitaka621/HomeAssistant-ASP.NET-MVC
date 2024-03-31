@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HomeAssistant.Core.Models.Recipe
+﻿namespace HomeAssistant.Core.Models.Recipe
 {
 	public class RecipeDetaislViewModel
 	{
@@ -17,6 +11,8 @@ namespace HomeAssistant.Core.Models.Recipe
         public byte[]? Photo { get; set; }
 
         public IEnumerable<string> Products { get; set; }=new List<string>();
+
+        public IEnumerable<string>? ProductsNotAvailable { get; set; }
 
         public IEnumerable<StepViewModel> Steps { get; set; } = new List<StepViewModel>();
     }

@@ -7,7 +7,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
 		public int RecipeId { get; set; }
 		public int ProductId { get; set; }
 		[ForeignKey("RecipeId, ProductId")]
-		public RecipeProduct Recipe { get; set; } = null!;
+		public RecipeProduct RecipeProduct { get; set; } = null!;
 
 		public int StepNumber { get; set; }
 		[ForeignKey("RecipeId, StepNumber")]

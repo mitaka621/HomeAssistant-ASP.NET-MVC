@@ -1,0 +1,24 @@
+﻿@using HomeAssistant.Core.Models.Recipe
+@using HomeAssistant.Infrastructure.Data.Enums
+@model StepDetailsViewModel
+
+<link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
+
+@if (Model.Type == StepType.TimerStep && Model.InitiatedOn!=null)
+{
+	<h1>@((new TimeSpan(0, Model.Duration.Value, 0) - (DateTime.Now - Model.InitiatedOn)).Value.ToString(@"mm\:ss"))</h1>
+}
+
+<h1>@(Model.StepNumber). @Model.Name</h1>
+<ul class="prod-for-step">
+	@foreach (var item in Model.Products)
+	{
+		<li>@item</li>
+	}
+</ul>
+<h2>@Model.Description</h2>
+
+<form method="post" asp-controller="Recipe" asp-action="MoveNextStep">
+	<input hidden name="recipeId" value="@Model.RecipeId"/>
+	<button type="submit">Next Step</button>
+</form>

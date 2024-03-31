@@ -17,6 +17,12 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<StepDetailsViewModel?> GetLastStepDetails(int recipeId);
 
-		Task AddStep(int recipeId,int[] productId,StepFormViewModel step);
-	}
+		Task AddStep(StepFormViewModel step);
+
+		Task<RecipesPaginationViewModel> GetAllRecipes(int page,int productsOnPage = 10);
+
+		public Task<StepDetailsViewModel?> GetUserStep(string userId, int recipeId);
+
+		public Task<StepDetailsViewModel?> MoveNextUserRecipeStep(string userId, int recipeId);
+    }
 }

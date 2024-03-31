@@ -37,7 +37,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasComment("Product category");
 
@@ -223,7 +223,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
 
                     b.HasComment("Notification");
                 });
@@ -242,7 +242,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasIndex("NotificationId");
 
-                    b.ToTable("NotificationsUsers");
+                    b.ToTable("NotificationsUsers", (string)null);
 
                     b.HasComment("Which user has seen what notification");
                 });
@@ -288,7 +288,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasComment("Product");
 
@@ -331,7 +331,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Recipes");
+                    b.ToTable("Recipes", (string)null);
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.RecipeProduct", b =>
@@ -346,7 +346,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("RecipesProducts");
+                    b.ToTable("RecipesProducts", (string)null);
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.RecipeProductStep", b =>
@@ -366,7 +366,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasIndex("RecipeId", "StepNumber");
 
-                    b.ToTable("RecipesProductsSteps");
+                    b.ToTable("RecipesProductsSteps", (string)null);
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingList", b =>
@@ -385,7 +385,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("ShoppingLists");
+                    b.ToTable("ShoppingLists", (string)null);
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.ShoppingListProduct", b =>
@@ -409,7 +409,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ShoppingListsProducts");
+                    b.ToTable("ShoppingListsProducts", (string)null);
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.Step", b =>
@@ -438,7 +438,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasKey("RecipeId", "StepNumber");
 
-                    b.ToTable("Steps");
+                    b.ToTable("Steps", (string)null);
                 });
 
             modelBuilder.Entity("HomeAssistant.Infrastructure.Data.Models.UserStep", b =>
@@ -459,7 +459,7 @@ namespace HomeAssistant.Infrastructure.Migrations
 
                     b.HasIndex("RecipeId", "StepNumber");
 
-                    b.ToTable("UsersSteps");
+                    b.ToTable("UsersSteps", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

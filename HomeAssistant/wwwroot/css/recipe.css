@@ -1,0 +1,38 @@
+﻿
+div.steps{
+    display:flex;
+    gap:1em;
+    flex-wrap:wrap;
+    flex-direction:column;
+    justify-content:start;
+    align-items:center;
+}
+div.step p{
+    margin:0;
+    padding:0;
+}
+div.step {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+div.steps>svg{
+    width:2em;
+}
+div.step>svg{
+    width:1.5em;
+}
+div.new-step{
+    display:flex;
+    gap:1em;
+}
+div.new-step>svg{
+    width:2em;
+}
+.not-Available-prod{
+    color:red;
+}
+.recipes{
+    display:flex;
+    flex-wrap:wrap;
+}

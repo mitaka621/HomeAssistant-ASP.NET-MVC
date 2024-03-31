@@ -13,23 +13,8 @@
 	</div>
 }
 
-<form method="post" asp-controller="Recipe" asp-action="AddNormalStep">
-	@if (Model.Products != null)
-	{
-		<div class="prod-to-include">
-			<h2>Select products for this step</h2>
-			@foreach (var item in Model.Products)
-			{
-				<div class="form-check">
-					<input id="@item.Key" name="SelectedProductIds" class="form-check-input" type="checkbox" value="@item.Key">
-					<label id="@item.Key" class="form-check-label" for="flexCheckDefault">
-						@item.Value
-					</label>
-				</div>
-			}
-		</div>
-	}
-
+<form method="post" asp-controller="Recipe" asp-action="AddTimerStep">
+	
 	<div class="col">
 		<input hidden asp-for="RecipeId" value="@ViewBag.recipeId" />
 		<div class="col-md-12">
@@ -39,9 +24,17 @@
 		</div>
 		<div class="col-md-12">
 			<label asp-for="Description" class="form-label">Write a detailed description for this step</label>
-			<textarea class="form-control" asp-for="Description" rows="3"></textarea>
+			<textarea class="form-control" name="Description" rows="3"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 		</div>
+
+		<div class="col-md-12">
+			<label asp-for="Duration" class="form-label"></label>
+			<input asp-for="Duration" required class="form-control">
+			<span asp-validation-for="Duration" class="text-danger"></span>
+		</div>
+
+
 	</div>
 	<button type="submit" class="btn btn-primary">Next</button>
 </form>
@@ -49,4 +42,3 @@
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 }
-

@@ -31,6 +31,6 @@ namespace HomeAssistant.Infrastructure.Data.Models
 
         public int? DurationInMin { get; set; }
 
-		public IEnumerable<RecipeProductStep> RecipeProducts { get; set; } = new List<RecipeProductStep>();
+		public IEnumerable<RecipeProductStep> RecipeProductStep { get; set; } = new List<RecipeProductStep>();
 	}
 }
