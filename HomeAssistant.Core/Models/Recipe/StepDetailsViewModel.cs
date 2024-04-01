@@ -25,5 +25,7 @@ namespace HomeAssistant.Core.Models.Recipe
         public StepType Type { get; set; }
 
 		public IEnumerable<string> Products { get; set; } = new List<string>();
+
+        public bool IsLast { get; set; }
     }
 }

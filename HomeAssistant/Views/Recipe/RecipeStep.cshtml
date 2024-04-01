@@ -4,10 +4,22 @@
 
 <link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
-@if (Model.Type == StepType.TimerStep && Model.InitiatedOn!=null)
+@if (Model.Type == StepType.TimerStep && Model.InitiatedOn != null)
 {
-	<h1>@((new TimeSpan(0, Model.Duration.Value, 0) - (DateTime.Now - Model.InitiatedOn)).Value.ToString(@"mm\:ss"))</h1>
+	<audio id="myAudio">
+		<source src="~/audio/timer_sound.mp3" type="audio/mpeg">
+	</audio>
+
+	if ((DateTime.Now - Model.InitiatedOn).Value.Minutes < Model.Duration.Value)
+	{
+		<h1 class="timer">@((new TimeSpan(0, Model.Duration.Value, 0) - (DateTime.Now - Model.InitiatedOn)).Value.ToString(@"mm\:ss"))</h1>
+	}
+	else
+	{
+		<h1 class="timer">00:00</h1>
+	}
 }
+
 
 <h1>@(Model.StepNumber). @Model.Name</h1>
 <ul class="prod-for-step">
@@ -18,7 +30,21 @@
 </ul>
 <h2>@Model.Description</h2>
 
-<form method="post" asp-controller="Recipe" asp-action="MoveNextStep">
-	<input hidden name="recipeId" value="@Model.RecipeId"/>
-	<button type="submit">Next Step</button>
-</form>
+@if (!Model.IsLast)
+{
+	<form method="post" asp-controller="Recipe" asp-action="MoveNextStep">
+		<input hidden name="recipeId" value="@Model.RecipeId" />
+		<button class="btn btn-success" type="submit">Next Step</button>
+	</form>
+}
+else
+{
+	<form method="post" asp-controller="Recipe" asp-action="FinishRecipe">
+		<input hidden name="recipeId" value="@Model.RecipeId" />
+		<button class="btn btn-primary" type="submit">Finish</button>
+	</form>
+}
+
+@section Scripts {
+	<script src="~/js/timer.js"></script>
+}

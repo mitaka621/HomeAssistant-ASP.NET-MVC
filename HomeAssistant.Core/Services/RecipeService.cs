@@ -92,7 +92,7 @@ namespace HomeAssistant.Core.Services
 		{
 			return await _dbcontext.RecipesProducts
 				.AsNoTracking()
-				.Include(x=>x.Product)
+				.Include(x => x.Product)
 				.Where(x => x.RecipeId == recipeId)
 				.ToDictionaryAsync(t => t.ProductId, t => t.Product.Name);
 		}
@@ -105,7 +105,7 @@ namespace HomeAssistant.Core.Services
 
 			var products = await _dbcontext.RecipesProducts
 				.AsNoTracking()
-				.Where(x => step.SelectedProductIds.Contains(x.ProductId)&&x.RecipeId==step.RecipeId)
+				.Where(x => step.SelectedProductIds.Contains(x.ProductId) && x.RecipeId == step.RecipeId)
 				.ToListAsync();
 
 			if (recipe == null)
@@ -134,7 +134,7 @@ namespace HomeAssistant.Core.Services
 				Name = step.Name,
 				Description = step.Description,
 				DurationInMin = step.Duration,
-				StepType=step.StepType,
+				StepType = step.StepType,
 			});
 
 			_dbcontext.RecipesProductsSteps
@@ -157,8 +157,8 @@ namespace HomeAssistant.Core.Services
 				.OrderByDescending(x => x.StepNumber)
 				.FirstOrDefaultAsync();
 
-            if (lastStep==null)
-            {
+			if (lastStep == null)
+			{
 				return null;
 			}
 
@@ -171,7 +171,7 @@ namespace HomeAssistant.Core.Services
 			};
 		}
 
-		public async Task<RecipesPaginationViewModel> GetAllRecipes(int page, int productsOnPage = 10)
+		public async Task<RecipesPaginationViewModel> GetAllRecipes(string userId,int page, int productsOnPage = 10 )
 		{
 			var recipesToReturn = _dbcontext.Recipes.AsNoTracking();
 			RecipesPaginationViewModel finalModel = new();
@@ -199,33 +199,35 @@ namespace HomeAssistant.Core.Services
 				Description = x.Description,
 				Name = x.Name,
 				Products = x.RecipeProducts.Where(x => x.Product.Count > 0).Select(x => x.Product.Name).ToArray(),
-				ProductsNotAvailable = x.RecipeProducts.Where(x => x.Product.Count == 0).Select(x => x.Product.Name).ToArray()
+				ProductsNotAvailable = x.RecipeProducts.Where(x => x.Product.Count == 0).Select(x => x.Product.Name).ToArray(),
+				AnySteps = x.Steps.Any(y => y.RecipeId == x.Id)
 			}).ToArrayAsync();
 
-            foreach (var item in finalModel.Recipes)
-            {
-				finalModel.Recipes.First(x=>x.Id==item.Id).Photo=await _imageService.GetRecipeImage(item.Id);
+			foreach (var item in finalModel.Recipes)
+			{
+				finalModel.Recipes.First(x => x.Id == item.Id).Photo = await _imageService.GetRecipeImage(item.Id);
 			}
 
-            return finalModel;
+			return finalModel;
 		}
 
-		public async Task<StepDetailsViewModel?> MoveNextUserRecipeStep(string userId, int recipeId)
+		public async Task MoveNextUserRecipeStep(string userId, int recipeId)
 		{
-			var recipeSteps=_dbcontext.Steps
+			var recipeSteps = _dbcontext.Steps
 				.AsNoTracking()
-				.Where(x=>x.RecipeId==recipeId)
+				.Where(x => x.RecipeId == recipeId)
 				.ToList();
-            if (recipeSteps.Count()==0)
-            {
+			if (recipeSteps.Count() == 0)
+			{
 				throw new InvalidOperationException();
-            }
+			}
 
-            var step=await _dbcontext.UsersSteps
+			var step = await _dbcontext.UsersSteps
 				.FirstOrDefaultAsync(x => x.UserId == userId && x.RecipeId == recipeId);
 
-            if (step==null)
-            {
+
+			if (step == null)
+			{
 				step = new UserStep()
 				{
 					RecipeId = recipeId,
@@ -237,64 +239,40 @@ namespace HomeAssistant.Core.Services
 				_dbcontext.Add(step);
 
 				await _dbcontext.SaveChangesAsync();
-				
-				var currentStep = recipeSteps.First(x => x.StepNumber == 1);
 
-				return new StepDetailsViewModel()
-				{
-					RecipeId = recipeId,
-					Description = currentStep.Description,
-					Name = currentStep.Name,
-					Duration = currentStep.DurationInMin,
-					StepNumber = currentStep.StepNumber,
-					Type = currentStep.StepType,
-					InitiatedOn = DateTime.Now,
-					Products= await _dbcontext.RecipesProductsSteps
-					.Where(x=>x.RecipeId==recipeId&&x.StepNumber==1)
-					.Select(x=>x.RecipeProduct.Product.Name)
-					.ToListAsync()
-				};
+				return;
 			}
 
-			var nextStep = recipeSteps.FirstOrDefault(x => x.StepNumber == step.StepNumber+1);
-			
-			if (nextStep==null)
-            {
+			var nextStep = recipeSteps.FirstOrDefault(x => x.StepNumber == step.StepNumber + 1);
+
+			if (nextStep == null)
+			{
 				_dbcontext.UsersSteps.Remove(step);
 				await _dbcontext.SaveChangesAsync();
 
-				return null;
-            }
+				return;
+			}
 
 			step.StepNumber++;
+			step.StartedOn = DateTime.Now;
 			await _dbcontext.SaveChangesAsync();
-
-			return new StepDetailsViewModel()
-			{
-				RecipeId = recipeId,
-				Description = nextStep.Description,
-				Name = nextStep.Name,
-				Duration = nextStep.DurationInMin,
-				StepNumber = nextStep.StepNumber,
-				Type = nextStep.StepType,
-				InitiatedOn = DateTime.Now,
-				Products = await _dbcontext.RecipesProductsSteps
-					.Where(x => x.RecipeId == recipeId && x.StepNumber == nextStep.StepNumber)
-					.Select(x => x.RecipeProduct.Product.Name)
-					.ToListAsync()
-			};			
 		}
 		public async Task<StepDetailsViewModel?> GetUserStep(string userId, int recipeId)
 		{
-			var userStep=await _dbcontext.UsersSteps
+			var userStep = await _dbcontext.UsersSteps
 				.AsNoTracking()
-				.Include(x=>x.Step)
-				.FirstOrDefaultAsync(x=>x.UserId==userId && x.RecipeId==recipeId);
+				.Include(x => x.Step)
+				.FirstOrDefaultAsync(x => x.UserId == userId && x.RecipeId == recipeId);
 
-            if (userStep == null)
-            {
+			if (userStep == null)
+			{
 				return null;
-            }
+			}
+
+			var lastStep = await _dbcontext.Steps
+				.Where(x => x.RecipeId == recipeId)
+				.OrderByDescending(x => x.StepNumber)
+				.FirstAsync();
 
 
 			return new StepDetailsViewModel()
@@ -309,8 +287,24 @@ namespace HomeAssistant.Core.Services
 				Products = await _dbcontext.RecipesProductsSteps
 					.Where(x => x.RecipeId == recipeId && x.StepNumber == userStep.Step.StepNumber)
 					.Select(x => x.RecipeProduct.Product.Name)
-					.ToListAsync()
+					.ToListAsync(),
+				IsLast = lastStep.StepNumber == userStep.StepNumber ? true : false
 			};
+		}
+
+		public async Task DeleteUserRecipeStep(string userId, int recipeId)
+		{
+			var step = await _dbcontext.UsersSteps
+				.FirstOrDefaultAsync(x => x.UserId == userId && x.RecipeId == recipeId);
+
+			if (step == null)
+			{
+				throw new ArgumentNullException(nameof(step));
+			}
+
+			_dbcontext.UsersSteps.Remove(step);
+
+			await _dbcontext.SaveChangesAsync();
 		}
 	}
 }

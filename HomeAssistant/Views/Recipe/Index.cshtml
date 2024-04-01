@@ -6,46 +6,49 @@
 <a class="btn btn-primary" asp-controller="Recipe" asp-action="Add">Add new recipe</a>
 
 <div class="recipes">
-	
-		@foreach (var item in Model.Recipes)
-		{
-			
-				<div class="card" style="width: 18rem;">
-					@if (item.Photo != null && item.Photo.Length > 0)
+
+	@foreach (var item in Model.Recipes)
+	{
+
+		<div class="card" style="width: 18rem;">
+			@if (item.Photo != null && item.Photo.Length > 0)
+			{
+				<img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" />
+			}
+			else
+			{
+				<p>No image!</p>
+			}
+			<div class="card-body">
+				<h5 class="card-title">@item.Name</h5>
+				<p class="card-text">@item.Description</p>
+				<h5>Ingredients:</h5>
+				<ul class="available-prod">
+					@foreach (var prod in item.Products)
 					{
-						<img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" />
+						<li>@prod</li>
 					}
-					else
-					{
-						<p>No image!</p>
-					}
-					<div class="card-body">
-						<h5 class="card-title">@item.Name</h5>
-						<p class="card-text">@item.Description</p>
-						<h5>Ingredients:</h5>
-						<ul class="available-prod">
-							@foreach (var prod in item.Products)
-							{
-								<li>@prod</li>
-							}
-						</ul>
-						@if (item.ProductsNotAvailable != null && item.ProductsNotAvailable.Count() != 0)
+				</ul>
+				@if (item.ProductsNotAvailable != null && item.ProductsNotAvailable.Count() != 0)
+				{
+					<p>Not Available:</p>
+					<ul class="not-Available-prod">
+						@foreach (var prod in item.ProductsNotAvailable)
 						{
-							<p>Not Available:</p>
-							<ul class="not-Available-prod">
-								@foreach (var prod in item.ProductsNotAvailable)
-								{
-									<li>@prod</li>
-								}
-							</ul>
+							<li>@prod</li>
 						}
-						<a type="submit" class="btn" asp-controller="Recipe" asp-action="RecipeStep" asp-route-recipeId="@item.Id">Start Cooking</a>
-						<a asp-controller="Recipe" asp-action="AddSteps" asp-route-recipeId="@item.Id" class="btn btn-primary">Edit Recipe Steps</a>
-					</div>
-				</div>
-			
-		}
-	
+					</ul>
+				}
+				@if (item.AnySteps)
+				{
+					<a type="submit" class="btn btn-success" asp-controller="Recipe" asp-action="RecipeStep" asp-route-recipeId="@item.Id">Start Cooking</a>
+				}
+				<a asp-controller="Recipe" asp-action="AddSteps" asp-route-recipeId="@item.Id" class="btn btn-primary">Edit Recipe Steps</a>
+			</div>
+		</div>
+
+	}
+
 </div>
 
 @if (Model.PageCount > 1)

@@ -20,7 +20,7 @@ namespace HomeAssistant.Controllers
 
 		public async Task<IActionResult> Index(int page=1)
 		{
-			return View(await _recipeService.GetAllRecipes(page));
+			return View(await _recipeService.GetAllRecipes(GetUserId(),page));
 		}
 
 		[HttpGet]
@@ -151,7 +151,7 @@ namespace HomeAssistant.Controllers
 
 				if (model == null)
 				{
-					model = await _recipeService.MoveNextUserRecipeStep(GetUserId(), recipeId);
+					return await MoveNextStep(recipeId);
 				}
 
 				return View(model);
@@ -166,7 +166,22 @@ namespace HomeAssistant.Controllers
 		public async Task<IActionResult> MoveNextStep(int recipeId)
 		{
 			await _recipeService.MoveNextUserRecipeStep(GetUserId(), recipeId);
+
 			return RedirectToAction(nameof(RecipeStep), new { recipeId });
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> FinishRecipe(int recipeId)
+		{
+			try
+			{
+				await _recipeService.DeleteUserRecipeStep(GetUserId(), recipeId);
+			}
+			catch(ArgumentNullException)
+			{
+				return BadRequest();
+			}
+			return RedirectToAction(nameof(Index));
 		}
 
 		private string GetUserId()
