@@ -1,0 +1,53 @@
+﻿@using HomeAssistant.Core.Models.Recipe
+@model RecipeFormViewModel
+
+<form method="post" asp-controller="Recipe" asp-action="Edit" enctype="multipart/form-data">
+	<input asp-for="Id" hidden>
+	<div class="col">
+		<div class="col-md-12">
+			<label asp-for="RecipeImage" class="form-label">Default file input example</label>
+			<input asp-for="RecipeImage" class="form-control" type="file" accept="image/*">
+		</div>
+		<div class="col-md-12">
+			<label asp-for="Name" class="form-label">Name</label>
+			<input asp-for="Name" class="form-control">
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+		<div class="col-md-12">
+			<label asp-for="Description" class="form-label">Write a short description</label>
+			<textarea class="form-control" asp-for="Description" rows="3"></textarea>
+			<span asp-validation-for="Description" class="text-danger"></span>
+		</div>
+
+		<div class="col-md-12 products">
+			@foreach (var item in Model.Products)
+			{
+				<div>
+					<input disabled class="form-control" value="@item.Value">
+					<input type="hidden" name="ProductsIds" class="form-control" id="@item.Key" value="@item.Key">
+					<a id="@item.Key" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
+				</div>
+			}
+			<label asp-for="ProductsIds" class="form-label">Required products for the recipe:</label>
+
+			<div class="input-form">
+				<h2>Add/Edit Products</h2>
+				<div class="form-outline" data-mdb-input-init>
+					<input onkeyup="onInput(this)" type="search" id="search" class="form-control" placeholder="Add/Search products by name" aria-label="Search" />
+				</div>
+				<table class="table table-striped table-hover table-info">
+					<tbody class="search-results">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<button type="submit" class="btn btn-primary">Edit</button>
+</form>
+
+
+
+@section Scripts {
+	<script src="~/js/productSearchForRecipe.js"></script>
+	<partial name="_ValidationScriptsPartial" />
+}

@@ -24,7 +24,7 @@
 		</div>
 		<div class="col-md-12">
 			<label asp-for="Description" class="form-label">Write a detailed description for this step</label>
-			<textarea class="form-control" name="Description" rows="3"></textarea>
+			<textarea class="form-control" asp-for="Description" rows="3"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 		</div>
 

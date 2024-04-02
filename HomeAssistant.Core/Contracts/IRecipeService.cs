@@ -11,6 +11,10 @@ namespace HomeAssistant.Core.Contracts
 	{
 		Task<int> AddRecipe(RecipeFormViewModel recipe);
 
+		Task<RecipeFormViewModel> GetRecipeFormViewModel(int recipeId);
+
+		Task EditRecipe(RecipeFormViewModel r);
+
 		Task<RecipeDetaislViewModel> GetRecipe(int recipeId);
 
 		Task<Dictionary<int,string>> GetProductsForRecipe(int recipeId);
@@ -26,5 +30,11 @@ namespace HomeAssistant.Core.Contracts
 		public Task MoveNextUserRecipeStep(string userId, int recipeId);
 
 		public Task DeleteUserRecipeStep(string userId, int recipeId);
+
+		public Task<StepFormViewModel> GetStep(int recipeId, int stepNumer);
+
+		public Task EditStep(StepFormViewModel step);
+
+		public Task DeleteRecipe(int recipeId);
     }
 }

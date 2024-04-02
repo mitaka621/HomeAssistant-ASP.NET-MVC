@@ -10,6 +10,8 @@ namespace HomeAssistant.Core.Models.Recipe
 	{
         public int RecipeId { get; set; }
 
+		public int StepNumber { get; set; }
+
         [Required(ErrorMessage = RequiredField)]
 		[StringLength(NameMaxLenght,
 		   MinimumLength = NameMinLenght,

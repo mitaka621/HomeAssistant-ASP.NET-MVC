@@ -17,5 +17,7 @@
         public IEnumerable<StepViewModel> Steps { get; set; } = new List<StepViewModel>();
 
         public bool AnySteps { get; set; }
+
+        public int PercentageCompleted { get; set; } = -1;
     }
 }

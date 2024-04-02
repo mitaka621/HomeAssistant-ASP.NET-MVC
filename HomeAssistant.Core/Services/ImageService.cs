@@ -80,7 +80,7 @@ namespace HomeAssistant.Core.Services
 				BucketName = "RecipePictures"
 			});
 
-			var existingImageFilter = Builders<GridFSFileInfo>.Filter.Eq("filename", recipeId);
+			var existingImageFilter = Builders<GridFSFileInfo>.Filter.Eq("filename", recipeId.ToString());
 			var existingImage = (await _gridFS.FindAsync(existingImageFilter)).FirstOrDefault();
 
 			if (existingImage != null)
@@ -92,7 +92,7 @@ namespace HomeAssistant.Core.Services
 			{
 				var options = new GridFSUploadOptions
 				{
-					Metadata = new BsonDocument("recipeId", recipeId)
+					Metadata = new BsonDocument("recipeId", recipeId.ToString())
 				};
 
 				await _gridFS.UploadFromStreamAsync(recipeId.ToString(), stream, options);

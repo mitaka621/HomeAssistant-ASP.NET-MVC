@@ -57,10 +57,11 @@ function onInput(e) {
 
 function ViewProductDetails(e) {
 	document.querySelector(`div.products`).innerHTML +=
-		`<input disabled class="form-control" value="${e.getAttribute("name")}">
-		<input type="hidden" name="ProductsIds" class="form-control" id="${e.id}" value="${e.id}">
-		<a id="${e.id}" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
-		`;
+		`<div>
+			<input disabled class="form-control" value="${e.getAttribute("name")}">
+			<input type="hidden" name="ProductsIds" class="form-control" id="${e.id}" value="${e.id}">
+			<a id="${e.id}" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
+		</div>`;
 
 	document.querySelector("#search").addEventListener("focusout", clear);
 	document.querySelector("#search").addEventListener("focus", (e) => onInput(e.target));
@@ -70,8 +71,7 @@ function ViewProductDetails(e) {
 }
 
 function removeProduct(e) {
-	document.querySelector(`input[id="${e.id}"]`).remove();
-	e.remove();
+	e.parentElement.remove();
 }
 
 function clear() {

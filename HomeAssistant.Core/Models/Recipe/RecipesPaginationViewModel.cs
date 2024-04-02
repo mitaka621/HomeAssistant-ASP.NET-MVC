@@ -13,5 +13,7 @@ namespace HomeAssistant.Core.Models.Recipe
 		public int CurrentPage { get; set; }
 
 		public IEnumerable<RecipeDetaislViewModel> Recipes { get; set; } = new List<RecipeDetaislViewModel>();
+
+		public IEnumerable<RecipeDetaislViewModel> StartedRecipes { get; set; } = new List<RecipeDetaislViewModel>();
 	}
 }

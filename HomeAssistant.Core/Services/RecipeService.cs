@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver.Core.Operations;
 using System.Data;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace HomeAssistant.Core.Services
@@ -171,10 +172,41 @@ namespace HomeAssistant.Core.Services
 			};
 		}
 
-		public async Task<RecipesPaginationViewModel> GetAllRecipes(string userId,int page, int productsOnPage = 10 )
+		public async Task<RecipesPaginationViewModel> GetAllRecipes(string userId, int page, int productsOnPage = 10)
 		{
 			var recipesToReturn = _dbcontext.Recipes.AsNoTracking();
 			RecipesPaginationViewModel finalModel = new();
+
+			var startedRecipes = await _dbcontext.UsersSteps
+				.AsNoTracking()
+				.Where(x => x.UserId == userId)
+				.Select(x => new { x.RecipeId, x.StepNumber })
+				  .ToDictionaryAsync(x => x.RecipeId, x => x.StepNumber);
+
+			var startedRecipesModel = await recipesToReturn.Where(x => startedRecipes.Keys.Contains(x.Id)).Select(x => new RecipeDetaislViewModel()
+			{
+				Id = x.Id,
+				Description = x.Description,
+				Name = x.Name
+			})
+				.ToListAsync();
+
+			foreach (var item in startedRecipesModel)
+			{
+				startedRecipesModel
+					.First(x => x.Id == item.Id).PercentageCompleted = startedRecipes.ToList()
+						.First(d => d.Key == item.Id).Value * 100
+						/
+						await _dbcontext.Steps
+						.Where(s => s.RecipeId == item.Id)
+						.CountAsync();
+
+				startedRecipesModel
+					.First(x => x.Id == item.Id).Photo = await _imageService.GetRecipeImage(item.Id);
+
+			}
+
+			finalModel.StartedRecipes = startedRecipesModel;
 
 			finalModel.PageCount = (int)Math.Ceiling((await recipesToReturn.CountAsync()) / (double)productsOnPage);
 
@@ -190,6 +222,7 @@ namespace HomeAssistant.Core.Services
 			finalModel.CurrentPage = page;
 
 			recipesToReturn = recipesToReturn
+				.Where(x => !startedRecipes.Keys.Contains(x.Id))
 				.Skip((page - 1) * productsOnPage)
 				.Take(productsOnPage);
 
@@ -303,6 +336,142 @@ namespace HomeAssistant.Core.Services
 			}
 
 			_dbcontext.UsersSteps.Remove(step);
+
+			await _dbcontext.SaveChangesAsync();
+		}
+
+		public async Task<StepFormViewModel> GetStep(int recipeId, int stepNumer)
+		{
+			var step = await _dbcontext.Steps
+				.AsNoTracking()
+				.Include(x => x.RecipeProductStep)
+				.FirstOrDefaultAsync(x => x.RecipeId == recipeId && x.StepNumber == stepNumer);
+
+			if (step == null)
+			{
+				throw new ArgumentNullException(nameof(step));
+			}
+			var model = new StepFormViewModel()
+			{
+				Description = step.Description,
+				Duration = step.DurationInMin,
+				StepNumber = step.StepNumber,
+				Name = step.Name,
+				Products = await _dbcontext.RecipesProducts.Where(x => x.RecipeId == recipeId)
+				.Select(t => new { t.ProductId, t.Product.Name })
+				   .ToDictionaryAsync(t => t.ProductId, t => t.Name),
+				SelectedProductIds = step.RecipeProductStep.Where(x => x.RecipeId == recipeId && x.StepNumber == stepNumer).Select(x => x.ProductId).ToArray(),
+				StepType = step.StepType,
+			};
+
+			return model;
+		}
+
+		public async Task EditStep(StepFormViewModel s)
+		{
+			var step = await _dbcontext.Steps
+				.FirstOrDefaultAsync(x => x.RecipeId == s.RecipeId && x.StepNumber == s.StepNumber);
+
+			if (step == null)
+			{
+				throw new ArgumentNullException(nameof(step));
+			}
+
+			step.Name = s.Name;
+			step.Description = s.Description;
+			step.DurationInMin = s.Duration;
+			step.StepNumber = s.StepNumber;
+
+			var oldProdForStep = await _dbcontext.RecipesProductsSteps
+				.Where(x => x.RecipeId == s.RecipeId && x.StepNumber == s.StepNumber)
+				.ToListAsync();
+
+			_dbcontext.RecipesProductsSteps.RemoveRange(oldProdForStep);
+			_dbcontext.RecipesProductsSteps
+				.AddRange(s.SelectedProductIds.Select(x => new RecipeProductStep()
+				{
+					ProductId = x,
+					StepNumber = s.StepNumber,
+					RecipeId = s.RecipeId,
+				}).ToArray());
+
+			await _dbcontext.SaveChangesAsync();
+		}
+
+		public async Task DeleteRecipe(int recipeId)
+		{
+			var recipe = await _dbcontext.Recipes.FirstOrDefaultAsync(x => x.Id == recipeId);
+
+			if (recipe == null)
+			{
+				throw new ArgumentNullException(nameof(recipe));
+			}
+
+			var steps = await _dbcontext.RecipesProductsSteps.Where(x => x.RecipeId == recipeId).ToListAsync();
+			var userSteps = await _dbcontext.UsersSteps.Where(x => x.RecipeId == recipeId).ToListAsync();
+			var recipeProducts = await _dbcontext.RecipesProducts.Where(x => x.RecipeId == recipeId).ToListAsync();
+
+			_dbcontext.UsersSteps.RemoveRange(userSteps);
+			_dbcontext.RecipesProducts.RemoveRange(recipeProducts);
+			_dbcontext.RecipesProductsSteps.RemoveRange(steps);
+			_dbcontext.Recipes.Remove(recipe);
+
+			_dbcontext.SaveChanges();
+		}
+
+		public async Task<RecipeFormViewModel> GetRecipeFormViewModel(int recipeId)
+		{
+			var recipe = await _dbcontext.Recipes
+				.AsNoTracking()
+				.Select(x => new RecipeFormViewModel()
+				{
+					Description = x.Description,
+					Id = x.Id,
+					Name = x.Name,
+				}).FirstOrDefaultAsync(x => x.Id == recipeId);
+
+
+			if (recipe == null)
+			{
+				throw new ArgumentNullException(nameof(recipe));
+			}
+
+			recipe.Products = await GetProductsForRecipe(recipeId);
+
+			return recipe;
+
+		}
+
+		public async Task EditRecipe(RecipeFormViewModel r)
+		{
+			var recipe = await _dbcontext.Recipes.FirstOrDefaultAsync(x => x.Id == r.Id);
+
+			if (recipe == null)
+			{
+				throw new ArgumentNullException(nameof(recipe));
+			}
+
+			recipe.Name = r.Name;
+			recipe.Description = r.Description;
+			recipe.Id = r.Id;
+
+			var prodToDelete=await _dbcontext.RecipesProducts.Where(x => x.RecipeId == r.Id).ToListAsync();
+
+			_dbcontext.RecipesProducts.RemoveRange(prodToDelete);
+
+			recipe.RecipeProducts = r.ProductsIds.Select(x => new RecipeProduct() { ProductId = x, RecipeId = r.Id }).ToList();
+
+			if (r.RecipeImage != null && r.RecipeImage.Length > 0)
+			{
+				using (var stream = new MemoryStream())
+				{
+					r.RecipeImage.CopyTo(stream);
+					var imageData = stream.ToArray();
+
+					await _imageService.SaveRecipeImage(r.Id, imageData);
+				}
+
+			}
 
 			await _dbcontext.SaveChangesAsync();
 		}

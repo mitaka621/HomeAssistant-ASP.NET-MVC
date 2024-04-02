@@ -88,8 +88,7 @@ namespace HomeAssistant.Controllers
 
 		[HttpPost]
 		public async Task<IActionResult> AddNormalStep(StepFormViewModel s)
-		{
-			//removing validation bc of inaccurate validation bug regarding input from checkbox
+		{		
 			ModelState.Remove("SelectedProductIds");
 
 			if (!ModelState.IsValid)
@@ -182,6 +181,86 @@ namespace HomeAssistant.Controllers
 				return BadRequest();
 			}
 			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> EditStep(int recipeId, int stepNumber)
+		{
+			try
+			{
+				return View(await _recipeService.GetStep(recipeId, stepNumber));
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+			
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> EditStep(StepFormViewModel step)
+		{
+            if (!ModelState.IsValid)
+            {
+				 step.Products = await _recipeService.GetProductsForRecipe(step.RecipeId);
+				return View(step);
+            }
+            try
+			{
+				await _recipeService.EditStep(step);
+
+				return RedirectToAction(nameof(AddSteps),new {recipeId=step.RecipeId});
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+
+		}
+		[HttpGet]
+		public async Task<IActionResult> Delete(int recipeId)
+		{
+			try
+			{
+				await _recipeService.DeleteRecipe(recipeId);
+
+				return RedirectToAction(nameof(Index));
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> Edit(int recipeId)
+		{
+			try
+			{
+				return View(await _recipeService.GetRecipeFormViewModel(recipeId));
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Edit(RecipeFormViewModel recipe)
+		{
+            if (!ModelState.IsValid)
+            {
+				return View(recipe);
+            }
+            try
+			{
+				await _recipeService.EditRecipe(recipe);
+				return RedirectToAction(nameof(Index));
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
 		}
 
 		private string GetUserId()

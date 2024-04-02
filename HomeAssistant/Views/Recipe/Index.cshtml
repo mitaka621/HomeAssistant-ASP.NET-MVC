@@ -3,47 +3,160 @@
 
 <link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
-<a class="btn btn-primary" asp-controller="Recipe" asp-action="Add">Add new recipe</a>
+
+@if (Model.StartedRecipes.Any())
+{
+	<h1>Started Recipes</h1>
+	<div class="started-recipes recipes">
+		@foreach (var item in Model.StartedRecipes)
+		{
+
+			<div class="card" style="width: 18rem;">
+				<div class="img-container">
+					@if (item.Photo != null && item.Photo.Length > 0)
+					{
+						<img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" />
+					}
+					else
+					{
+						<p>No image!</p>
+					}
+				</div>
+				<div class="card-body">
+					<h5 class="card-title"><b>@item.Name</b></h5>
+					<p class="card-text">@item.Description</p>
+
+					<h5>Progress:</h5>
+					<div class="progress">
+						<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @item.PercentageCompleted%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">@item.PercentageCompleted%</div>
+					</div>
+
+					<a type="submit" class="btn btn-success" asp-controller="Recipe" asp-action="RecipeStep" asp-route-recipeId="@item.Id">Resume Recipe</a>
+
+				</div>
+			</div>
+
+		}
+	</div>
+}
+
+<div class="add-new">
+	<h1>Available Recipes</h1>
+	<a class="btn btn-primary" asp-controller="Recipe" asp-action="Add">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" /></svg>
+	</a>
+</div>
 
 <div class="recipes">
 
 	@foreach (var item in Model.Recipes)
 	{
+		int notAvailableProducts = item.ProductsNotAvailable == null ? 0 : item.ProductsNotAvailable.Count();
+		int totalProducts = item.Products.Count() + notAvailableProducts;
 
-		<div class="card" style="width: 18rem;">
-			@if (item.Photo != null && item.Photo.Length > 0)
-			{
-				<img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" />
-			}
-			else
-			{
-				<p>No image!</p>
-			}
+		<div class="card recipe" style="width: 18rem;">
+			<div class="img-container">
+				@if (item.Photo != null && item.Photo.Length > 0)
+				{
+					<img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" />
+				}
+				else
+				{
+					<p>No image!</p>
+				}
+			</div>
 			<div class="card-body">
-				<h5 class="card-title">@item.Name</h5>
-				<p class="card-text">@item.Description</p>
-				<h5>Ingredients:</h5>
-				<ul class="available-prod">
-					@foreach (var prod in item.Products)
-					{
-						<li>@prod</li>
-					}
-				</ul>
-				@if (item.ProductsNotAvailable != null && item.ProductsNotAvailable.Count() != 0)
+				<h5 class="card-title"><b>@item.Name</b></h5>
+				<p class="card-text desc">@item.Description</p>
+				@if (totalProducts - notAvailableProducts != totalProducts)
 				{
-					<p>Not Available:</p>
-					<ul class="not-Available-prod">
-						@foreach (var prod in item.ProductsNotAvailable)
-						{
-							<li>@prod</li>
-						}
-					</ul>
+					<h5 class="alert-danger">Availible Ingredients: @(totalProducts - notAvailableProducts)/@(totalProducts)</h5>
 				}
-				@if (item.AnySteps)
+				else
 				{
-					<a type="submit" class="btn btn-success" asp-controller="Recipe" asp-action="RecipeStep" asp-route-recipeId="@item.Id">Start Cooking</a>
+					<h5>Available Ingredients: @(totalProducts - notAvailableProducts)/@(totalProducts)</h5>
 				}
-				<a asp-controller="Recipe" asp-action="AddSteps" asp-route-recipeId="@item.Id" class="btn btn-primary">Edit Recipe Steps</a>
+
+				<button type="button" class="btn btn-primary show" data-bs-toggle="modal" data-bs-target="#s@(item.Id)">
+					Begin
+				</button>
+
+				<!-- Modal -->
+				<div class="modal fade" id="s@(item.Id)" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<div class="action-btns">
+									<a class="btn btn-primary" title="Edit recipe details" asp-controller="Recipe" asp-action="Edit" asp-route-recipeId="@item.Id">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" /></svg>
+									</a>
+									<a class="btn btn-warning" title="Edit steps" asp-controller="Recipe" asp-action="AddSteps" asp-route-recipeId="@item.Id">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M192 0c-41.8 0-77.4 26.7-90.5 64H64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H282.5C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM72 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm104-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16s7.2-16 16-16zM72 368a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm88 0c0-8.8 7.2-16 16-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16z" /></svg>
+									</a>
+									<a class="btn btn-danger" asp-controller="Recipe" asp-action="Delete" asp-route-recipeId="@item.Id" title="Delete recipe">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" /></svg>
+									</a>
+								</div>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="img-container-modal">
+									@if (item.Photo != null && item.Photo.Length > 0)
+									{
+										<img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" />
+									}
+									else
+									{
+										<p>No image!</p>
+									}
+								</div>
+								<h5 class="card-title"><b>@item.Name</b></h5>
+								<p class="card-text">@item.Description</p>
+								<h5>Ingredients:</h5>
+								<div class="ingredients-container">
+
+									<div>
+										@if (item.ProductsNotAvailable != null && item.ProductsNotAvailable.Count() != 0)
+										{
+											<p><u>Available</u></p>
+										}
+										<ul class="available-prod">
+											@foreach (var prod in item.Products)
+											{
+												<li>@prod</li>
+											}
+										</ul>
+									</div>
+
+									@if (item.ProductsNotAvailable != null && item.ProductsNotAvailable.Count() != 0)
+									{
+										<div>
+											<p><u>Not Available</u></p>
+											<ul class="not-Available-prod">
+												@foreach (var prod in item.ProductsNotAvailable)
+												{
+													<li>@prod</li>
+												}
+											</ul>
+										</div>
+									}
+								</div>
+							</div>
+							<div class="modal-footer">
+								@if (item.AnySteps)
+								{
+									<a type="submit" class="btn btn-success" asp-controller="Recipe" asp-action="RecipeStep" asp-route-recipeId="@item.Id">Start Cooking</a>
+								}
+								else
+								{
+									<a asp-controller="Recipe" asp-action="AddSteps" asp-route-recipeId="@item.Id" class="btn btn-warning">Add steps to the recipe</a>
+								}
+								
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 
