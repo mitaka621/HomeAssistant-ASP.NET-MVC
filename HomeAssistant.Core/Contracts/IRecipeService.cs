@@ -36,5 +36,9 @@ namespace HomeAssistant.Core.Contracts
 		public Task EditStep(StepFormViewModel step);
 
 		public Task DeleteRecipe(int recipeId);
+
+		public Task ChangeStepPosition(int recipeId, int oldStepNumber, int newStepNumber);
+
+		public Task DeleteStep(int recipeId, int stepNumber);
     }
 }

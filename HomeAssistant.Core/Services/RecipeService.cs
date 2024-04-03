@@ -475,5 +475,72 @@ namespace HomeAssistant.Core.Services
 
 			await _dbcontext.SaveChangesAsync();
 		}
+
+		public async Task ChangeStepPosition(int recipeId, int oldStepNumber, int newStepNumber)
+		{
+			var step = await _dbcontext.Steps
+				.AsNoTracking()
+				.FirstOrDefaultAsync(x => x.RecipeId == recipeId && x.StepNumber == oldStepNumber);
+
+            if (step==null)
+            {
+				throw new ArgumentNullException(nameof(step));
+            }
+
+			var totalStepsCount = await _dbcontext.Steps.Where(x => x.RecipeId == recipeId).CountAsync();
+
+            if (oldStepNumber==newStepNumber||newStepNumber<1||newStepNumber>totalStepsCount)
+            {
+				throw new InvalidOperationException();
+            }
+
+			var step2 = await _dbcontext.Steps
+				.AsNoTracking()
+				.FirstOrDefaultAsync(x => x.RecipeId == recipeId && x.StepNumber == newStepNumber);
+
+            if (step2==null)
+            {
+				throw new ArgumentNullException(nameof(step2));
+			}
+
+
+			_dbcontext.Steps.RemoveRange(step,step2);
+			await _dbcontext.SaveChangesAsync();
+
+			step.StepNumber = newStepNumber;
+
+			step2.StepNumber =oldStepNumber;
+
+			_dbcontext.Steps.AddRange(step,step2);
+			await _dbcontext.SaveChangesAsync();
+		}
+
+		public async Task DeleteStep(int recipeId, int stepNumber)
+		{
+			var step = await _dbcontext.Steps
+				.AsNoTracking()
+				.FirstOrDefaultAsync(x => x.RecipeId == recipeId && x.StepNumber == stepNumber);
+
+			if (step == null)
+			{
+				throw new ArgumentNullException(nameof(step));
+			}
+
+			var totalStepsCount = await _dbcontext.Steps.Where(x => x.RecipeId == recipeId).CountAsync();
+
+			var steps=await _dbcontext.Steps
+				.AsNoTracking()
+				.Where(x=>x.RecipeId==recipeId&&x.StepNumber>step.StepNumber&&x.StepNumber<= totalStepsCount)
+				.ToListAsync();
+
+			
+			_dbcontext.Steps.RemoveRange(steps);
+			_dbcontext.Steps.Remove(step);
+			await _dbcontext.SaveChangesAsync();
+
+			steps.ForEach(x => x.StepNumber--);
+			_dbcontext.Steps.AddRange(steps);
+			await _dbcontext.SaveChangesAsync();
+		}
 	}
 }

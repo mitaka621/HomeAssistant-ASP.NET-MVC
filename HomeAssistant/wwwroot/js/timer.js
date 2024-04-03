@@ -1,5 +1,17 @@
 let timer = document.querySelector("h1.timer");
 
+var x = document.getElementById("myAudio");
+x.loop = true;
+var promise = x.play();
+
+if (promise !== undefined) {
+    promise.catch(function (error) {
+        alert('Please enable audio autoplay to hear the timer go off.');
+    });
+} else {
+    x.pause();
+}
+
 let min, sec;
 
 if (timer !== null) {
@@ -18,15 +30,8 @@ if (timer !== null) {
 function Timer(min, sec) {
 
     if (min === 0 && sec === 0) {
-        var x = document.getElementById("myAudio");   
-        x.loop = true;
-        var promise = x.play();;
-
-        if (promise !== undefined) {
-            promise.catch(function (error) {
-                alert('Please enable autoplay to hear the timer go off.');
-            });
-        }
+      
+        x.play();
 
         let btn = document.querySelector("button.btn-danger");
         btn.classList.remove("btn-danger")

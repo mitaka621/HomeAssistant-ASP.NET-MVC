@@ -18,9 +18,9 @@ namespace HomeAssistant.Controllers
 			_recipeService = recipeService;
 		}
 
-		public async Task<IActionResult> Index(int page=1)
+		public async Task<IActionResult> Index(int page = 1)
 		{
-			return View(await _recipeService.GetAllRecipes(GetUserId(),page));
+			return View(await _recipeService.GetAllRecipes(GetUserId(), page));
 		}
 
 		[HttpGet]
@@ -88,7 +88,7 @@ namespace HomeAssistant.Controllers
 
 		[HttpPost]
 		public async Task<IActionResult> AddNormalStep(StepFormViewModel s)
-		{		
+		{
 			ModelState.Remove("SelectedProductIds");
 
 			if (!ModelState.IsValid)
@@ -117,7 +117,7 @@ namespace HomeAssistant.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddTimerStep(StepFormViewModel s)
 		{
-			if (!ModelState.IsValid&&s.Duration!=null)
+			if (!ModelState.IsValid && s.Duration != null)
 			{
 				s.PreviousStep = await _recipeService.GetLastStepDetails(s.RecipeId);
 				return View(s);
@@ -158,8 +158,8 @@ namespace HomeAssistant.Controllers
 			catch (InvalidOperationException)
 			{
 				return BadRequest();
-			}         
-        }
+			}
+		}
 
 		[HttpPost]
 		public async Task<IActionResult> MoveNextStep(int recipeId)
@@ -176,7 +176,7 @@ namespace HomeAssistant.Controllers
 			{
 				await _recipeService.DeleteUserRecipeStep(GetUserId(), recipeId);
 			}
-			catch(ArgumentNullException)
+			catch (ArgumentNullException)
 			{
 				return BadRequest();
 			}
@@ -194,22 +194,22 @@ namespace HomeAssistant.Controllers
 			{
 				return BadRequest();
 			}
-			
+
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> EditStep(StepFormViewModel step)
 		{
-            if (!ModelState.IsValid)
-            {
-				 step.Products = await _recipeService.GetProductsForRecipe(step.RecipeId);
+			if (!ModelState.IsValid)
+			{
+				step.Products = await _recipeService.GetProductsForRecipe(step.RecipeId);
 				return View(step);
-            }
-            try
+			}
+			try
 			{
 				await _recipeService.EditStep(step);
 
-				return RedirectToAction(nameof(AddSteps),new {recipeId=step.RecipeId});
+				return RedirectToAction(nameof(AddSteps), new { recipeId = step.RecipeId });
 			}
 			catch (ArgumentNullException)
 			{
@@ -248,11 +248,11 @@ namespace HomeAssistant.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Edit(RecipeFormViewModel recipe)
 		{
-            if (!ModelState.IsValid)
-            {
+			if (!ModelState.IsValid)
+			{
 				return View(recipe);
-            }
-            try
+			}
+			try
 			{
 				await _recipeService.EditRecipe(recipe);
 				return RedirectToAction(nameof(Index));
@@ -261,6 +261,46 @@ namespace HomeAssistant.Controllers
 			{
 				return BadRequest();
 			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ChengeStepPos(int recipeId, int oldStepNumber, int newStepNumber)
+		{
+			try
+			{
+				await _recipeService.ChangeStepPosition(recipeId, oldStepNumber, newStepNumber);
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+			catch (InvalidOperationException)
+			{
+				return BadRequest();
+			}
+
+			return RedirectToAction(nameof(AddSteps), new { recipeId = recipeId });
+
+
+
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> DeleteStep(int recipeId, int stepNumber)
+		{
+			try
+			{
+				await _recipeService.DeleteStep(recipeId, stepNumber);
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+
+			return RedirectToAction(nameof(AddSteps), new { recipeId = recipeId });
+
+
+
 		}
 
 		private string GetUserId()

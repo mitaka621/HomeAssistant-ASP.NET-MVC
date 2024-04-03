@@ -81,11 +81,11 @@ namespace HomeAssistant.Core.Services
 			});
 
 			var existingImageFilter = Builders<GridFSFileInfo>.Filter.Eq("filename", recipeId.ToString());
-			var existingImage = (await _gridFS.FindAsync(existingImageFilter)).FirstOrDefault();
+			var existingImage = await _gridFS.FindAsync(existingImageFilter);
 
 			if (existingImage != null)
 			{
-				await _gridFS.DeleteAsync(existingImage.Id);
+				await existingImage.ForEachAsync(x => _gridFS.DeleteAsync(x.Id));
 			}
 
 			using (var stream = new MemoryStream(imageData))
@@ -95,7 +95,7 @@ namespace HomeAssistant.Core.Services
 					Metadata = new BsonDocument("recipeId", recipeId.ToString())
 				};
 
-				await _gridFS.UploadFromStreamAsync(recipeId.ToString(), stream, options);
+				var id=await _gridFS.UploadFromStreamAsync(recipeId.ToString(), stream, options);
 			}
 
 		}

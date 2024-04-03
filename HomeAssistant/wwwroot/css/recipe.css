@@ -150,3 +150,18 @@ div.action-btns svg {
     fill: white;
     margin-bottom: 0.2em;
 }
+div.step-controls button {
+    padding: 0;
+}
+div.step-controls svg {
+    width: 1em;
+}
+div.step-controls {
+    display: flex;
+    flex-direction: column;
+}
+
+svg.edit-svg{
+    width:1em;
+    margin-bottom:0.3em;
+}
