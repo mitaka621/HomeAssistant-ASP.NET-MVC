@@ -165,3 +165,38 @@ svg.edit-svg{
     width:1em;
     margin-bottom:0.3em;
 }
+div.add-products-container a{
+    height: fit-content;
+}
+form.recipe-form .img-label {
+    text-align: center;
+    width: 100%;
+}
+form.recipe-form label{
+    font-size:1.3em;
+}
+form.recipe-form textarea{
+    margin-bottom:3em;
+}
+form.recipe-form h2{
+    text-align:center;
+}
+form.recipe-form .btn-div {
+    margin:0 auto;
+    width:fit-content;
+}
+div.add-products-container {
+    display: flex;
+    gap: 1em;
+}
+form.recipe-form h1 {
+    margin-bottom: 1em;
+    text-align: center;
+}
+form.recipe-form input {
+    margin-bottom: 2em;
+}
+.recipe-form {
+    width:40em;
+    margin:0 auto;
+}

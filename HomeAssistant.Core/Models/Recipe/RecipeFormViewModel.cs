@@ -27,6 +27,6 @@ namespace HomeAssistant.Core.Models.Recipe
 
         public IEnumerable<RecipeProductViewModel> SelectedProducts { get; set; } = new List<RecipeProductViewModel>();
 
-		public Dictionary<int, string> Products { get; set; } = new();
-    }
+		public IEnumerable<RecipeProductViewModel> RecipeProducts { get; set; } = new List<RecipeProductViewModel>();
+	}
 }

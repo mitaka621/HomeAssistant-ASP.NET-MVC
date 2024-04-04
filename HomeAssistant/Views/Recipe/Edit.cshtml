@@ -20,12 +20,12 @@
 		</div>
 
 		<div class="col-md-12 products">
-			@foreach (var item in Model.Products)
+			@foreach (var item in Model.RecipeProducts)
 			{
 				<div>
-					<input disabled class="form-control" value="@item.Value">
-					<input type="hidden" name="ProductsIds" class="form-control" id="@item.Key" value="@item.Key">
-					<a id="@item.Key" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
+					<input disabled class="form-control" value="@item.Name">
+					<input type="hidden" name="ProductsIds" class="form-control" id="@item.Id" value="@item.Id">
+					<a id="@item.Id" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
 				</div>
 			}
 			<label class="form-label">Required products for the recipe:</label>

@@ -39,10 +39,8 @@
 }
 else
 {
-	<form method="post" asp-controller="Recipe" asp-action="FinishRecipe">
-		<input hidden name="recipeId" value="@Model.RecipeId" />
-		<button class="btn btn-primary" type="submit">Finish</button>
-	</form>
+	
+	<a class="btn btn-primary" asp-controller="Recipe" asp-action="FinishRecipe"asp-route-recipeId="@Model.RecipeId">Finish</a>
 }
 
 @section Scripts {

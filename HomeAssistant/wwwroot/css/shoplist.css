@@ -127,7 +127,7 @@ div.right {
     display: flex;
     flex-direction: column;
     gap: 0.2em;
-    height: 18em;
+    height: 38em;
     overflow: scroll;
     scrollbar-width: thin;
     overflow-x: hidden;

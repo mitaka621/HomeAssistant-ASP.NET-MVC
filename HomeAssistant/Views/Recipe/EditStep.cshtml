@@ -13,9 +13,9 @@
 			@foreach (var item in Model.Products)
 			{
 				<div class="form-check">
-					<input id="s(@item.Key)" @(Model.SelectedProductIds.Contains(item.Key)?"checked":"") name="SelectedProductIds" class="form-check-input" type="checkbox" value="@item.Key">
-					<label class="form-check-label" for="s(@item.Key)">
-						@item.Value
+					<input id="s(@item.Id)" @(Model.SelectedProductIds.Contains(item.Id) ? "checked" : "") name="SelectedProductIds" class="form-check-input" type="checkbox" value="@item.Id">
+					<label class="form-check-label" for="s(@item.Id)">
+						@item.Name
 					</label>
 				</div>
 			}

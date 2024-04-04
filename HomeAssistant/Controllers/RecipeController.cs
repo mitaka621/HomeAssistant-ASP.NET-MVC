@@ -169,19 +169,7 @@ namespace HomeAssistant.Controllers
 			return RedirectToAction(nameof(RecipeStep), new { recipeId });
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> FinishRecipe(int recipeId)
-		{
-			try
-			{
-				await _recipeService.DeleteUserRecipeStep(GetUserId(), recipeId);
-			}
-			catch (ArgumentNullException)
-			{
-				return BadRequest();
-			}
-			return RedirectToAction(nameof(Index));
-		}
+		
 
 		[HttpGet]
 		public async Task<IActionResult> EditStep(int recipeId, int stepNumber)
@@ -298,9 +286,32 @@ namespace HomeAssistant.Controllers
 			}
 
 			return RedirectToAction(nameof(AddSteps), new { recipeId = recipeId });
+		}
 
+		[HttpGet] 
+		public async Task<IActionResult> FinishRecipe(int recipeId)
+		{
+			ViewBag.RecipeId = recipeId;	
+			return View(await _recipeService.GetProductsForRecipe(recipeId));
+		}
 
-
+		[HttpPost]
+		public async Task<IActionResult> FinishRecipe(int recipeId, IEnumerable<RecipeProductViewModel> products)
+		{
+			try
+			{
+				await _recipeService.UpdateProductQuantities(products);
+				await _recipeService.DeleteUserRecipeStep(GetUserId(), recipeId);
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+			catch (InvalidOperationException)
+			{
+				return BadRequest();
+			}
+			return RedirectToAction(nameof(Index));
 		}
 
 		private string GetUserId()

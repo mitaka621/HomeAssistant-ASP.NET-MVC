@@ -22,7 +22,7 @@
 	<ul>
 		@foreach (var product in Model.Products)
 		{
-			<li>@product</li>
+			<li>@(product.Name)(@product.Quantity)</li>
 		}
 	</ul>
 </div>
@@ -31,6 +31,7 @@
 	<h3>Add steps for preparing the dish:</h3>
 	@{
 		int counter = 1;
+
 		foreach (var step in Model.Steps)
 		{
 			<div class="step">

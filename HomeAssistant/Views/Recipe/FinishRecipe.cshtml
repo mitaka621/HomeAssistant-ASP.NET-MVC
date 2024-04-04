@@ -1,0 +1,30 @@
+﻿@using HomeAssistant.Core.Models.Recipe
+@model IEnumerable<RecipeProductViewModel>
+
+<h1>Products Used</h1>
+
+<h2>Is this correct?</h2>
+<form class="row g-3" asp-controller="Recipe" asp-action="FinishRecipe" asp-route-recipeId="@ViewBag.RecipeId">
+	@{
+		int count = 0;
+		foreach (var prod in Model)
+		{
+			if (prod.AvailableQuantity == 0)
+			{
+				continue;
+			}
+			<div class="col-md-6">
+				<label class="form-label">Product Name</label>
+				<input disabled class="form-control" value="@prod.Name">
+				<input hidden type="number" name="products[@(count)].Id" value="@prod.Id">
+			</div>
+			<div class="col-md-6">
+				<label for="@prod.Id" class="form-label">Quantity Used (Max Available @prod.AvailableQuantity)</label>
+				<input type="number" name="products[@(count++)].Quantity" class="form-control" id="@prod.Id" required min="0" max="@prod.AvailableQuantity" step="1" value="@(prod.Quantity<=prod.AvailableQuantity?prod.Quantity:prod.AvailableQuantity)">
+			</div>
+		}
+	}
+
+	<button class="btn btn-primary" type="submit">Finish</button>
+	
+</form>

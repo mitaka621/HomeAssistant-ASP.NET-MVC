@@ -51,8 +51,8 @@
 
 	@foreach (var item in Model.Recipes)
 	{
-		int notAvailableProducts = item.ProductsNotAvailable == null ? 0 : item.ProductsNotAvailable.Count();
-		int totalProducts = item.Products.Count() + notAvailableProducts;
+		int notAvailableProducts = item.Products.Count(x=>!x.IsAvailable);
+		int totalProducts = item.Products.Count();
 
 		<div class="card recipe" style="width: 18rem;">
 			<div class="img-container">
@@ -116,26 +116,26 @@
 								<div class="ingredients-container">
 
 									<div>
-										@if (item.ProductsNotAvailable != null && item.ProductsNotAvailable.Count() != 0)
+										@if (notAvailableProducts>0)
 										{
 											<p><u>Available</u></p>
 										}
 										<ul class="available-prod">
-											@foreach (var prod in item.Products)
+											@foreach (var prod in item.Products.Where(x=>x.IsAvailable))
 											{
-												<li>@prod</li>
+												<li>@(prod.Name)(@prod.Quantity)</li>
 											}
 										</ul>
 									</div>
 
-									@if (item.ProductsNotAvailable != null && item.ProductsNotAvailable.Count() != 0)
+									@if (notAvailableProducts > 0)
 									{
 										<div>
 											<p><u>Not Available</u></p>
 											<ul class="not-Available-prod">
-												@foreach (var prod in item.ProductsNotAvailable)
+												@foreach (var prod in item.Products.Where(x=>!x.IsAvailable))
 												{
-													<li>@prod</li>
+													<li>@(prod.Name)(@prod.AvailableQuantity / @prod.Quantity)</li>
 												}
 											</ul>
 										</div>

@@ -30,8 +30,8 @@ namespace HomeAssistant.Core.Services
 				Description = r.Description,
 				Name = r.Name,
 				RecipeProducts = r.SelectedProducts
-				.DistinctBy(x=>x.Id)
-				.Where(x=>x.Quantity>0)
+				.DistinctBy(x => x.Id)
+				.Where(x => x.Quantity > 0)
 				.Select(x => new RecipeProduct()
 				{
 					ProductId = x.Id,
@@ -81,7 +81,12 @@ namespace HomeAssistant.Core.Services
 				Description = recipe.Description,
 				Name = recipe.Name,
 				Photo = await getImage,
-				Products = recipe.RecipeProducts.Select(x => x.Product.Name).ToArray(),
+				Products = recipe.RecipeProducts
+				.Select(x => new RecipeProductViewModel()
+				{
+					Name = x.Product.Name,
+					Quantity = x.Quantity,
+				}).ToArray(),
 				Steps = recipe.Steps.Select(x => new StepViewModel()
 				{
 					Description = x.Description,
@@ -93,13 +98,18 @@ namespace HomeAssistant.Core.Services
 			};
 		}
 
-		public async Task<Dictionary<int, string>> GetProductsForRecipe(int recipeId)
+		public async Task<IEnumerable<RecipeProductViewModel>> GetProductsForRecipe(int recipeId)
 		{
 			return await _dbcontext.RecipesProducts
 				.AsNoTracking()
-				.Include(x => x.Product)
 				.Where(x => x.RecipeId == recipeId)
-				.ToDictionaryAsync(t => t.ProductId, t => t.Product.Name);
+				.Select(x => new RecipeProductViewModel()
+				{
+					Id = x.ProductId,
+					Name = x.Product.Name,
+					Quantity = x.Quantity,
+					AvailableQuantity = x.Product.Count
+				}).ToListAsync();
 		}
 
 		public async Task AddStep(StepFormViewModel step)
@@ -235,14 +245,35 @@ namespace HomeAssistant.Core.Services
 				Id = x.Id,
 				Description = x.Description,
 				Name = x.Name,
-				Products = x.RecipeProducts.Where(x => x.Product.Count > 0).Select(x => x.Product.Name).ToArray(),
-				ProductsNotAvailable = x.RecipeProducts.Where(x => x.Product.Count == 0).Select(x => x.Product.Name).ToArray(),
+				Products = x.RecipeProducts.Select(x => new RecipeProductViewModel()
+				{
+					Id = x.ProductId,
+					Name = x.Product.Name,
+					Quantity = x.Quantity,
+				}).ToArray(),
 				AnySteps = x.Steps.Any(y => y.RecipeId == x.Id)
 			}).ToArrayAsync();
 
-			foreach (var item in finalModel.Recipes)
+			foreach (var recipe in finalModel.Recipes)
 			{
-				finalModel.Recipes.First(x => x.Id == item.Id).Photo = await _imageService.GetRecipeImage(item.Id);
+				finalModel.Recipes.First(x => x.Id == recipe.Id).Photo = await _imageService.GetRecipeImage(recipe.Id);
+
+				var prodForRecipe = await _dbcontext.Products
+					.Where(x => recipe.Products.Select(x => x.Id).Contains(x.Id))
+					.ToListAsync();
+				foreach (var product in recipe.Products)
+				{
+					var currentProd = finalModel.Recipes
+						.First(x => x.Id == recipe.Id)
+						.Products
+						.First(x => x.Id == product.Id);
+
+					currentProd.IsAvailable = prodForRecipe
+										.First(x => x.Id == product.Id).Count >= product.Quantity ? true : false;
+
+					currentProd.AvailableQuantity = prodForRecipe
+										.First(x => x.Id == product.Id).Count;
+				}
 			}
 
 			return finalModel;
@@ -362,8 +393,12 @@ namespace HomeAssistant.Core.Services
 				StepNumber = step.StepNumber,
 				Name = step.Name,
 				Products = await _dbcontext.RecipesProducts.Where(x => x.RecipeId == recipeId)
-				.Select(t => new { t.ProductId, t.Product.Name })
-				   .ToDictionaryAsync(t => t.ProductId, t => t.Name),
+				.Select(t => new RecipeProductViewModel()
+				{
+					Id = t.ProductId,
+					Name = t.Product.Name,
+				})
+				   .ToListAsync(),
 				SelectedProductIds = step.RecipeProductStep.Where(x => x.RecipeId == recipeId && x.StepNumber == stepNumer).Select(x => x.ProductId).ToArray(),
 				StepType = step.StepType,
 			};
@@ -440,7 +475,7 @@ namespace HomeAssistant.Core.Services
 				throw new ArgumentNullException(nameof(recipe));
 			}
 
-			recipe.Products = await GetProductsForRecipe(recipeId);
+			recipe.RecipeProducts = await GetProductsForRecipe(recipeId);
 
 			return recipe;
 
@@ -569,5 +604,30 @@ namespace HomeAssistant.Core.Services
 			_dbcontext.RecipesProductsSteps.AddRange(stepsProducts);
 			await _dbcontext.SaveChangesAsync();
 		}
+
+		public async Task UpdateProductQuantities(IEnumerable<RecipeProductViewModel> prodToUpdate)
+		{
+			var products = await _dbcontext.Products
+				.Where(x => prodToUpdate.Select(y => y.Id).Contains(x.Id))
+				.ToListAsync();
+
+            foreach (var product in prodToUpdate)
+            {
+				var currentProd= products.FirstOrDefault(x => x.Id == product.Id);
+                if (currentProd==null)
+                {
+					throw new ArgumentNullException();
+                }
+
+                if (currentProd.Count< product.Quantity|| product.Quantity<0)
+                {
+					throw new InvalidOperationException();
+				}
+
+				currentProd.Count-= product.Quantity;
+
+			}
+			await _dbcontext.SaveChangesAsync();
+        }
 	}
 }

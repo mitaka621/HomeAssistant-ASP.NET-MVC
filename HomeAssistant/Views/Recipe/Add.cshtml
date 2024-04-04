@@ -1,10 +1,16 @@
 ﻿@using HomeAssistant.Core.Models.Recipe
 @model RecipeFormViewModel
 
-<form method="post" asp-controller="Recipe" asp-action="Add" enctype="multipart/form-data">
+<link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
+
+
+<form class="recipe-form" method="post" asp-controller="Recipe" asp-action="Add" enctype="multipart/form-data">
+	<h1>
+		Add New Recipe
+	</h1>
 	<div class="col">
 		<div class="col-md-12">
-			<label asp-for="RecipeImage" class="form-label">Default file input example</label>
+			<label asp-for="RecipeImage" class="form-label img-label">Recipe Image(optional)</label>
 			<input asp-for="RecipeImage" class="form-control" type="file" accept="image/*">
 		</div>
 		<div class="col-md-12">
@@ -19,9 +25,8 @@
 		</div>
 
 		<div class="col-md-12 products">
-			<label class="form-label">Required products for the recipe:</label>
 			<div class="input-form">
-				<h2>Add/Edit Products</h2>
+				<h2>Required products for the recipe:</h2>
 				<div class="form-outline" data-mdb-input-init>
 					<input onkeyup="onInput(this)" type="search" id="search" class="form-control" placeholder="Add/Search products by name" aria-label="Search" />
 				</div>
@@ -32,7 +37,10 @@
 			</div>
 		</div>
 	</div>
+	<div class="btn-div">
 		<button type="submit" class="btn btn-primary">Next</button>
+	</div>
+		
 </form>
 
 

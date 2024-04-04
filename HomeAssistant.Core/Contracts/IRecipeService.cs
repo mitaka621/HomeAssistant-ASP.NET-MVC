@@ -17,7 +17,7 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<RecipeDetaislViewModel> GetRecipe(int recipeId);
 
-		Task<Dictionary<int,string>> GetProductsForRecipe(int recipeId);
+		Task<IEnumerable<RecipeProductViewModel>> GetProductsForRecipe(int recipeId);
 
 		Task<StepDetailsViewModel?> GetLastStepDetails(int recipeId);
 
@@ -40,5 +40,7 @@ namespace HomeAssistant.Core.Contracts
 		public Task ChangeStepPosition(int recipeId, int oldStepNumber, int newStepNumber);
 
 		public Task DeleteStep(int recipeId, int stepNumber);
+
+		public Task UpdateProductQuantities( IEnumerable<RecipeProductViewModel> prodToUpdate);
     }
 }

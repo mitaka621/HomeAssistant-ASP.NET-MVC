@@ -34,7 +34,7 @@ namespace HomeAssistant.Core.Models.Recipe
 
         public StepDetailsViewModel? PreviousStep { get; set; }
 
-        public Dictionary<int,string>? Products { get; set; }
+		public IEnumerable<RecipeProductViewModel> Products { get; set; } = new List<RecipeProductViewModel>();
 
 		public StepType StepType { get; set; }	
     }
