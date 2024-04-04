@@ -13,7 +13,8 @@ function onInput(e) {
 					.innerHTML = `<a class="btn btn-primary" onmousedown="redirect()">Add Product</a>`;
 			}
 			
-			let existingProductsIds = (Array.from(document.querySelectorAll("div.products>input"))).map(x => x.id);
+			let existingProductsIds = (Array.from(document.querySelectorAll(`a[onClick="removeProduct(this)"]`))).map(x => x.id);
+
             r.forEach(product => {
                 if (!existingProductsIds.includes(product.id.toString())) {
 

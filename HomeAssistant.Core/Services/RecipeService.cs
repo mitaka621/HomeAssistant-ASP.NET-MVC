@@ -486,6 +486,7 @@ namespace HomeAssistant.Core.Services
             {
 				throw new ArgumentNullException(nameof(step));
             }
+			var stepProducts=await _dbcontext.RecipesProductsSteps.Where(x=>x.RecipeId==recipeId&&x.StepNumber==oldStepNumber).ToListAsync();
 
 			var totalStepsCount = await _dbcontext.Steps.Where(x => x.RecipeId == recipeId).CountAsync();
 
@@ -503,15 +504,23 @@ namespace HomeAssistant.Core.Services
 				throw new ArgumentNullException(nameof(step2));
 			}
 
+			var step2Products = await _dbcontext.RecipesProductsSteps.Where(x => x.RecipeId == recipeId && x.StepNumber == newStepNumber).ToListAsync();
 
-			_dbcontext.Steps.RemoveRange(step,step2);
+
+			_dbcontext.RecipesProductsSteps.RemoveRange(stepProducts);
+			_dbcontext.RecipesProductsSteps.RemoveRange(step2Products);
+			_dbcontext.Steps.RemoveRange(step2, step);
 			await _dbcontext.SaveChangesAsync();
 
 			step.StepNumber = newStepNumber;
+			stepProducts.ForEach(x => x.StepNumber = newStepNumber);
 
 			step2.StepNumber =oldStepNumber;
+			step2Products.ForEach(x => x.StepNumber=oldStepNumber);
 
 			_dbcontext.Steps.AddRange(step,step2);
+			_dbcontext.RecipesProductsSteps.AddRange(stepProducts);
+			_dbcontext.RecipesProductsSteps.AddRange(step2Products);
 			await _dbcontext.SaveChangesAsync();
 		}
 
@@ -526,6 +535,8 @@ namespace HomeAssistant.Core.Services
 				throw new ArgumentNullException(nameof(step));
 			}
 
+			var stepProducts = await _dbcontext.RecipesProductsSteps.Where(x => x.RecipeId == recipeId && x.StepNumber == stepNumber).ToListAsync();
+
 			var totalStepsCount = await _dbcontext.Steps.Where(x => x.RecipeId == recipeId).CountAsync();
 
 			var steps=await _dbcontext.Steps
@@ -533,13 +544,19 @@ namespace HomeAssistant.Core.Services
 				.Where(x=>x.RecipeId==recipeId&&x.StepNumber>step.StepNumber&&x.StepNumber<= totalStepsCount)
 				.ToListAsync();
 
-			
-			_dbcontext.Steps.RemoveRange(steps);
+			var stepsProducts = await _dbcontext.RecipesProductsSteps
+				.Where(x => x.RecipeId == recipeId && x.StepNumber > step.StepNumber && x.StepNumber <= totalStepsCount).ToListAsync();
+
+			_dbcontext.RecipesProductsSteps.RemoveRange(stepProducts);
+			_dbcontext.RecipesProductsSteps.RemoveRange(stepsProducts);
 			_dbcontext.Steps.Remove(step);
+			_dbcontext.Steps.RemoveRange(steps);
 			await _dbcontext.SaveChangesAsync();
 
 			steps.ForEach(x => x.StepNumber--);
+			stepsProducts.ForEach(x => x.StepNumber--);
 			_dbcontext.Steps.AddRange(steps);
+			_dbcontext.RecipesProductsSteps.AddRange(stepsProducts);	
 			await _dbcontext.SaveChangesAsync();
 		}
 	}
