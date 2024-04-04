@@ -56,11 +56,13 @@ function onInput(e) {
         });
 }
 
+let count = 0;
 function ViewProductDetails(e) {
 	document.querySelector(`div.products`).innerHTML +=
 		`<div>
 			<input disabled class="form-control" value="${e.getAttribute("name")}">
-			<input type="hidden" name="ProductsIds" class="form-control" id="${e.id}" value="${e.id}">
+			<input type="hidden" name="SelectedProducts[${count}].Id" class="form-control" id="${e.id}" value="${e.id}">
+			<input type="number" min="1" step="1" name="SelectedProducts[${count++}].Quantity" class="form-control" value=""  placeholder="Enter product amount" required>
 			<a id="${e.id}" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
 		</div>`;
 
@@ -72,6 +74,7 @@ function ViewProductDetails(e) {
 }
 
 function removeProduct(e) {
+	count--;
 	e.parentElement.remove();
 }
 

@@ -20,7 +20,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
 		[MaxLength(Constants.DescriptionMaxLength)]
 		public string Description { get; set; } = string.Empty;
 
-		public IEnumerable<RecipeProduct> RecipeProducts { get; set; } = new List<RecipeProduct>();
+        public IEnumerable<RecipeProduct> RecipeProducts { get; set; } = new List<RecipeProduct>();
 
 		public IEnumerable<Step> Steps { get; set; } = new List<Step>();
 

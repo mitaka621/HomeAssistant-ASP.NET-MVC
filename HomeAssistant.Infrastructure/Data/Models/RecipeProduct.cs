@@ -12,6 +12,8 @@ namespace HomeAssistant.Infrastructure.Data.Models
         [ForeignKey(nameof(ProductId))]
         public Product Product { get; set; } = null!;
 
+        public int Quantity { get; set; }
+
         public ICollection<RecipeProductStep> Steps { get; set; }=new List<RecipeProductStep>();
 	}
 }
