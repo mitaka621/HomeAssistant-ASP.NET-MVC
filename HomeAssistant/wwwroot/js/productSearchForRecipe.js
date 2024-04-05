@@ -55,8 +55,13 @@ function onInput(e) {
             });
         });
 }
-
+var products = Array.from(document.querySelectorAll("div.add-products-container")).map(x => parseInt( x.id.split("p")[1]));
+console.log(products);
 let count = 0;
+if (products.length!=0) {
+	products.sort((a, b) => b - a);
+	count = products[0]+1;
+}
 function ViewProductDetails(e) {
 	document.querySelector(`div.products`).innerHTML +=
 		`<div class="add-products-container">

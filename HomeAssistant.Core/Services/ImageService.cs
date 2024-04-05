@@ -100,7 +100,24 @@ namespace HomeAssistant.Core.Services
 
 		}
 
-		public async Task<byte[]> GetRecipeImage(int recipeId, CancellationToken cancellationToken=new())
+        public async Task DeleteIfExistsRecipeImg(int recipeId)
+        {
+            _gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+            {
+                BucketName = "RecipePictures"
+            });
+
+            var existingImageFilter = Builders<GridFSFileInfo>.Filter.Eq("filename", recipeId.ToString());
+            var existingImage = await _gridFS.FindAsync(existingImageFilter);
+
+            if (existingImage != null)
+            {
+                await existingImage.ForEachAsync(x => _gridFS.DeleteAsync(x.Id));
+            }
+
+        }
+
+        public async Task<byte[]> GetRecipeImage(int recipeId, CancellationToken cancellationToken=new())
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions

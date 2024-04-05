@@ -1,7 +1,9 @@
 ﻿@using HomeAssistant.Core.Models.Recipe
 @model RecipeFormViewModel
 
-<form method="post" asp-controller="Recipe" asp-action="Edit" enctype="multipart/form-data">
+<link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
+
+<form class="recipe-form" method="post" asp-controller="Recipe" asp-action="Edit" enctype="multipart/form-data">
 	<input asp-for="Id" hidden>
 	<div class="col">
 		<div class="col-md-12">
@@ -20,18 +22,10 @@
 		</div>
 
 		<div class="col-md-12 products">
-			@foreach (var item in Model.RecipeProducts)
-			{
-				<div>
-					<input disabled class="form-control" value="@item.Name">
-					<input type="hidden" name="ProductsIds" class="form-control" id="@item.Id" value="@item.Id">
-					<a id="@item.Id" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
-				</div>
-			}
+				
 			<label class="form-label">Required products for the recipe:</label>
 
 			<div class="input-form">
-				<h2>Add/Edit Products</h2>
 				<div class="form-outline" data-mdb-input-init>
 					<input onkeyup="onInput(this)" type="search" id="search" class="form-control" placeholder="Add/Search products by name" aria-label="Search" />
 				</div>
@@ -41,8 +35,22 @@
 				</table>
 			</div>
 		</div>
+		@{
+			int count = 0;
+			foreach (var item in Model.RecipeProducts)
+			{
+				<div class="add-products-container" id="p@(count)">
+					<input disabled class="form-control" value="@item.Name">
+					<input type="hidden" name="SelectedProducts[@(count)].Id" class="form-control" id="@item.Id" value="@item.Id">
+					<input type="number" min="1" step="1" name="SelectedProducts[@(count++)].Quantity" value="@item.Quantity" class="form-control" value="" placeholder="Enter product amount" required>
+					<a id="@item.Id" class="btn btn-danger" onClick="removeProduct(this)">remove</a>
+				</div>
+			}
+		}
 	</div>
-	<button type="submit" class="btn btn-primary">Edit</button>
+	<div class="btn-div">
+		<button type="submit" class="btn btn-primary">Next</button>
+	</div>
 </form>
 
 
