@@ -4,44 +4,51 @@
 
 <link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
-@if (Model.Type == StepType.TimerStep && Model.InitiatedOn != null)
-{
-	<audio id="myAudio">
-		<source src="~/audio/timer_sound.mp3" type="audio/mpeg">
-	</audio>
+<h1>@Model.StepNumber / @Model.TotalStepsCount</h1>
 
-	if ((DateTime.Now - Model.InitiatedOn).Value.Minutes < Model.Duration.Value)
+<div class="step-content">
+	@if (Model.Type == StepType.TimerStep && Model.InitiatedOn != null)
 	{
-		<h1 class="timer">@((new TimeSpan(0, Model.Duration.Value, 0) - (DateTime.Now - Model.InitiatedOn)).Value.ToString(@"mm\:ss"))</h1>
+		<audio id="myAudio">
+			<source src="~/audio/timer_sound.mp3" type="audio/mpeg">
+		</audio>
+
+		if ((DateTime.Now - Model.InitiatedOn).Value.Minutes < Model.Duration.Value)
+		{
+			<h1 class="timer">@((new TimeSpan(0, Model.Duration.Value, 0) - (DateTime.Now - Model.InitiatedOn)).Value.ToString(@"mm\:ss"))</h1>
+		}
+		else
+		{
+			<h1 class="timer">00:00</h1>
+		}
+	}
+
+	<h1>@Model.Name</h1>
+	<ul class="prod-for-step">
+		@if (Model.Products.Any())
+		{
+			<h2>Required Products</h2>
+		}
+		@foreach (var item in Model.Products)
+		{
+			<li>@item</li>
+		}
+	</ul>
+	<h2>@Model.Description</h2>
+
+	@if (Model.TotalStepsCount != Model.StepNumber)
+	{
+		<form method="post" asp-controller="Recipe" asp-action="MoveNextStep">
+			<input hidden name="recipeId" value="@Model.RecipeId" />
+			<button class="btn btn-success" type="submit">Next Step</button>
+		</form>
 	}
 	else
 	{
-		<h1 class="timer">00:00</h1>
+		<a class="btn btn-primary" asp-controller="Recipe" asp-action="FinishRecipe" asp-route-recipeId="@Model.RecipeId">Finish</a>
 	}
-}
 
-
-<h1>@(Model.StepNumber). @Model.Name</h1>
-<ul class="prod-for-step">
-	@foreach (var item in Model.Products)
-	{
-		<li>@item</li>
-	}
-</ul>
-<h2>@Model.Description</h2>
-
-@if (!Model.IsLast)
-{
-	<form method="post" asp-controller="Recipe" asp-action="MoveNextStep">
-		<input hidden name="recipeId" value="@Model.RecipeId" />
-		<button class="btn btn-success" type="submit">Next Step</button>
-	</form>
-}
-else
-{
-	
-	<a class="btn btn-primary" asp-controller="Recipe" asp-action="FinishRecipe"asp-route-recipeId="@Model.RecipeId">Finish</a>
-}
+</div>
 
 @section Scripts {
 	<script src="~/js/timer.js"></script>

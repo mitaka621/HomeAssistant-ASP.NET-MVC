@@ -339,11 +339,6 @@ namespace HomeAssistant.Core.Services
 				return null;
 			}
 
-			var lastStep = await _dbcontext.Steps
-				.Where(x => x.RecipeId == recipeId)
-				.OrderByDescending(x => x.StepNumber)
-				.FirstAsync();
-
 
 			return new StepDetailsViewModel()
 			{
@@ -358,8 +353,10 @@ namespace HomeAssistant.Core.Services
 					.Where(x => x.RecipeId == recipeId && x.StepNumber == userStep.Step.StepNumber)
 					.Select(x => x.RecipeProduct.Product.Name)
 					.ToListAsync(),
-				IsLast = lastStep.StepNumber == userStep.StepNumber ? true : false
-			};
+				TotalStepsCount= await _dbcontext.Steps
+				.Where(x => x.RecipeId == recipeId)
+				.CountAsync()
+		};
 		}
 
 		public async Task DeleteUserRecipeStep(string userId, int recipeId)
@@ -404,6 +401,13 @@ namespace HomeAssistant.Core.Services
 				SelectedProductIds = step.RecipeProductStep.Where(x => x.RecipeId == recipeId && x.StepNumber == stepNumer).Select(x => x.ProductId).ToArray(),
 				StepType = step.StepType,
 			};
+
+
+			var totalStepsCount = await _dbcontext.Steps
+				.Where(x => x.RecipeId == recipeId)
+				.CountAsync();
+
+
 
 			return model;
 		}

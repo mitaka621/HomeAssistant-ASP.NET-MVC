@@ -5,11 +5,12 @@ x.loop = true;
 var promise = x.play();
 
 if (promise !== undefined) {
+    document.getElementById("myAudio").pause();
     promise.catch(function (error) {
         alert('Please enable audio autoplay to hear the timer go off.');
     });
 } else {
-    x.pause();
+    document.getElementById("myAudio").pause();
 }
 
 let min, sec;

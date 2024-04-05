@@ -1,9 +1,17 @@
 ﻿@using HomeAssistant.Core.Models.Recipe
 @model IEnumerable<RecipeProductViewModel>
 
-<h1>Products Used</h1>
+@if(Model.Where(x=>x.AvailableQuantity==0).Count()!=Model.Count())
+{
+	<h1>Products Used</h1>
 
-<h2>Is this correct?</h2>
+	<h2>Is this correct?</h2>
+}
+else
+{
+	<h1>All of the recipe products are not available in the fridge.</h1>
+}
+
 <form class="row g-3" asp-controller="Recipe" asp-action="FinishRecipe" asp-route-recipeId="@ViewBag.RecipeId">
 	@{
 		int count = 0;

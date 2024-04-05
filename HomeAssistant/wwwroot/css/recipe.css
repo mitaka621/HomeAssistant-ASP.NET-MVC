@@ -200,3 +200,11 @@ form.recipe-form input {
     width:40em;
     margin:0 auto;
 }
+
+h1.step-counter{
+    text-align:center;
+}
+.step-content{
+    text-align:center;
+    margin:0 auto;
+}
