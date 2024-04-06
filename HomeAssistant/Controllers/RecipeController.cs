@@ -291,8 +291,13 @@ namespace HomeAssistant.Controllers
 		[HttpGet] 
 		public async Task<IActionResult> FinishRecipe(int recipeId)
 		{
-			ViewBag.RecipeId = recipeId;	
-			return View(await _recipeService.GetProductsForRecipe(recipeId));
+			ViewBag.RecipeId = recipeId;
+			var model = await _recipeService.GetProductsForRecipe(recipeId);
+			if (model.Where(x => x.AvailableQuantity == 0).Count() == model.Count())
+			{
+				return await FinishRecipe(recipeId, new List<RecipeProductViewModel>());
+			}
+			return View(model);
 		}
 
 		[HttpPost]

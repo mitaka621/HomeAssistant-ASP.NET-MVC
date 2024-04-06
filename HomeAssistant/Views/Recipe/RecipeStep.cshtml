@@ -4,7 +4,24 @@
 
 <link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
-<h1>@Model.StepNumber / @Model.TotalStepsCount</h1>
+
+<div class="float-container">
+	<div class="step-progress">
+		<h3>Progress</h3>
+		<h1>@Model.StepNumber / @Model.TotalStepsCount</h1>
+	</div>
+
+	@if (Model.Products.Any())
+	{
+		<h3>Products</h3>
+	}
+	<ul class="prod-for-step">
+		@foreach (var item in Model.Products)
+		{
+			<li>@item</li>
+		}
+	</ul>
+</div>
 
 <div class="step-content">
 	@if (Model.Type == StepType.TimerStep && Model.InitiatedOn != null)
@@ -24,23 +41,16 @@
 	}
 
 	<h1>@Model.Name</h1>
-	<ul class="prod-for-step">
-		@if (Model.Products.Any())
-		{
-			<h2>Required Products</h2>
-		}
-		@foreach (var item in Model.Products)
-		{
-			<li>@item</li>
-		}
-	</ul>
-	<h2>@Model.Description</h2>
+
+	<p>@Model.Description</p>
 
 	@if (Model.TotalStepsCount != Model.StepNumber)
 	{
 		<form method="post" asp-controller="Recipe" asp-action="MoveNextStep">
 			<input hidden name="recipeId" value="@Model.RecipeId" />
-			<button class="btn btn-success" type="submit">Next Step</button>
+			<button class="btn done" type="submit" id="btnsubmit">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" /></svg>
+			</button>
 		</form>
 	}
 	else
@@ -49,6 +59,7 @@
 	}
 
 </div>
+
 
 @section Scripts {
 	<script src="~/js/timer.js"></script>
