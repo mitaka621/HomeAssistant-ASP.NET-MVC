@@ -41,6 +41,8 @@ namespace HomeAssistant.Core.Services
 			_dbcontext.Recipes.Add(newRecipe);
 			await _dbcontext.SaveChangesAsync();
 
+			await _imageService.DeleteIfExistsRecipeImg(newRecipe.Id);
+
 			if (r.RecipeImage != null && r.RecipeImage.Length > 0)
 			{
 				using (var stream = new MemoryStream())
@@ -337,11 +339,6 @@ namespace HomeAssistant.Core.Services
 				return null;
 			}
 
-			var lastStep = await _dbcontext.Steps
-				.Where(x => x.RecipeId == recipeId)
-				.OrderByDescending(x => x.StepNumber)
-				.FirstAsync();
-
 
 			return new StepDetailsViewModel()
 			{
@@ -356,8 +353,10 @@ namespace HomeAssistant.Core.Services
 					.Where(x => x.RecipeId == recipeId && x.StepNumber == userStep.Step.StepNumber)
 					.Select(x => x.RecipeProduct.Product.Name)
 					.ToListAsync(),
-				IsLast = lastStep.StepNumber == userStep.StepNumber ? true : false
-			};
+				TotalStepsCount= await _dbcontext.Steps
+				.Where(x => x.RecipeId == recipeId)
+				.CountAsync()
+		};
 		}
 
 		public async Task DeleteUserRecipeStep(string userId, int recipeId)
@@ -403,6 +402,13 @@ namespace HomeAssistant.Core.Services
 				StepType = step.StepType,
 			};
 
+
+			var totalStepsCount = await _dbcontext.Steps
+				.Where(x => x.RecipeId == recipeId)
+				.CountAsync();
+
+
+
 			return model;
 		}
 
@@ -446,9 +452,12 @@ namespace HomeAssistant.Core.Services
 				throw new ArgumentNullException(nameof(recipe));
 			}
 
+			Task deleteImg=_imageService.DeleteIfExistsRecipeImg(recipeId);
+
 			var steps = await _dbcontext.RecipesProductsSteps.Where(x => x.RecipeId == recipeId).ToListAsync();
 			var userSteps = await _dbcontext.UsersSteps.Where(x => x.RecipeId == recipeId).ToListAsync();
 			var recipeProducts = await _dbcontext.RecipesProducts.Where(x => x.RecipeId == recipeId).ToListAsync();
+
 
 			_dbcontext.UsersSteps.RemoveRange(userSteps);
 			_dbcontext.RecipesProducts.RemoveRange(recipeProducts);
@@ -456,7 +465,9 @@ namespace HomeAssistant.Core.Services
 			_dbcontext.Recipes.Remove(recipe);
 
 			_dbcontext.SaveChanges();
-		}
+
+			await deleteImg;
+        }
 
 		public async Task<RecipeFormViewModel> GetRecipeFormViewModel(int recipeId)
 		{
@@ -611,7 +622,7 @@ namespace HomeAssistant.Core.Services
 				.Where(x => prodToUpdate.Select(y => y.Id).Contains(x.Id))
 				.ToListAsync();
 
-            foreach (var product in prodToUpdate)
+            foreach (var product in prodToUpdate.DistinctBy(x=>x.Id))
             {
 				var currentProd= products.FirstOrDefault(x => x.Id == product.Id);
                 if (currentProd==null)
