@@ -1,8 +1,10 @@
 ﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Models.Product;
 using HomeAssistant.Core.Models.ShoppingList;
+using HomeAssistant.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace HomeAssistant.Controllers
@@ -11,10 +13,12 @@ namespace HomeAssistant.Controllers
 	public class ShoppingListController : Controller
 	{
 		private readonly IShoppingListService _shoppingListService;
+		private readonly IHubContext<SignalRShoppingCartHub> _hubContext;
 
-        public ShoppingListController(IShoppingListService shoppingListService)
+		public ShoppingListController(IShoppingListService shoppingListService, IHubContext<SignalRShoppingCartHub> hubContext)
         {
 			_shoppingListService=shoppingListService;
+			_hubContext=hubContext;
 		}
 
 		[HttpGet]
@@ -146,7 +150,10 @@ namespace HomeAssistant.Controllers
 		{
 			try
 			{
-				await _shoppingListService.MarkAsBought(GetUserId(), prodId);
+				var userId = GetUserId();
+				await _shoppingListService.MarkAsBought(userId, prodId);
+				await _hubContext.Clients.All
+					.SendAsync("GetShoppingCartUpdate", userId, await _shoppingListService.GetShoppingListProgress(userId));
 			}
 			catch (ArgumentNullException)
 			{
@@ -161,7 +168,10 @@ namespace HomeAssistant.Controllers
 		{
 			try
 			{
-				await _shoppingListService.MarkAsUnbought(GetUserId(), prodId);
+				var userId = GetUserId();
+				await _shoppingListService.MarkAsUnbought(userId, prodId);
+				await _hubContext.Clients.All
+					.SendAsync("GetShoppingCartUpdate", userId, await _shoppingListService.GetShoppingListProgress(userId));
 			}
 			catch (ArgumentNullException)
 			{

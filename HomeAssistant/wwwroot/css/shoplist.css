@@ -133,6 +133,17 @@ div.right {
     overflow-x: hidden;
     overflow-y: auto;
 }
+.bought-products-container-small {
+    background-color: #e8dddd;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    height: 18em;
+    overflow: scroll;
+    scrollbar-width: thin;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 .bought-product > p {
     margin: 0;
 }
@@ -284,8 +295,10 @@ a.out-of-stock p{
 div.out-of-stock-right {
     width: 18em;
     height:45em;
-    position:relative;
+    position:absolute;
     margin-top:10em;
+   
+    z-index:0;
 }
 .info-container-left {
     margin-top: 9em;

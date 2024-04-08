@@ -363,6 +363,21 @@ namespace HomeAssistant.Core.Services
 
 			return shoppingLists;
 		}
+
+		public async Task<int> GetShoppingListProgress(string userId)
+		{
+			var sl=await _dbcontext.ShoppingLists
+				.Include(x=>x.ShoppingListProducts)
+				.FirstOrDefaultAsync(x => x.User.Id == userId);
+
+            if (sl==null)
+            {
+                throw new ArgumentNullException(nameof(sl));
+            }
+
+			return sl.ShoppingListProducts.Where(x => x.IsBought).Count() * 100 / sl.ShoppingListProducts.Count();
+
+		}
 	}
 }
 

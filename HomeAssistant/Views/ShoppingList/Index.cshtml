@@ -37,7 +37,7 @@
 										</div>
 										<p>Progress:</p>
 										<div class="progress small-progress">
-											<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: @list.Progress%">@list.Progress%</div>
+											<div id="@list.UserId" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: @list.Progress%">@list.Progress%</div>
 										</div>
 										@if (list.StartedOn != null)
 										{
@@ -122,7 +122,7 @@
 		<div class="info-container">
 			<div class="right">
 				<h2>Bought Products</h2>
-				<div class="bought-products-container">
+				<div class="bought-products-container-small">
 					@foreach (var prod in Model.BoughtProducts)
 					{
 						<form method="post">
@@ -148,5 +148,10 @@
 		</div>
 	}
 </div>
+
+@section Scripts{
+	<script src="~/js/signalr/dist/browser/signalr.js"></script>
+	<script src="~/js/shoppingListSignalR.js"></script>
+}
 
 

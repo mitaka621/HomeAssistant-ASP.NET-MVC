@@ -1,5 +1,6 @@
 using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Services;
+using HomeAssistant.Hubs;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using HomeAssistant.Middlewares;
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<HomeAssistantDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddSignalR();
 
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -80,5 +82,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+app.MapHub<SignalRShoppingCartHub>("/cartHub");
 
 app.Run();

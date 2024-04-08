@@ -34,7 +34,7 @@
 										</div>
 										<p>Progress:</p>
 										<div class="progress small-progress">
-											<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: @list.Progress%">@list.Progress%</div>
+											<div id="@list.UserId" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: @list.Progress%">@list.Progress%</div>
 										</div>
 										@if (list.StartedOn != null)
 										{
@@ -208,5 +208,7 @@
 @section Scripts {
 	<script src="~/js/shoppingListSearch.js"></script>
 	<partial name="_ValidationScriptsPartial" />
+	<script src="~/js/signalr/dist/browser/signalr.js"></script>
+	<script src="~/js/shoppingListSignalR.js"></script>
 }
 

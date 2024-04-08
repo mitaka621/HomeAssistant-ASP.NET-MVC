@@ -38,5 +38,7 @@ namespace HomeAssistant.Core.Contracts
 
 		public Task<IEnumerable<ShoppingListViewModel>> GetTop20StartedShoppingListsExceptCurrentUser(string userId);
 
+		public Task<int> GetShoppingListProgress(string userId);
+
 	}
 }
