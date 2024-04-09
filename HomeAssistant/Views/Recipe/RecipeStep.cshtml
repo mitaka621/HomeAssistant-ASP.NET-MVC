@@ -4,6 +4,13 @@
 
 <link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Recipes", "/Recipe/index");
+	previousPages.Add("Cook", "#");
+	ViewBag.previousPages = previousPages;
+}
 
 <div class="float-container">
 	<div class="step-progress">

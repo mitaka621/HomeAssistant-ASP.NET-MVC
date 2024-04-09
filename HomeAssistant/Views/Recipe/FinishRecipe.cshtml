@@ -1,6 +1,14 @@
 ﻿@using HomeAssistant.Core.Models.Recipe
 @model IEnumerable<RecipeProductViewModel>
 
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Recipes", "/Recipe/index");
+	previousPages.Add("Cook", "#");
+	ViewBag.previousPages = previousPages;
+}
+
 @if(Model.Where(x=>x.AvailableQuantity==0).Count()!=Model.Count())
 {
 	<h1>Products Used</h1>

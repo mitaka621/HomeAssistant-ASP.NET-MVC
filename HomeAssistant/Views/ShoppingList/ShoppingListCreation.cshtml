@@ -5,6 +5,10 @@
 @{
 	var shoppingLists = (IEnumerable<ShoppingListViewModel>)ViewBag.ActiveShoppingLists;
 	int count = 0;
+
+	Dictionary<string, string> previousPages = new();
+	previousPages.Add("Create Shopping List", "#");
+	ViewBag.previousPages = previousPages;
 }
 
 <link rel="stylesheet" href="~/css/shoplist.css" asp-append-version="true" />

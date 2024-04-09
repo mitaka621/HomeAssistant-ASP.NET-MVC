@@ -2,6 +2,14 @@
 @using HomeAssistant.Core.Models.Product
 @model ProductFormViewModel
 
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Fridge", "/Fridge/index");
+	previousPages.Add("Add Product", "#");
+	ViewBag.previousPages = previousPages;
+}
+
 <h1>Add Product</h1>
 
 <form method="post" asp-controller="Fridge" asp-action="AddProduct">

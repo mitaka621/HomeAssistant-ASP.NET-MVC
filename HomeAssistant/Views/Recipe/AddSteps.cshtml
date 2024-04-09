@@ -4,6 +4,15 @@
 
 <link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Recipes", "/Recipe/index");
+	previousPages.Add("Add", "/Recipe/Add");
+	previousPages.Add("Steps", "#");
+	ViewBag.previousPages = previousPages;
+}
+
 <div class="container2">
 	<div class="img-container-modal">
 		@if (Model.Photo != null && Model.Photo.Length > 0)
@@ -89,11 +98,11 @@
 				Add Recipe Step
 			</button>
 			<ul class="dropdown-menu">
-				@foreach (var option in Enum.GetValues(typeof(StepType)))
+				@foreach (StepType option in Enum.GetValues(typeof(StepType)))
 				{
 					<li>
-						<a class="dropdown-item" asp-controller="Recipe" asp-action="Add@(option.ToString())" asp-route-recipeId="@Model.Id">
-							@option.ToString()
+						<a class="dropdown-item text-center" asp-controller="Recipe" asp-action="Add@(option.ToString())" asp-route-recipeId="@Model.Id">
+							@(option==StepType.TimerStep?"Timer":"Task")
 						</a>
 					</li>
 				}

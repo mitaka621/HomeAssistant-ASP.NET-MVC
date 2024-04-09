@@ -1,6 +1,17 @@
 ﻿@using HomeAssistant.Core.Models.Recipe
 @model RecipeFormViewModel
 
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Recipes", "/Recipe/index");
+	previousPages.Add("Edit", "#");
+	ViewBag.previousPages = previousPages;
+
+
+}
+
+
 <link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
 <form class="recipe-form" method="post" asp-controller="Recipe" asp-action="Edit" enctype="multipart/form-data">

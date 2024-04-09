@@ -1,13 +1,24 @@
 ﻿@using HomeAssistant.Core.Models.Recipe
 @model StepFormViewModel
 
+@{
+	Dictionary<string, string> previousPages = new();
 
-<h1>Step Number @(Model.PreviousStep == null ? 1 : Model.PreviousStep.StepNumber++)</h1>
+	previousPages.Add("Recipes", "/Recipe/index");
+	previousPages.Add("Add", "/Recipe/Add");
+	previousPages.Add("Steps", $"/Recipe/AddSteps?recipeId={Model.RecipeId}");
+	previousPages.Add("Task", $"#");
+	ViewBag.previousPages = previousPages;
+
+	
+}
+
+<h1>Step Number @(Model.PreviousStep == null ? 1 : Model.PreviousStep.StepNumber+1)</h1>
 
 @if (Model.PreviousStep != null)
 {
 	<div class="prev-step">
-		<h2>Previous Step Number (@Model.PreviousStep.StepNumber)</h2>
+		<h2>Previous Step</h2>
 		<h3>@Model.PreviousStep.Name</h3>
 		<p>@Model.PreviousStep.Description</p>
 	</div>

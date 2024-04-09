@@ -3,6 +3,13 @@
 @using HomeAssistant.Core.Models.Product
 @model FridgeViewModel
 
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Fridge", "/Fridge/index");
+	ViewBag.previousPages = previousPages;
+}
+
 <link rel="stylesheet" href="~/css/fridge.css" asp-append-version="true" />
 
 <partial name="/Views/Shared/_ToastPopupPartial.cshtml" />

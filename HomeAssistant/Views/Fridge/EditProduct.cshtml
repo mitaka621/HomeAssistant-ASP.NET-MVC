@@ -2,6 +2,14 @@
 @using HomeAssistant.Core.Models.Product
 @model ProductFormViewModel
 
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Fridge", "/Fridge/index");
+	previousPages.Add("Edit Product", "#");
+	ViewBag.previousPages = previousPages;
+}
+
 <h1>Edit Product</h1>
 
 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteModal">

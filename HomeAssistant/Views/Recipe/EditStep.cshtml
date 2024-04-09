@@ -2,6 +2,18 @@
 @using HomeAssistant.Infrastructure.Data.Enums
 @model StepFormViewModel
 
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Recipes", "/Recipe/index");
+	previousPages.Add("Add", "/Recipe/Add");
+	previousPages.Add("Steps", $"/Recipe/AddSteps?recipeId={Model.RecipeId}");
+	previousPages.Add("Edit Step", $"#");
+	ViewBag.previousPages = previousPages;
+
+
+}
+
 
 <h1>Step Number @(Model.PreviousStep == null ? 1 : Model.PreviousStep.StepNumber++)</h1>
 

@@ -60,7 +60,8 @@ namespace HomeAssistant.Controllers
 				return View(new StepFormViewModel()
 				{
 					PreviousStep = await _recipeService.GetLastStepDetails(recipeId),
-					Products = await _recipeService.GetProductsForRecipe(recipeId)
+					Products = await _recipeService.GetProductsForRecipe(recipeId),
+					RecipeId= recipeId
 				});
 			}
 			catch (ArgumentNullException)
@@ -78,6 +79,7 @@ namespace HomeAssistant.Controllers
 				return View(new StepFormViewModel()
 				{
 					PreviousStep = await _recipeService.GetLastStepDetails(recipeId),
+					RecipeId = recipeId
 				});
 			}
 			catch (ArgumentNullException)
@@ -176,7 +178,9 @@ namespace HomeAssistant.Controllers
 		{
 			try
 			{
-				return View(await _recipeService.GetStep(recipeId, stepNumber));
+				var model = await _recipeService.GetStep(recipeId, stepNumber);
+				model.RecipeId = recipeId;
+				return View(model);
 			}
 			catch (ArgumentNullException)
 			{

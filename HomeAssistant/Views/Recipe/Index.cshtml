@@ -3,6 +3,13 @@
 
 <link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Recipes", "/Recipe/index");
+
+	ViewBag.previousPages = previousPages;
+}
 
 @if (Model.StartedRecipes.Any())
 {

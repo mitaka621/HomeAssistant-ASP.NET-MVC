@@ -89,9 +89,17 @@ ul.navbar-nav>li.nav-item {
 .configbtn{
     font-size:1.1em;
     font-weight:600;
+    margin-left:1em;
 }
 
 .toast-container {
     margin-top: 3em;
 }
 
+.nav-arrow{
+    width:1em;
+    margin:0 0.4em;
+}
+div.container-fluid>a{
+    margin-right:0;
+}
