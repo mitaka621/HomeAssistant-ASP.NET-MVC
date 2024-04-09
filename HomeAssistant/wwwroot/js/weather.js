@@ -60,9 +60,9 @@ fetch('/api/Weather/Weather')
         }
         else if (json.main.temp < 25) {
             hatSvg.src = "/svg/cap.svg";
-            shirtSvg.src = "/svg/shirt.svg";
+            shirtSvg.src = "/svg/light-sweater.svg";
             hatDesc.innerHTML = "Cap"
-            shirtDesc.innerHTML = "Shirt"
+            shirtDesc.innerHTML = "Light Sweater"
         }
         else if (json.main.temp < 30) {
             hatSvg.src = "/svg/cap.svg";
