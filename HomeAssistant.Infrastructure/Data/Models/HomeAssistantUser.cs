@@ -39,6 +39,8 @@ namespace HomeAssistant.Infrastructure.Data.Models
 
         public ShoppingList ShoppingList { get; set; } = null!;
 
+        public IEnumerable<Notification> InvokedNotifications { get; set; } =new List<Notification>();
+
         public IEnumerable<UserStep> UserRecipeSteps { get; set; } = new List<UserStep>();
     }
 }

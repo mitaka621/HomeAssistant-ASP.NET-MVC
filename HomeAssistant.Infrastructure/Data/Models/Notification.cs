@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,12 @@ namespace HomeAssistant.Infrastructure.Data.Models
 
         [Comment("Date and time when the notification was created")]
         public DateTime CreatedOn { get; set; }
+
+        public string? InvokedBy { get; set; }
+        [ForeignKey(nameof(InvokedBy))]
+        public HomeAssistantUser? User { get; set; }
+
+        public string InvokerURL { get; set; }= string.Empty;
 
         public IEnumerable<NotificationUser> NotificationsUsers { get; set; } = null!;
 
