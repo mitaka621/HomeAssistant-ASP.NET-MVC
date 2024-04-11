@@ -22,5 +22,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
         public int NotificationId { get; set; }
         [ForeignKey(nameof(NotificationId))]
         public Notification Notification { get; set; } = null!;
+
+        public bool IsDismissed { get; set; }
     }
 }
