@@ -17,13 +17,11 @@ namespace HomeAssistant.Infrastructure.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(Constants.NameMaxLenght)]
         [Comment("Notification title")]
         public string Title { get; set; }=string.Empty;
 
-        [MaxLength(Constants.DescriptionMaxLength)]
-        [Comment("Notification description (optional)")]
-        public string? Description { get; set; }
+        [Comment("Notification description")]
+        public string Description { get; set; }=string.Empty;
 
         [Comment("Date and time when the notification was created")]
         public DateTime CreatedOn { get; set; }
@@ -34,7 +32,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
 
         public string InvokerURL { get; set; }= string.Empty;
 
-        public IEnumerable<NotificationUser> NotificationsUsers { get; set; } = null!;
+        public IEnumerable<NotificationUser> NotificationsUsers { get; set; } = new List<NotificationUser>();
 
     }
 }

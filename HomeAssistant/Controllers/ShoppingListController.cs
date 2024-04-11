@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
+using System.Text;
 
 namespace HomeAssistant.Controllers
 {
@@ -13,12 +14,20 @@ namespace HomeAssistant.Controllers
 	public class ShoppingListController : Controller
 	{
 		private readonly IShoppingListService _shoppingListService;
-		private readonly IHubContext<SignalRShoppingCartHub> _hubContext;
+		private readonly IHubContext<SignalRShoppingCartHub> _shoppingListHubContext;
+		private readonly IHubContext<NotificationsHub> _notificationHubContext;
+		private readonly INotificationService _notificationService;
 
-		public ShoppingListController(IShoppingListService shoppingListService, IHubContext<SignalRShoppingCartHub> hubContext)
+		public ShoppingListController(
+			IShoppingListService shoppingListService,
+			IHubContext<SignalRShoppingCartHub> hubContext,
+			INotificationService notificationService,
+			IHubContext<NotificationsHub> notificationHubContext)
         {
 			_shoppingListService=shoppingListService;
-			_hubContext=hubContext;
+			_shoppingListHubContext=hubContext;
+			_notificationService=notificationService;
+			_notificationHubContext=notificationHubContext;
 		}
 
 		[HttpGet]
@@ -152,8 +161,9 @@ namespace HomeAssistant.Controllers
 			{
 				var userId = GetUserId();
 				await _shoppingListService.MarkAsBought(userId, prodId);
-				await _hubContext.Clients.All
+				await _shoppingListHubContext.Clients.All
 					.SendAsync("GetShoppingCartUpdate", userId, await _shoppingListService.GetShoppingListProgress(userId));
+			
 			}
 			catch (ArgumentNullException)
 			{
@@ -170,7 +180,7 @@ namespace HomeAssistant.Controllers
 			{
 				var userId = GetUserId();
 				await _shoppingListService.MarkAsUnbought(userId, prodId);
-				await _hubContext.Clients.All
+				await _shoppingListHubContext.Clients.All
 					.SendAsync("GetShoppingCartUpdate", userId, await _shoppingListService.GetShoppingListProgress(userId));
 			}
 			catch (ArgumentNullException)
@@ -186,14 +196,41 @@ namespace HomeAssistant.Controllers
 		{
 			try
 			{
-				await _shoppingListService.SaveBoughtProducts(GetUserId());	
+				var shoppingList=await _shoppingListService.GetShoppingList(GetUserId());
+
+				StringBuilder sb = new();
+
+                foreach (var item in shoppingList.Products)
+                {
+					sb.Append($"{item.Name}");
+
+					if (item.Price!=null && item.Price>0)
+                    {
+						sb.Append($" - {item.Price} lv");
+                    }
+
+					sb.AppendLine($" ({item.QuantityToBuy})");
+				}
+
+                var notificationId=await _notificationService.CreateNotificationForAllUsers(
+					"Shopping Finished",
+					sb.ToString().TrimEnd(),
+					HttpContext.Request.Path.ToString(),
+					GetUserId());
+
+				await _notificationHubContext.Clients
+					.All
+					.SendAsync("PushNotfication",await _notificationService.GetNotification(notificationId));
+
+				await _shoppingListService.SaveBoughtProducts(GetUserId());
+
 			}
 			catch (ArgumentNullException)
 			{
 				return BadRequest();
 			}
 
-			return RedirectToAction("Index", "Fridge");
+			return RedirectToAction(nameof(Index));
 		}
 
 

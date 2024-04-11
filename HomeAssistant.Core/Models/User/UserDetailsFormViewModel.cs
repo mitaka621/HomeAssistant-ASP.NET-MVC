@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Amazon.Util.Internal;
 using Microsoft.AspNetCore.Http;
 using HomeAssistant.Core.Models.User;
+using HomeAssistant.Core.Models.Notification;
 
 namespace HomeAssistant.Core.Models
 {
@@ -38,6 +39,8 @@ namespace HomeAssistant.Core.Models
         public IEnumerable<string>? UserRoles { get; set; }
 
         public IEnumerable<RoleViewModel>? AllRoles { get; set; }
+
+        public IEnumerable<NotificationViewModel> Notifications { get; set; }=new List<NotificationViewModel>();
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }

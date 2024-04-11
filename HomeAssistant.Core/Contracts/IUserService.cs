@@ -10,11 +10,13 @@ namespace HomeAssistant.Core.Contracts
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDetailsViewModel>> GetAllUsersAsync();
+        Task<IEnumerable<UserDetailsViewModel>> GetAllNonDelitedUsersAsync();
 
 		Task<IEnumerable<UserDetailsViewModel>> GetAllDeletedUsersAsync();
 
 		Task<IEnumerable<UserDetailsViewModel>> GetAllNotApprovedUsersAsync();
+
+		Task<IEnumerable<string>> GetAllApprovedNotDeletedUsersAsync();
 
 		Task<UserDetailsFormViewModel> GetUserByIdAsync(string Id);
 

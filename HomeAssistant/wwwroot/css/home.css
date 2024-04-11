@@ -109,10 +109,45 @@ div.right {
     background-color: #dcc8a0;
     padding: 1em;
     border-radius: 20px;
-    overflow: auto;
+    overflow: hidden;
     height:35em;
     display:flex;
     gap:1em;
     flex-direction:column;
+    width:25em;
 }
 
+.notifications {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    scrollbar-width: thin;
+}
+.accordion-button{
+    gap:1em;
+    padding:1em 0;
+    justify-content:center;
+}
+.accordion-button::after, .accordion-button:not(.collapsed)::after {
+    background-image: initial;
+    position: absolute;
+}
+.notf-title p{
+    margin:0;
+}
+.notf-title {
+    display: flex;
+    width:12em;
+   gap:0.5em;
+    flex-direction: column;
+}
+
+.blockquote-footer {
+    margin: 0;
+    margin-top:0.5em;
+}
+
+.accordion-button{
+    margin:0;
+}

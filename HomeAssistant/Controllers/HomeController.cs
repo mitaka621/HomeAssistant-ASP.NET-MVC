@@ -11,11 +11,14 @@ namespace HomeAssistant.Controllers
     public class HomeController : Controller
     {
         private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
 
-        public HomeController(IUserService userService)
+        public HomeController(IUserService userService, INotificationService notificationService)
         {
             _userService = userService;
-        }
+			_notificationService = notificationService;
+
+		}
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -32,7 +35,11 @@ namespace HomeAssistant.Controllers
             {
 				return RedirectToAction(nameof(WaitingApproval));
 			}
-            return View(await _userService.GetUserByIdAsync(GetUserId()));
+            var model = await _userService.GetUserByIdAsync(GetUserId());
+
+            model.Notifications=await _notificationService.GetNotificationsForUser(GetUserId());
+
+			return View(model);
         }
 
         [HttpGet]

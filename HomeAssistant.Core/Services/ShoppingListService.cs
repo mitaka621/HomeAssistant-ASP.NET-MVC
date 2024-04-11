@@ -233,9 +233,16 @@ namespace HomeAssistant.Core.Services
 
 			int totalProducts = await products.CountAsync();
 
-			model.Progress = model.BoughtProducts.Count * 100 / totalProducts;
-
-			model.TotalPages = (int)Math.Ceiling((totalProducts-model.BoughtProducts.Count) / (double)prodOnPage);
+			if (totalProducts == 0)
+			{
+				model.Progress = 100;
+				model.TotalPages = 1;
+			}
+			else
+			{
+				model.Progress = model.BoughtProducts.Count * 100 / totalProducts;
+				model.TotalPages = (int)Math.Ceiling((totalProducts - model.BoughtProducts.Count) / (double)prodOnPage);
+			}
 
 			if (page < 1)
 			{
@@ -340,24 +347,24 @@ namespace HomeAssistant.Core.Services
 				.AsNoTracking()
 				.Take(20)
 				.Where(x => x.UserId != userId && x.IsStarted)
-				.Select(sl=>new ShoppingListViewModel()
+				.Select(sl => new ShoppingListViewModel()
 				{
-					UserId=sl.UserId,
-					StartedOn=sl.StartedOn,
+					UserId = sl.UserId,
+					StartedOn = sl.StartedOn,
 					FirstName = sl.User.FirstName,
-					LastName= sl.User.LastName,
+					LastName = sl.User.LastName,
 					Products = sl.ShoppingListProducts.Select(x => new ShoppingListProductViewModel()
 					{
 						Id = x.ProductId,
 						Name = x.Product.Name
 					}),
 					Progress = sl.ShoppingListProducts.Where(x => x.IsBought).Count() * 100 / sl.ShoppingListProducts.Count()
-					
+
 				}).ToListAsync();
 
 
-            for (int i = 0; i < shoppingLists.Count; i++)
-            {
+			for (int i = 0; i < shoppingLists.Count; i++)
+			{
 				shoppingLists[i].ProfilePicture = await _ImageService.GetPFP(shoppingLists[i].UserId);
 			}
 
@@ -366,14 +373,14 @@ namespace HomeAssistant.Core.Services
 
 		public async Task<int> GetShoppingListProgress(string userId)
 		{
-			var sl=await _dbcontext.ShoppingLists
-				.Include(x=>x.ShoppingListProducts)
+			var sl = await _dbcontext.ShoppingLists
+				.Include(x => x.ShoppingListProducts)
 				.FirstOrDefaultAsync(x => x.User.Id == userId);
 
-            if (sl==null)
-            {
-                throw new ArgumentNullException(nameof(sl));
-            }
+			if (sl == null)
+			{
+				throw new ArgumentNullException(nameof(sl));
+			}
 
 			return sl.ShoppingListProducts.Where(x => x.IsBought).Count() * 100 / sl.ShoppingListProducts.Count();
 

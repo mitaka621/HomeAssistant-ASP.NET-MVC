@@ -43,10 +43,10 @@
 		</div>
 		<div class="main-menu">
 			<a class="btn btn-success" asp-controller="Fridge" asp-action="Index">
-				<img src="~/svg/fridge.svg"/>
+				<img src="~/svg/fridge.svg" />
 				<span>Fridge</span>
 			</a>
-			<a class="btn btn-success" asp-controller="ShoppingList" asp-action="Index">Shopping Cart</a>
+			<a class="btn btn-success" asp-controller="ShoppingList" asp-action="Index">Shopping List</a>
 			<a class="btn btn-success" asp-controller="Recipe" asp-action="Index">Recepies</a>
 			<a class="btn btn-success">Where is Nola?</a>
 		</div>
@@ -54,70 +54,66 @@
 
 	<div class="right">
 		<h3>Notifications:</h3>
-		<div class="card">
-			<div class="card-header">
-				Featured
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">Special title treatment</h5>
-				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
-				<span>3 seconds ago</span>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-header">
-				Featured
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">Special title treatment</h5>
-				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
-				<span>3 seconds ago</span>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-header">
-				Featured
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">Special title treatment</h5>
-				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
-				<span>3 seconds ago</span>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-header">
-				Featured
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">Special title treatment</h5>
-				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
-				<span>3 seconds ago</span>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-header">
-				Featured
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">Special title treatment</h5>
-				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
-				<span>3 seconds ago</span>
-			</div>
-			<div class="card">
-			<div class="card-header">
-				Featured
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">Special title treatment</h5>
-				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>			
-				<span>3 seconds ago</span>
-			</div>
+		<div class="notifications">
+			@foreach (var notification in Model.Notifications)
+			{
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingTwo">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#n@(notification.Id)" aria-expanded="false" aria-controls="@notification.Id">
+							<div class="notf-title">
+								<p>@notification.Title</p>
+								@{
+									var duration = DateTime.Now - notification.CreatedOn;
 
-		</div>
+									string convertedDuration = "";
+									if (duration.TotalDays >= 1)
+									{
+										convertedDuration += Math.Round(duration.TotalDays) + (Math.Round(duration.TotalDays) == 1 ? " day" : " days") + " ago";
+									}
+									else if (duration.TotalHours >= 1)
+									{
+										convertedDuration += Math.Round(duration.TotalHours) + (Math.Round(duration.TotalHours) == 1 ? " hour" : " hours") + " ago";
+									}
+									else if (duration.TotalMinutes >= 1)
+									{
+										convertedDuration += Math.Round(duration.TotalMinutes) + (Math.Round(duration.TotalMinutes) == 1 ? " minute" : " minutes") + " ago";
+									}
+									else
+									{
+										convertedDuration += "Less than a minute ago";
+									}
+									<p class="text-muted">@convertedDuration</p>
+								}
+								@if (!String.IsNullOrEmpty(notification.Source))
+								{
+									<figcaption figcaption class="blockquote-footer">
+										@notification.Source
+									</figcaption>
+								}								
+							</div>
+							
+							<div>								
+								<div class="smallpfp">
+									<img src="data:image/jpeg;base64,@Convert.ToBase64String(notification.Invoker.Photo)" alt="Profile Picture" />
+								</div>
+								@notification.Invoker.FirstName
+							</div>
+						</button>
+					</h2>
+					<div id="n@(notification.Id)" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+						<div class="accordion-body">
+							@(Html.Raw(notification.Description.Replace("\r\n", "<br />")))
+						</div>
+					</div>
+				</div>
+			}
 		</div>
 	</div>
 </div>
 
+
 @section Scripts {
 	<script src="~/js/weather.js"></script>
+	<script src="~/js/signalr/dist/browser/signalr.js"></script>
+	<script src="~/js/NotificationsSignalR.js"></script>
 }

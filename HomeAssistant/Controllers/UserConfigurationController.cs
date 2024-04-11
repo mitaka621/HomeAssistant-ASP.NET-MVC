@@ -34,7 +34,7 @@ namespace HomeAssistant.Controllers
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 
-			return View(await userService.GetAllUsersAsync());
+			return View(await userService.GetAllNonDelitedUsersAsync());
 		}
 
 		[HttpPost]
