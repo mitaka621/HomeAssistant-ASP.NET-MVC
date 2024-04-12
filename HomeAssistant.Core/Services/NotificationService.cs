@@ -78,7 +78,7 @@ namespace HomeAssistant.Core.Services
 		{
 			var notifications = await _dbcontext.NotificationsUsers
 				.AsNoTracking()
-				.Where(x => x.UserId == userId)
+				.Where(x => x.UserId == userId&&!x.IsDismissed)
 				.Select(x => new NotificationViewModel()
 				{
 					Id = x.NotificationId,
@@ -138,5 +138,19 @@ namespace HomeAssistant.Core.Services
 
 			return model;
 		}
+
+		public async Task DismissNotification(string userId, int notificationId)
+		{
+			var notification=await _dbcontext.NotificationsUsers
+				.FirstOrDefaultAsync(x => x.UserId == userId && x.NotificationId == notificationId);
+
+            if (notification==null)
+            {
+				throw new ArgumentNullException();
+            }
+
+			notification.IsDismissed = true;
+			await _dbcontext.SaveChangesAsync();
+        }
 	}
 }

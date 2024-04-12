@@ -106,7 +106,7 @@ div.main-menu img{
 
 
 div.right {
-    background-color: #dcc8a0;
+    background-color: #d0e2c8;
     padding: 1em;
     border-radius: 20px;
     overflow: hidden;
@@ -123,6 +123,7 @@ div.right {
     flex-direction: column;
     gap: 1em;
     scrollbar-width: thin;
+    background
 }
 .accordion-button{
     gap:1em;
@@ -150,4 +151,20 @@ div.right {
 
 .accordion-button{
     margin:0;
+}
+
+.accordion-item {
+    max-width: 999px;
+    max-height: 999px;
+    transition: max-width 0.5s, max-height 0.5s;
+}
+
+a.dismiss{
+    width:100%;
+   padding:0;
+
+}
+
+.ShoppingList{
+    color:#4aa031;
 }

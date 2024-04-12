@@ -16,5 +16,7 @@ namespace HomeAssistant.Core.Contracts
 		Task<IEnumerable<NotificationViewModel>> GetNotificationsForUser(string userId);
 
 		Task<NotificationViewModel> GetNotification(int notidicationId);
+
+		Task DismissNotification(string userId, int notificationId);
 	}
 }

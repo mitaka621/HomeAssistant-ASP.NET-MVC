@@ -48,13 +48,17 @@
 			</a>
 			<a class="btn btn-success" asp-controller="ShoppingList" asp-action="Index">Shopping List</a>
 			<a class="btn btn-success" asp-controller="Recipe" asp-action="Index">Recepies</a>
-			<a class="btn btn-success">Where is Nola?</a>
+			<a class="btn btn-success">Messeges</a>
 		</div>
 	</div>
 
 	<div class="right">
 		<h3>Notifications:</h3>
 		<div class="notifications">
+			@if (!Model.Notifications.Any())
+			{
+				<p>No notifications!</p>
+			}
 			@foreach (var notification in Model.Notifications)
 			{
 				<div class="accordion-item">
@@ -86,10 +90,16 @@
 								}
 								@if (!String.IsNullOrEmpty(notification.Source))
 								{
-									<figcaption figcaption class="blockquote-footer">
+									<figcaption figcaption class="blockquote-footer @notification.Source">
 										@notification.Source
 									</figcaption>
-								}								
+								}
+								else
+								{
+									<figcaption figcaption class="blockquote-footer">
+										System
+									</figcaption>
+								}
 							</div>
 							
 							<div>								
@@ -104,6 +114,7 @@
 						<div class="accordion-body">
 							@(Html.Raw(notification.Description.Replace("\r\n", "<br />")))
 						</div>
+						<a id="b@(notification.Id)" class="btn btn-danger dismiss" onclick="Dismiss(this)">Dismiss</a>
 					</div>
 				</div>
 			}
