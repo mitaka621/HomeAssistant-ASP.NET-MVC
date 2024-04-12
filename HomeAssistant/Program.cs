@@ -24,6 +24,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IShoppingListService, ShoppingListService>();
 builder.Services.AddScoped<IRecipeService,RecipeService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 
 builder.Services.AddDefaultIdentity<HomeAssistantUser>(options =>
 {
@@ -87,5 +88,7 @@ app.MapRazorPages();
 app.MapHub<SignalRShoppingCartHub>("/cartHub");
 
 app.MapHub<NotificationsHub>("/notificationHub");
+
+app.MapHub<MessageHub>("/messageHub");
 
 app.Run();

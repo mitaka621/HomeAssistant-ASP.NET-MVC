@@ -24,5 +24,7 @@ namespace HomeAssistant.Core.Models
 
 		public string? DeletedOn { get; set; } = string.Empty;
 
-	}
+        public byte[] Photo { get; set; } = new byte[0];
+
+    }
 }

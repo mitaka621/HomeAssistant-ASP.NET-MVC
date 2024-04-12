@@ -5,19 +5,22 @@ using System.Security.Claims;
 
 namespace HomeAssistant.Hubs
 {
-	[Authorize(Roles ="StandardUser")]
-	public class NotificationsHub:Hub
+	[Authorize(Roles = "StandardUser")]
+	public class NotificationsHub : Hub
 	{
 		public INotificationService _notificationService;
 
-        public NotificationsHub(INotificationService notificationService)
-        {
-			_notificationService=notificationService;
+		public NotificationsHub(INotificationService notificationService)
+		{
+			_notificationService = notificationService;
 
 		}
-        public async Task MarkAsDismissed(int notificationId)
+		public async Task MarkAsDismissed(int notificationId)
 		{
 			await _notificationService.DismissNotification(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty, notificationId);
+
+
+
 		}
 	}
 }

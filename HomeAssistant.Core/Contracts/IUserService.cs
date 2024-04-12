@@ -16,7 +16,7 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<IEnumerable<UserDetailsViewModel>> GetAllNotApprovedUsersAsync();
 
-		Task<IEnumerable<string>> GetAllApprovedNotDeletedUsersAsync();
+		Task<IEnumerable<UserDetailsViewModel>> GetAllApprovedNotDeletedUsersAsync();
 
 		Task<UserDetailsFormViewModel> GetUserByIdAsync(string Id);
 

@@ -1,0 +1,15 @@
+﻿@using HomeAssistant.Core.Models
+@model IEnumerable<UserDetailsViewModel>
+
+<div class="selection-container">
+	@foreach (var user in Model)
+	{
+		<a class="user btn" asp-controller="Message" asp-action="Chat" asp-route-recipiantId="@user.Id">
+			<div class="smallpfp" asp-area="Identity" asp-page="/Account/Manage/Index">
+				<img src="data:image/jpeg;base64,@Convert.ToBase64String(user.Photo)" alt="Profile Picture" />
+			</div>
+			<p>@user.FirstName @user.LastName</p>
+			<p>@user.Username</p>
+		</a>
+	}
+</div>

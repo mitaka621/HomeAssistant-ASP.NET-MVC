@@ -23,8 +23,10 @@ namespace HomeAssistant.Infrastructure.Data
         public DbSet<Step> Steps { get; set; }
 		public DbSet<UserStep> UsersSteps { get; set; }
         public DbSet<RecipeProductStep> RecipesProductsSteps { get; set; }
+        public DbSet<ChatRoom> ChatRooms { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ShoppingListProduct>()
                 .HasKey(x => new { x.ShoppingListId, x.ProductId });
@@ -43,6 +45,9 @@ namespace HomeAssistant.Infrastructure.Data
 
             builder.Entity<RecipeProductStep>()
                 .HasKey(x => new { x.StepNumber,x.RecipeId,x.ProductId});
+
+            builder.Entity<Message>()
+                .HasKey(x => new { x.MessageId, x.UserId, x.ChatRoomId });
 
             builder.Entity<HomeAssistantUser>()
                 .Property(b => b.Latitude)

@@ -13,11 +13,13 @@ namespace HomeAssistant.Core.Services
 	{
 		private readonly UserManager<HomeAssistantUser> userManager;
 		private readonly RoleManager<IdentityRole> roleManager;
+		private readonly IimageService imageService;
 
-		public UserService(UserManager<HomeAssistantUser> _userManager, RoleManager<IdentityRole> _roleManager)
+		public UserService(UserManager<HomeAssistantUser> _userManager, RoleManager<IdentityRole> _roleManager, IimageService imageService)
 		{
 			userManager = _userManager;
 			roleManager = _roleManager;
+			this.imageService = imageService;
 		}
 
 		public async Task<IEnumerable<UserDetailsViewModel>> GetAllNonDelitedUsersAsync()
@@ -261,12 +263,27 @@ namespace HomeAssistant.Core.Services
 			return (await userManager.UpdateAsync(dbUser)).Succeeded;
 		}
 
-		public async Task<IEnumerable<string>> GetAllApprovedNotDeletedUsersAsync()
+		public async Task<IEnumerable<UserDetailsViewModel>> GetAllApprovedNotDeletedUsersAsync()
 		{
-			var users =await userManager
-				.GetUsersInRoleAsync("StandardUser");
+			var users =(await userManager
+				.GetUsersInRoleAsync("StandardUser"))
+				.Where(x => !x.IsDeleted)
+				.Select(x => new UserDetailsViewModel()
+				{
+					Id = x.Id,
+					FirstName = x.FirstName,
+					LastName = x.LastName,
+					Email = x.Email,
+					Username = x.UserName,
+				}).ToList();
 
-			return users.Where(x => !x.IsDeleted).Select(x=>x.Id);
+			List<Task> pfpTasks=new List<Task>();
+			for (int i = 0; i < users.Count; i++)
+			{
+				users[i].Photo = await imageService.GetPFP(users[i].Id);
+			}
+
+			return users;
 				
 		}
 	}

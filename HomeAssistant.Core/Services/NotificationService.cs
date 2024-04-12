@@ -32,7 +32,7 @@ namespace HomeAssistant.Core.Services
 				NotificationsUsers = (await _userService.GetAllApprovedNotDeletedUsersAsync())
 				.Select(x => new NotificationUser()
 				{
-					UserId = x
+					UserId = x.Id
 				}).ToList()
 			};
 
@@ -46,7 +46,7 @@ namespace HomeAssistant.Core.Services
 		public async Task<int> CreateNotificationForSpecificUsers(string title, string description, string invokerURL, string userId, string? invokerId)
 		{
 
-			if ((await _userService.GetAllApprovedNotDeletedUsersAsync()).FirstOrDefault(x => x == userId) == null)
+			if ((await _userService.GetAllApprovedNotDeletedUsersAsync()).FirstOrDefault(x => x.Id == userId) == null)
 			{
 				throw new ArgumentNullException();
 			}
