@@ -27,6 +27,8 @@ namespace HomeAssistant.Core.Contracts
 
 		public Task<StepDetailsViewModel?> GetUserStep(string userId, int recipeId);
 
+		public Task<IEnumerable<Tuple<string,int, string>>> GetUsersWithExpiredTimers();
+
 		public Task MoveNextUserRecipeStep(string userId, int recipeId);
 
 		public Task DeleteUserRecipeStep(string userId, int recipeId);

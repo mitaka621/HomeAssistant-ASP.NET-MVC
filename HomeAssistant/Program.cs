@@ -1,3 +1,4 @@
+using HomeAssistant.BackgroundServiceJobs;
 using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Services;
 using HomeAssistant.Hubs;
@@ -11,13 +12,13 @@ using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HomeAssistantDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddSignalR();
+builder.Services.AddHostedService<CheckTimerExpirationService>();
 
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -52,6 +53,8 @@ builder.Services.AddMvc(options=>options.Filters.Add(new AutoValidateAntiforgery
 
 builder.Services
     .AddHttpClient<IWeatherService, WeatherService>();
+
+
 
 var app = builder.Build();
 

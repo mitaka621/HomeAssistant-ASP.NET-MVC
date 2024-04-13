@@ -2,6 +2,7 @@
 using HomeAssistant.Core.Models.Fridge;
 using HomeAssistant.Core.Models.Recipe;
 using HomeAssistant.Infrastructure.Data;
+using HomeAssistant.Infrastructure.Data.Enums;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -640,5 +641,25 @@ namespace HomeAssistant.Core.Services
 			}
 			await _dbcontext.SaveChangesAsync();
         }
+
+		public async Task<IEnumerable<Tuple<string, int, string>>> GetUsersWithExpiredTimers()
+		{
+			var alreadyNotifiedUsers = (await _dbcontext.NotificationsUsers
+				.AsNoTracking()
+				.Include(x=>x.Notification)
+				.Where(x => !x.IsDismissed && x.Notification.InvokerURL.Contains("Recipe"))
+				.ToListAsync())
+				.Select(x =>new { recipeId=int.Parse(x.Notification.InvokerURL.Split("=")[1]),userId=x.UserId })
+				.ToList();
+
+			return (await _dbcontext.UsersSteps
+				.AsNoTracking()
+				.Where(x => x.Step.StepType == StepType.TimerStep)
+				.Select(x=>new {x.StartedOn, x.Step.DurationInMin,x.UserId,x.Step.Recipe.Name, x.Step.Recipe.Id })
+				.ToListAsync())
+				.Where(x=> !alreadyNotifiedUsers.Any(y=>y.userId==x.UserId&&y.recipeId==x.Id)&&(DateTime.Now - x.StartedOn).Minutes > x.DurationInMin.Value)
+				.Select(x=>Tuple.Create(x.UserId,x.Id, x.Name))
+				.ToList();
+		}
 	}
 }
