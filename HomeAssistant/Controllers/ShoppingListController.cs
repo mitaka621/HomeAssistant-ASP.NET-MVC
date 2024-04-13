@@ -10,7 +10,7 @@ using System.Text;
 
 namespace HomeAssistant.Controllers
 {
-	[Authorize(Roles ="StandardUser")] 
+    [Authorize(Roles ="StandardUser")] 
 	public class ShoppingListController : Controller
 	{
 		private readonly IShoppingListService _shoppingListService;

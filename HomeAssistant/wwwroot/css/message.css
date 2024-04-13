@@ -137,3 +137,10 @@ button.sendBtn svg {
     padding: 0;
     fill:wheat;
 }
+
+.spinner-container {
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}

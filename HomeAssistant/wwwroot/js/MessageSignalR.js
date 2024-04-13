@@ -64,7 +64,7 @@ function LoadMoreMessages() {
     fetch(`/Message/LoadMessageRangeJson?chatroomId=${chatRoomId}&skip=${skip}&take=${take}`)
         .then(r => r.json())
         .then(data => {
-            document.querySelector(".spinner-border").remove();
+            document.querySelector(".spinner-container").remove();
 
             if (data.length===0) {
                 return;
@@ -105,12 +105,14 @@ function LoadMoreMessages() {
                     document.querySelector(".messages-container").insertAdjacentElement("afterbegin", div);
                 }
             });
-            document.querySelector(".messages-container").insertAdjacentHTML("afterbegin", `<div class="spinner-border" role="status">
-				<span class="visually-hidden">Loading...</span>
+            document.querySelector(".messages-container").insertAdjacentHTML("afterbegin", `<div class="spinner-container">
+				<div class="spinner-border" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
 			</div>`)
 
             let observer = new IntersectionObserver(handleIntersection, options);
-            observer.observe(document.querySelector(".spinner-border"));
+            observer.observe(document.querySelector(".spinner-container"));
 
             var newChatBoxHeight = chatBox.scrollHeight;
             var heightDifference = newChatBoxHeight - chatBoxHeight;
@@ -126,7 +128,7 @@ let options = {
 };
 
 let observer = new IntersectionObserver(handleIntersection, options);
-observer.observe(document.querySelector(".spinner-border"));
+observer.observe(document.querySelector(".spinner-container"));
 
 function handleIntersection(entries, observer) {
     entries.forEach(entry => {
