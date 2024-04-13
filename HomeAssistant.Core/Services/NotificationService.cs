@@ -103,7 +103,8 @@ namespace HomeAssistant.Core.Services
                 {
 					continue;
                 }
-                notifications[i].Invoker.Photo = await _imageService.GetPFP(notifications[i].Invoker.Id);
+
+				notifications[i].Invoker.Photo = await _imageService.GetPFP(notifications[i].Invoker.Id);
 			}
 
 			return notifications;

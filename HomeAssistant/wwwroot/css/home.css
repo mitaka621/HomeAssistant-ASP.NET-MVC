@@ -165,6 +165,27 @@ a.dismiss{
 
 }
 
-.ShoppingList{
-    color:#4aa031;
+.not-container-title{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:1em;
+}
+
+div.not-container-title a{
+    padding:0;
+    height:fit-content;
+}
+
+div.not-container-title svg {
+    width: 1.4em;
+    fill:white;
+    margin: 0 0.2em 0.2em 0.2em;
+}
+
+.ShoppingList {
+    color: #4aa031;
+}
+.Message{
+    color:#f77474;
 }

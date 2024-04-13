@@ -40,10 +40,11 @@ namespace HomeAssistant.Hubs
 			}
 			else
 			{
-				var notificationId = await _notificationService.CreateNotificationForAllUsers(
+				var notificationId = await _notificationService.CreateNotificationForSpecificUsers(
 					"Recieved New Message",
 					message,
-					"/message",
+					"/Message",
+					recipientId,
 					GetUserId());
 
 				await _notificationHubContext.Clients

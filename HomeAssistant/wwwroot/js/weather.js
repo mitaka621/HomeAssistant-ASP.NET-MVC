@@ -62,7 +62,7 @@ fetch('/api/Weather/Weather')
             hatSvg.src = "/svg/cap.svg";
             shirtSvg.src = "/svg/light-sweater.svg";
             hatDesc.innerHTML = "Cap"
-            shirtDesc.innerHTML = "Light Sweater"
+            shirtDesc.innerHTML = "Long Sleeved T-Shirt"
         }
         else if (json.main.temp < 30) {
             hatSvg.src = "/svg/cap.svg";

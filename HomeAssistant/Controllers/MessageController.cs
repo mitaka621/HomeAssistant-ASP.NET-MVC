@@ -26,6 +26,11 @@ namespace HomeAssistant.Controllers
 			return View(await _messageService.GetChatDetails(GetUserId(),recipiantId));
 		}
 
+		public async Task<IActionResult> LoadMessageRangeJson(int chatroomId, int skip, int take)
+		{
+			return Json(await _messageService.LoadMessagesRange(chatroomId, skip, take));
+		}
+
 		private string GetUserId()
 		{
 			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;

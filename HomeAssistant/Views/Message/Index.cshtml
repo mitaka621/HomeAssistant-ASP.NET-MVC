@@ -1,15 +1,25 @@
 ﻿@using HomeAssistant.Core.Models
 @model IEnumerable<UserDetailsViewModel>
 
+
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add("Message Center", "/Message/index");
+	ViewBag.previousPages = previousPages;
+}
+
+<link rel="stylesheet" href="~/css/message.css" asp-append-version="true" />
+
 <div class="selection-container">
 	@foreach (var user in Model)
 	{
 		<a class="user btn" asp-controller="Message" asp-action="Chat" asp-route-recipiantId="@user.Id">
-			<div class="smallpfp" asp-area="Identity" asp-page="/Account/Manage/Index">
+			<div class="smallpfp smallpfp2" asp-area="Identity" asp-page="/Account/Manage/Index">
 				<img src="data:image/jpeg;base64,@Convert.ToBase64String(user.Photo)" alt="Profile Picture" />
 			</div>
 			<p>@user.FirstName @user.LastName</p>
-			<p>@user.Username</p>
+			<p><b>@user.Username</b></p>
 		</a>
 	}
 </div>

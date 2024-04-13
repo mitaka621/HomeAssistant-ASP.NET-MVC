@@ -59,3 +59,7 @@ function Dismiss(e) {
 		console.error("Error dismissing notification:");
 	});
 }
+
+function DismissAll() {
+	document.querySelectorAll("a.dismiss").forEach(x => x.click());
+}

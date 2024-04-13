@@ -21,7 +21,7 @@ namespace HomeAssistant.Core.Services
 			_imageService = imageService;
 		}
 
-		public async Task<ChatDetailsViewModel> GetChatDetails(string currentUser, string userId2)
+		public async Task<ChatDetailsViewModel> GetChatDetails(string currentUser, string userId2, int messagesCount = 50)
 		{
             if (currentUser==userId2)
             {
@@ -29,7 +29,7 @@ namespace HomeAssistant.Core.Services
             }
 
             var chatroom = await _dbContext.ChatRooms
-				.Include(x => x.Messages)
+				.Include(x => x.Messages.OrderByDescending(x=>x.CreatedOn).Take(messagesCount))
 				.FirstOrDefaultAsync(x => (x.User1Id == currentUser && x.User2Id == userId2) || (x.User1Id == userId2 && x.User2Id == currentUser));
 
 			if (chatroom == null)
@@ -44,7 +44,7 @@ namespace HomeAssistant.Core.Services
 				CreatedOn = x.CreatedOn,
 				MessageContent = x.MessageContent,
 				UserId = x.UserId,
-			}).ToList();
+			}).OrderBy(x=>x.CreatedOn).ToList();
 
 			model.ChatRoomId = chatroom.Id;
 			model.currentUserPhoto = await _imageService.GetPFP(currentUser);
@@ -79,6 +79,22 @@ namespace HomeAssistant.Core.Services
 
 			await _dbContext.SaveChangesAsync();
 
+		}
+
+
+		public async Task<IEnumerable<MessageViewModel>> LoadMessagesRange(int chatroomId, int skip, int take)
+		{
+			return await _dbContext.Messages
+				.OrderByDescending(x=>x.CreatedOn)
+				.Skip(skip)
+				.Take(take)
+				.Select(x=>new MessageViewModel()
+				{
+					CreatedOn= x.CreatedOn,
+					MessageContent = x.MessageContent,
+					UserId=x.UserId,
+				})
+				.ToListAsync();
 		}
 
 		private async Task<ChatRoom> CreateChatRoom(string userId1, string userId2)

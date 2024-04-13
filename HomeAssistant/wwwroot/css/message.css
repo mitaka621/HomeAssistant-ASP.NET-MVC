@@ -1,0 +1,139 @@
+﻿.selection-container {
+    width: 100%;
+    min-height: 80vh;
+    max-height: fit-content;
+    display: flex;
+    gap: 2em;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+div.selection-container p{
+    margin:0;
+}
+div.smallpfp2 {
+    width: 15em;
+    height: 15em;
+    margin-bottom:0.4em;
+}
+div.smallpfp2 img{
+    width:23em;
+}
+a.user {
+    transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+a.user:hover {
+    transform: scale(1.1);
+}
+
+.current-user-message {
+    display: flex;
+    width: 100%;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-bottom: 1em;
+    gap: 1.3em;
+}
+
+div.current-user-message p{
+    margin:0;
+}
+
+.message-date {
+    max-height: 0;
+    overflow: hidden; 
+    transition: max-height 0.3s ease;
+}
+
+.current-user-message:hover .message-date {
+  max-height: 100px;
+}
+.other-user-message:hover .message-date {
+    max-height: 100px;
+}
+.message-text {
+    padding: 0.3em 1em;
+    border-radius: 8px;
+    max-width: 40vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 5px 10px -3px rgba(0,0,0,0.5);
+}
+
+.current-user-message .message-text {
+    background-color: #535e52;
+    color:white;
+    font-weight:500;
+}
+
+.other-user-message .message-text {
+    background-color: #d9f3f2;
+    font-weight: 500;
+}
+
+.message-and-time {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+div.other-user-message p{
+    margin:0;
+}
+.other-user-message {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 1em;
+    gap: 1.3em;
+}
+
+.message-and-time2 {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+.card-header p{
+    margin:0;
+    font-size:1.5em;
+}
+.card-header {
+    display: flex;
+    align-items: center;
+    gap:1em;
+}
+
+.card-body{
+    height:70vh;
+    overflow:scroll;
+    overflow-x:hidden;
+}
+
+.send-container{
+    display:flex;
+    padding:0 5em 0.5em 5em;
+    gap:0.5em;
+}
+
+.form-control{
+    border-radius:20px;
+    background-color:#f7f7f7
+}
+.sendBtn {
+    border-radius: 50%;
+    width:2.5em;
+    height:2.5em;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:0;
+    padding:0;
+}
+button.sendBtn svg {
+    width: 1em;
+    margin: 0;
+    padding: 0;
+    fill:wheat;
+}
