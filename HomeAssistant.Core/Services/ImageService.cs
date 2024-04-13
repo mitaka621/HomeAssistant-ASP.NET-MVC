@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using System.IO;
 
 namespace HomeAssistant.Core.Services
 {
@@ -73,6 +74,52 @@ namespace HomeAssistant.Core.Services
             }        
         }
 
+		public async Task<Dictionary<string, byte[]>> GetPfpRange(params string[] userIds)
+		{
+			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+			{
+				BucketName = "ProfilePictures"
+			});
+
+			var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", "defaultpfp");
+			var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
+
+			byte[] defualtPfp;
+			using (var stream = new MemoryStream())
+			{
+				await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
+				defualtPfp = stream.ToArray();
+			}
+
+			filter = Builders<GridFSFileInfo>.Filter.In("filename", userIds);
+			var cursor = await _gridFS.FindAsync(filter);
+
+			var picturesDict = new Dictionary<string, byte[]>();
+
+			while (await cursor.MoveNextAsync())
+			{
+				var batch = cursor.Current;
+				foreach (var fileInf in batch)
+				{
+					using (var stream = new MemoryStream())
+					{
+						await _gridFS.DownloadToStreamAsync(fileInf.Id, stream);
+						picturesDict[fileInf.Filename] = stream.ToArray();
+					}
+				}
+			}
+
+			foreach (var userId in userIds)
+			{
+				if (!picturesDict.ContainsKey(userId) && defualtPfp != null)
+				{
+					picturesDict[userId] = defualtPfp;
+				}
+			}
+
+			return picturesDict;
+		}
+
 		public async Task SaveRecipeImage(int recipeId, byte[] imageData)
 		{
 			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
@@ -140,5 +187,7 @@ namespace HomeAssistant.Core.Services
 
 			return new byte[0];
 		}
+
+	
 	}
 }

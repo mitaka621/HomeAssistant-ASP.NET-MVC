@@ -265,7 +265,7 @@ namespace HomeAssistant.Core.Services
 
 		public async Task<IEnumerable<UserDetailsViewModel>> GetAllApprovedNotDeletedUsersAsync()
 		{
-			var users =(await userManager
+			var users = (await userManager
 				.GetUsersInRoleAsync("StandardUser"))
 				.Where(x => !x.IsDeleted)
 				.Select(x => new UserDetailsViewModel()
@@ -277,14 +277,20 @@ namespace HomeAssistant.Core.Services
 					Username = x.UserName,
 				}).ToList();
 
-			List<Task> pfpTasks=new List<Task>();
+
+			var userPhotos = await imageService
+				.GetPfpRange(users.Select(x => x.Id).Distinct().ToArray());
+
+			users
+				.ForEach(x => x.Photo = userPhotos.FirstOrDefault(y => y.Key == x.Id).Value ?? new byte[0]);
+
 			for (int i = 0; i < users.Count; i++)
 			{
 				users[i].Photo = await imageService.GetPFP(users[i].Id);
 			}
 
 			return users;
-				
+
 		}
 	}
 }

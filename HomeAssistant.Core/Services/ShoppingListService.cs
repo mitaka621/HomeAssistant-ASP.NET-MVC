@@ -362,11 +362,11 @@ namespace HomeAssistant.Core.Services
 
 				}).ToListAsync();
 
+			var userPhotos = await _ImageService
+				.GetPfpRange(shoppingLists.Select(x => x.UserId).Distinct().ToArray());
 
-			for (int i = 0; i < shoppingLists.Count; i++)
-			{
-				shoppingLists[i].ProfilePicture = await _ImageService.GetPFP(shoppingLists[i].UserId);
-			}
+			shoppingLists
+				.ForEach(x => x.ProfilePicture = userPhotos.FirstOrDefault(y => y.Key == x.UserId).Value ?? new byte[0]);
 
 			return shoppingLists;
 		}

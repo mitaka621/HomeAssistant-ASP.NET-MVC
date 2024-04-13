@@ -12,6 +12,8 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<byte[]> GetPFP(string userId);
 
+		Task<Dictionary<string, byte[]>> GetPfpRange(params string[] userIds);
+
 		Task SaveRecipeImage(int RecipeId, byte[] imageData);
 
 		Task<byte[]> GetRecipeImage(int RecipeId, CancellationToken cancellationToken=new());
