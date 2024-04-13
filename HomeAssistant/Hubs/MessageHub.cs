@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Linq;
@@ -10,11 +11,16 @@ namespace HomeAssistant.Hubs
 	public class MessageHub : Hub
 	{
 		private readonly IMessageService _messageService;
+		private readonly IHubContext<NotificationsHub> _notificationHubContext;
+		private readonly INotificationService _notificationService;
+
 		private static List<string> connectedClients = new List<string>();
 
-		public MessageHub(IMessageService messageService)
+		public MessageHub(IMessageService messageService, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService)
 		{
 			_messageService = messageService;
+			_notificationHubContext = notificationHubContext;
+			_notificationService = notificationService;
 		}
 
 		public override Task OnConnectedAsync()
@@ -28,10 +34,22 @@ namespace HomeAssistant.Hubs
 			await _messageService
 					.SendMessage(chatRoomId, GetUserId(), recipientId, message);
 
-            if (connectedClients.Any(x=>x==recipientId))
-            {
+			if (connectedClients.Any(x => x == recipientId))
+			{
 				await Clients.User(recipientId).SendAsync("LoadMessage", message);
-			}         
+			}
+			else
+			{
+				var notificationId = await _notificationService.CreateNotificationForAllUsers(
+					"Recieved New Message",
+					message,
+					"/message",
+					GetUserId());
+
+				await _notificationHubContext.Clients
+					.User(recipientId)
+					.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+			}
 		}
 
 		public override Task OnDisconnectedAsync(Exception? exception)
