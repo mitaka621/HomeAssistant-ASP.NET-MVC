@@ -110,7 +110,7 @@
 			</tbody>
 		</table>
 		<form method="post">
-			<button type="submit" class="btn btn-info" asp-controller="ShoppingList" asp-action="StartShopping">Start Shopping</button>
+			<button type="submit" class="btn btn-start" asp-controller="ShoppingList" asp-action="StartShopping">Start Shopping</button>
 		</form>
 	</div>
 	@if (Model.OutOfStockProducts.Any())
@@ -125,7 +125,31 @@
 							<a class="btn out-of-stock" onclick="OpenModal(this)" id="@prod.Id" name="@prod.Name">
 								<p><b>Name:</b> <span class="fs-5">@prod.Name</span></p>
 								<p><b>Category:</b> @prod.ProductCategory.Name</p>
-								<p><b>Last added:</b> @(String.Format("{0:dd} days {0:hh} hours ago", (DateTime.Now - prod.AddedOn)))</p>
+								<p>
+									<b>Last added:</b>
+									@{
+										var duration = DateTime.Now - prod.AddedOn;
+
+										string convertedDuration = "Added ";
+										if (duration.TotalDays >= 1)
+										{
+											convertedDuration += Math.Round(duration.TotalDays) + (Math.Round(duration.TotalDays) == 1 ? " day" : " days") + " ago";
+										}
+										else if (duration.TotalHours >= 1)
+										{
+											convertedDuration += Math.Round(duration.TotalHours) + (Math.Round(duration.TotalHours) == 1 ? " hour" : " hours") + " ago";
+										}
+										else if (duration.TotalMinutes >= 1)
+										{
+											convertedDuration += Math.Round(duration.TotalMinutes) + (Math.Round(duration.TotalMinutes) == 1 ? " minute" : " minutes") + " ago";
+										}
+										else
+										{
+											convertedDuration += " less than a minute ago";
+										}
+									@convertedDuration
+									}
+								</p>
 							</a>
 						</form>
 					}

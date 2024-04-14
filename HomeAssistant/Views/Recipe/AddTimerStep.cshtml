@@ -13,7 +13,9 @@
 
 }
 
-<h1>Step Number @(Model.PreviousStep == null ? 1 : Model.PreviousStep.StepNumber+1)</h1>
+<link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
+
+
 
 @if (Model.PreviousStep != null)
 {
@@ -24,8 +26,10 @@
 	</div>
 }
 
-<form method="post" asp-controller="Recipe" asp-action="AddTimerStep">
-	
+
+
+<form class="add-step-form" method="post" asp-controller="Recipe" asp-action="AddTimerStep">
+	<h1>Step Number @(Model.PreviousStep == null ? 1 : Model.PreviousStep.StepNumber + 1)</h1>
 	<div class="col">
 		<input hidden asp-for="RecipeId" value="@ViewBag.recipeId" />
 		<div class="col-md-12">
@@ -47,7 +51,9 @@
 
 
 	</div>
-	<button type="submit" class="btn btn-primary">Next</button>
+	<div class="btn-div">
+		<button type="submit" class="btn btn-primary">Next</button>
+	</div>
 </form>
 
 @section Scripts {

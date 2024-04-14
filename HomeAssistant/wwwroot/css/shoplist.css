@@ -33,6 +33,11 @@ div.main-create:first-child:only-child {
     scrollbar-width: thin;
 }
 
+form{
+    width:fit-content;
+    margin: 0 auto;
+}
+
 .product{
     background-color:#9edc2a;
     margin-bottom:1em;
@@ -302,4 +307,8 @@ div.out-of-stock-right {
 }
 .info-container-left {
     margin-top: 9em;
+}
+
+.btn-start {
+    background-color: #9edc2a;
 }

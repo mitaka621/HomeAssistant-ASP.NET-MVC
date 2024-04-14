@@ -25,7 +25,7 @@ namespace HomeAssistant.Core.Services
 			int? categoryId,
 			OrderBy orderBy,
 			int page,
-			int productsOnPage=10)
+			int productsOnPage=20)
 		{
 			var prodToReturn = _dbContext.Products
 				.AsNoTracking()

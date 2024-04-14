@@ -1,5 +1,4 @@
-﻿
-div.steps{
+﻿div.steps{
     display:flex;
     gap:1em;
     flex-wrap:wrap;
@@ -240,4 +239,26 @@ button.done>svg:hover {
 button.done > svg {
     width: 4em;
     fill: #f9b74f;
+}
+
+.prev-step {
+    background-color: #cffc6c;
+    width: fit-content;
+    padding: 1em 1em;
+    border-radius: 20px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+form.add-step-form {
+    width: 50%;
+    margin: 2em auto;
+}
+form > div.prod-to-include{
+   margin-bottom:2em;
+}
+
+form>div.btn-div{
+    width:fit-content;
+    margin:1em auto;
 }

@@ -43,7 +43,7 @@ namespace HomeAssistant.Controllers
 				parsedEnum = OrderBy.Recent;
 			}
 			
-			var fridgeViewModel = await _productService.GetProducts(isAvailable, categoryId, parsedEnum, page);
+			var fridgeViewModel = await _productService.GetProducts(isAvailable, categoryId, parsedEnum, page,20);
 
 			fridgeViewModel.LatestFridgeActivity = await _notificationService.GetTop20ProductRelatedNotification();
 

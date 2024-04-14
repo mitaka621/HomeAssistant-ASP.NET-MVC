@@ -127,7 +127,7 @@ div.main-menu img{
 
 
 div.right {
-    background-color: #d0e2c8;
+    background-color: #d9f3f2;
     padding: 1em;
     border-radius: 20px;
     overflow: hidden;
@@ -210,17 +210,47 @@ div.not-container-title svg {
     align-items:center;
 }
 
-.ShoppingList {
-    color: #4aa031;
-}
-.Message{
-    color:#f77474;
+figcaption{
+    font-weight:700;
 }
 
+.ShoppingList {
+    color: #9CCC65
+}
+.shoppinglist-btn {
+    background-color: #54d359;
+    color: white;
+    font-weight: 600;
+    text-shadow: 4px 2px 5px rgba(0,0,0,0.6);
+}
+.Message {
+    color: #9575CD
+}
+.message-btn {
+    background-color: #b68eff;
+    color: white;
+    font-weight: 600;
+    text-shadow: 4px 2px 5px rgba(0,0,0,0.6);
+}
 .Recipe {
-    color: #638dff;
+    color: #FFB74D
+}
+
+.recepies-btn {
+    background-color: #efa02a;
+    color: white;
+    font-weight: 600;
+    text-shadow: 4px 2px 5px rgba(0,0,0,0.6);
 }
 
 .Fridge {
-    color:#2d0690;
+    color: #8ED1FC;
 }
+.fridge-btn {
+    background-color: #4c98d7;
+    color: white;
+    font-weight: 600;
+    text-shadow: 4px 2px 5px rgba(0,0,0,0.6);
+}
+
+

@@ -34,10 +34,14 @@ div.main-container h1{
     padding:0.5em 0 0 1em;;
 }
 
+div.product p{
+    margin:0;
+}
+
 div.product > div.left {
     display: flex;
     flex-direction: column;
-    padding-bottom:1em;
+    padding-bottom: 1em;
 }
 
 div.product > div.right {

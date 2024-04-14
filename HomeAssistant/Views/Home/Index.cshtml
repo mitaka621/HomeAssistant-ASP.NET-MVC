@@ -42,13 +42,22 @@
 			<h3>@DateTime.Now.ToString("dd/MM/yyyy")</h3>
 		</div>
 		<div class="main-menu">
-			<a class="btn btn-success" asp-controller="Fridge" asp-action="Index">
-				<img src="~/svg/fridge.svg" />
+			<a class="btn fridge-btn" asp-controller="Fridge" asp-action="Index">
+				<img src="~/svg/fridge.png" />
 				<span>Fridge</span>
 			</a>
-			<a class="btn btn-success" asp-controller="ShoppingList" asp-action="Index">Shopping List</a>
-			<a class="btn btn-success" asp-controller="Recipe" asp-action="Index">Recepies</a>
-			<a class="btn btn-success" asp-controller="Message" asp-action="Index">Messeges</a>
+			<a class="btn shoppinglist-btn" asp-controller="ShoppingList" asp-action="Index">
+				<img src="~/svg/basket.png" />			
+				<span>Shopping List</span>
+			</a>
+			<a class="btn recepies-btn" asp-controller="Recipe" asp-action="Index">
+				<img src="~/svg/notebook.png" />
+				<span>Recepies</span>
+				</a>
+			<a class="btn message-btn" asp-controller="Message" asp-action="Index">
+				<img src="~/svg/message.png" />
+				<span>Messeges</span>
+				</a>
 		</div>
 	</div>
 
@@ -116,7 +125,7 @@
 									</div>
 									@notification.Invoker.FirstName
 								</div>
-							}			
+							}
 						</button>
 					</h2>
 					<div id="n@(notification.Id)" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
