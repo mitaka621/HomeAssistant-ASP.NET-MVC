@@ -1,4 +1,25 @@
-﻿div.main-container {
+﻿@media only screen and (max-width: 1000px) {
+    p, a{
+        font-size:1.5em;
+    }
+    h2, h3, h4, h5 {
+        font-size: 1.2em;
+    }
+    .main-container{
+        flex-wrap:wrap;
+    }
+    div.right{
+        order:-1;
+    }
+    .text-center{
+        order:0;
+    }
+    .left{
+        order:1;
+    }
+}
+
+div.main-container {
     display: flex;
     justify-content: center;
     gap: 1em;
