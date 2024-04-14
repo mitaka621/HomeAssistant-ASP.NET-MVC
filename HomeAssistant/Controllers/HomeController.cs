@@ -60,6 +60,23 @@ namespace HomeAssistant.Controllers
 			return View();
 		}
 
+        [HttpGet]
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult StatusCode(int id)
+        {
+            if (id == 404|| id == 500)
+            {
+                return View("Status" + id);
+            }
+
+            return View(id);
+        }
+
 		private string GetUserId()
 		{
 			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
