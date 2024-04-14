@@ -18,7 +18,7 @@ namespace HomeAssistant.Core.Services
 
 		public WeatherService(HttpClient _httpClient,IConfiguration configuration,UserManager<HomeAssistantUser> _userManager)
 		{
-			apiKey = configuration.GetConnectionString("weatherApi");
+			apiKey = configuration.GetSection("ExternalServiceApiKeys")["weatherApi"];
 			httpClient = _httpClient;
 			userManager= _userManager;
 
