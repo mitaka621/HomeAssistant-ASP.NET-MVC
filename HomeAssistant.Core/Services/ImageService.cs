@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
@@ -10,11 +11,12 @@ namespace HomeAssistant.Core.Services
     {
         private readonly IMongoClient _client;
         private IGridFSBucket _gridFS;
-
-		public ImageService(IMongoClient client)
+		private readonly ILogger _logger;
+		public ImageService(IMongoClient client, ILogger<ImageService> logger)
         {
             _client = client;
-        }
+			_logger = logger;
+		}
 
         public async Task SavePFP(string userId, byte[] imageData)
         {
@@ -46,78 +48,96 @@ namespace HomeAssistant.Core.Services
 
         public async Task<byte[]> GetPFP(string userId)
         {
-			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+			try
 			{
-				BucketName = "ProfilePictures"
-			});
+				_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+				{
+					BucketName = "ProfilePictures"
+				});
 
-			var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
-            var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
+				var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", userId);
+				var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
 
-            if (fileInfo != null)
-            {
-                using (var stream = new MemoryStream())
-                {
-                    await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
-                    return stream.ToArray();
-                }
-            }
-            else
-            {
-                filter = Builders<GridFSFileInfo>.Filter.Eq("filename", "defaultpfp");
-                fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
-				using (var stream = new MemoryStream())
-                {
-                    await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
-                    return stream.ToArray();
-                }
-            }        
+				if (fileInfo != null)
+				{
+					using (var stream = new MemoryStream())
+					{
+						await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
+						return stream.ToArray();
+					}
+				}
+				else
+				{
+					filter = Builders<GridFSFileInfo>.Filter.Eq("filename", "defaultpfp");
+					fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
+					using (var stream = new MemoryStream())
+					{
+						await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
+						return stream.ToArray();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogCritical(ex, "Atlas Mongodb error");
+				return new byte[0];
+			}
+			
         }
 
 		public async Task<Dictionary<string, byte[]>> GetPfpRange(params string[] userIds)
 		{
-			_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+			try
 			{
-				BucketName = "ProfilePictures"
-			});
-
-			var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", "defaultpfp");
-			var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
-
-			byte[] defualtPfp;
-			using (var stream = new MemoryStream())
-			{
-				await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
-				defualtPfp = stream.ToArray();
-			}
-
-			filter = Builders<GridFSFileInfo>.Filter.In("filename", userIds);
-			var cursor = await _gridFS.FindAsync(filter);
-
-			var picturesDict = new Dictionary<string, byte[]>();
-
-			while (await cursor.MoveNextAsync())
-			{
-				var batch = cursor.Current;
-				foreach (var fileInf in batch)
+				_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
 				{
-					using (var stream = new MemoryStream())
+					BucketName = "ProfilePictures"
+				});
+
+				var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", "defaultpfp");
+				var fileInfo = (await _gridFS.FindAsync(filter)).FirstOrDefault();
+
+				byte[] defualtPfp;
+				using (var stream = new MemoryStream())
+				{
+					await _gridFS.DownloadToStreamAsync(fileInfo.Id, stream);
+					defualtPfp = stream.ToArray();
+				}
+
+				filter = Builders<GridFSFileInfo>.Filter.In("filename", userIds);
+				var cursor = await _gridFS.FindAsync(filter);
+
+				var picturesDict = new Dictionary<string, byte[]>();
+
+				while (await cursor.MoveNextAsync())
+				{
+					var batch = cursor.Current;
+					foreach (var fileInf in batch)
 					{
-						await _gridFS.DownloadToStreamAsync(fileInf.Id, stream);
-						picturesDict[fileInf.Filename] = stream.ToArray();
+						using (var stream = new MemoryStream())
+						{
+							await _gridFS.DownloadToStreamAsync(fileInf.Id, stream);
+							picturesDict[fileInf.Filename] = stream.ToArray();
+						}
 					}
 				}
-			}
 
-			foreach (var userId in userIds)
-			{
-				if (!picturesDict.ContainsKey(userId) && defualtPfp != null)
+				foreach (var userId in userIds)
 				{
-					picturesDict[userId] = defualtPfp;
+					if (!picturesDict.ContainsKey(userId) && defualtPfp != null)
+					{
+						picturesDict[userId] = defualtPfp;
+					}
 				}
-			}
 
-			return picturesDict;
+				return picturesDict;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogCritical(ex, "Atlas Mongodb error");
+				return new Dictionary<string, byte[]>();
+			}
+			
 		}
 
 		public async Task SaveRecipeImage(int recipeId, byte[] imageData)
