@@ -87,6 +87,7 @@ namespace HomeAssistant.Core.Services
 				Products = recipe.RecipeProducts
 				.Select(x => new RecipeProductViewModel()
 				{
+					Id=x.ProductId,
 					Name = x.Product.Name,
 					Quantity = x.Quantity,
 				}).ToArray(),

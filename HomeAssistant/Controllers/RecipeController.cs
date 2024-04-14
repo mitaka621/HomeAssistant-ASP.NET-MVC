@@ -356,7 +356,7 @@ namespace HomeAssistant.Controllers
 
             var notificationId = await _notificationService.CreateNotificationForAllUsersExceptOne(
                 "Recipe Finished - " + recipe.Name,
-                 recipe.Description,
+                 "Consumed Products:\r\n"+ string.Join("\r\n", products.Select(x=>$"{recipe.Products.First(y=>y.Id==x.Id).Name}({x.Quantity})")),
                  GetUserId(),
                  HttpContext.Request.Path.ToString(),
                  GetUserId());
