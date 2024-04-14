@@ -45,7 +45,10 @@ namespace HomeAssistant.Controllers
 			
 			var fridgeViewModel = await _productService.GetProducts(isAvailable, categoryId, parsedEnum, page);
 
-			ViewBag.OrderBy = parsedEnum;
+			fridgeViewModel.LatestFridgeActivity = await _notificationService.GetTop20ProductRelatedNotification();
+
+
+            ViewBag.OrderBy = parsedEnum;
 			ViewBag.ToastTitle = ToastTitle;
 			ViewBag.ToastMessage = ToastMessage;
 			ViewBag.Available = isAvailable;
@@ -67,6 +70,7 @@ namespace HomeAssistant.Controllers
             {
                 await _productService.DecreaseQuantityByOne(productId);
 
+			
                 var product = await _productService.GetProduct(productId);
 
                 var notificationId = await _notificationService.CreateNotificationForAllUsers(
@@ -74,7 +78,8 @@ namespace HomeAssistant.Controllers
                      "Remaining: "+ product.Count,
                      HttpContext.Request.Path.ToString(),
                 GetUserId());
-                await _notificationHubContext.Clients
+
+                _=_notificationHubContext.Clients
                     .All
                     .SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
             }
@@ -112,7 +117,8 @@ namespace HomeAssistant.Controllers
                      "Product Quantity: " + product.Count,
                      HttpContext.Request.Path.ToString(),
                 GetUserId());
-                await _notificationHubContext.Clients
+
+               _=_notificationHubContext.Clients
                     .All
                     .SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
             }

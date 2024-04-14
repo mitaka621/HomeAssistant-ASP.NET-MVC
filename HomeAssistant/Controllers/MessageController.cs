@@ -23,7 +23,15 @@ namespace HomeAssistant.Controllers
 
 		public async Task<IActionResult> Chat(string recipiantId)
 		{
-			return View(await _messageService.GetChatDetails(GetUserId(),recipiantId));
+			try
+			{
+				return View(await _messageService.GetChatDetails(GetUserId(), recipiantId));
+			}
+			catch (InvalidOperationException)
+			{
+				return BadRequest();
+			}
+			
 		}
 
 		public async Task<IActionResult> LoadMessageRangeJson(int chatroomId, int skip, int take)

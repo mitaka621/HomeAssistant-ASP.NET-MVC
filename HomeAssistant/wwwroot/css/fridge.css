@@ -1,21 +1,26 @@
 ﻿.product-container {
     background-color: #9edc2a;
-    width: 60em;
+    width: 50em;
     height: fit-content;
-    padding: 2em;
     display: flex;
     gap:2em;
     flex-direction: column;
     justify-content: space-between;
-
+    padding-top:2em;
+    border-radius:20px;
 }
 
-    .product-container > div {
-        display: flex;
-        gap: 0.5em;
-        flex-wrap: wrap;
-        justify-content:center
-    }
+
+.product-container > div {
+    display: flex;
+    gap: 0.5em;
+    flex-wrap: wrap;
+    justify-content: center
+}
+
+div.main-container h1{
+    text-align:center;
+}
 
 .product {
     border: 1px solid black;
@@ -32,6 +37,7 @@
 div.product > div.left {
     display: flex;
     flex-direction: column;
+    padding-bottom:1em;
 }
 
 div.product > div.right {
@@ -48,12 +54,14 @@ div.product > div.right {
     display: flex;
     gap: 4.7em;
     width: fit-content;
+    margin: 1em auto;
 }
-
 
 .main-container {
     display: flex;
-    justify-content: space-between
+    justify-content: flex-end;
+    gap:2em;
+    margin:4em 0;
 }
 
 tr:hover {
@@ -78,4 +86,62 @@ input {
     display:flex;
     justify-content:center;
 
+}
+div.right-panel {
+    margin-top:7em;
+    background-color: #535e52;
+    padding: 1em;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 51em;
+    display: flex;
+    gap: 1em;
+    flex-direction: column;
+    width: 20em;
+    color:white;
+}
+
+.notifications {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    scrollbar-width: thin;  
+}
+
+.accordion-button {
+    gap: 1em;
+    padding: 1em 0;
+    justify-content: center;
+}
+
+.accordion-button::after, .accordion-button:not(.collapsed)::after {
+    background-image: initial;
+    position: absolute;
+}
+
+.notf-title p {
+    margin: 0;
+}
+
+.notf-title {
+    display: flex;
+    width: 12em;
+    gap: 0.5em;
+    flex-direction: column;
+}
+
+.blockquote-footer {
+    margin: 0;
+    margin-top: 0.5em;
+}
+
+.accordion-button {
+    margin: 0;
+}
+
+.accordion-item {
+    max-width: 999px;
+    max-height: 999px;
+    transition: max-width 0.5s, max-height 0.5s;
 }

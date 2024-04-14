@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HomeAssistant.Core.Models.Notification;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace HomeAssistant.Core.Models.Fridge
 
         public int CurrentPage { get; set; }
 
-        public IEnumerable<ProductViewModel> Products { get; set; } = null!;
+        public IEnumerable<ProductViewModel> Products { get; set; } = new List<ProductViewModel>();
+
+        public IEnumerable<NotificationViewModel> LatestFridgeActivity { get; set; }= new List<NotificationViewModel>();
     }
 }

@@ -182,5 +182,71 @@ namespace HomeAssistant.Core.Services
             await _dbcontext.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<NotificationViewModel>> GetTop20ProductRelatedNotification()
+        {
+			var notifications=await _dbcontext.Notifications
+				.AsNoTracking()
+				.Include(x=>x.User)
+				.OrderByDescending(x => x.CreatedOn)
+				.Where(x => x.InvokerURL.Contains("/ShoppingList/FinishShoppingList") ||
+				x.InvokerURL.Contains("/Fridge") ||
+				x.InvokerURL.Contains("/Recipe/FinishRecipe"))
+				.Take(20)
+				.ToListAsync();
+
+			List<NotificationViewModel> model=new List<NotificationViewModel>();
+
+            var images=await _imageService.GetPfpRange(notifications				
+                .Where(x => x != null)
+                .Select(x => x.InvokedBy ?? "")
+                .Distinct().ToArray());
+
+            foreach (var item in notifications)
+            {
+                if (item.InvokerURL.Contains("/Fridge"))
+                {
+
+					model.Add(new NotificationViewModel()
+					{
+						CreatedOn = item.CreatedOn,
+						Title = item.Title,
+						Invoker = new NotificationUserViewModel()
+						{
+							FirstName = item.User == null ? "" : item.User.FirstName,
+							Photo = images.First(x => x.Key == item.InvokedBy).Value
+
+						}
+					});
+
+					continue;
+                }
+
+                foreach (var product in item.Description.Split("\r\n").Where(x => x.Length > 1).Skip(1))
+                {
+					var modelToAdd=new NotificationViewModel()
+					{
+						CreatedOn = item.CreatedOn,
+						Invoker = new NotificationUserViewModel()
+						{
+							FirstName = item.User == null ? "" : item.User.FirstName,
+							Photo = images.First(x => x.Key == item.InvokedBy).Value
+						}
+					};
+					
+					if (item.InvokerURL.Contains("ShoppingList"))
+                    {
+						modelToAdd.Title = $"{product.Split("(")[1]} {product.Split("(")[0]} added to fridge";
+					}
+					else
+					{
+						modelToAdd.Title = $"{product.Split("(")[1]} {product.Split("(")[0]} removed from fridge";
+					}
+
+					model.Add(modelToAdd);
+				}
+            }
+
+			return model;
+        }
     }
 }
