@@ -37,7 +37,7 @@ namespace HomeAssistant.BackgroundServiceJobs
 
 						foreach (var tuple in usersWithExpiredTimers)
 						{
-							var notificationId = await _notificationService.CreateNotificationForSpecificUsers(
+							var notificationId = await _notificationService.CreateNotificationForSpecificUser(
 							$"Timer for {tuple.Item3} expired",
 							"You are ready to porceed to the next step!",
 							$"/Recipe/RecipeStep?recipeId={tuple.Item2}",

@@ -43,7 +43,7 @@ namespace HomeAssistant.Core.Services
 
 		}
 
-		public async Task<int> CreateNotificationForSpecificUsers(string title, string description, string invokerURL, string userId, string? invokerId)
+		public async Task<int> CreateNotificationForSpecificUser(string title, string description, string invokerURL, string userId, string? invokerId)
 		{
 
 			if ((await _userService.GetAllApprovedNotDeletedUsersAsync()).FirstOrDefault(x => x.Id == userId) == null)

@@ -40,7 +40,7 @@ namespace HomeAssistant.Hubs
 			}
 			else
 			{
-				var notificationId = await _notificationService.CreateNotificationForSpecificUsers(
+				var notificationId = await _notificationService.CreateNotificationForSpecificUser(
 					"Recieved New Message",
 					message,
 					"/Message",

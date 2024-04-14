@@ -85,6 +85,8 @@ namespace HomeAssistant.Core.Services
 		public async Task<IEnumerable<MessageViewModel>> LoadMessagesRange(int chatroomId, int skip, int take)
 		{
 			return await _dbContext.Messages
+				.AsNoTracking()
+				.Where(x=>x.ChatRoomId==chatroomId)
 				.OrderByDescending(x=>x.CreatedOn)
 				.Skip(skip)
 				.Take(take)
