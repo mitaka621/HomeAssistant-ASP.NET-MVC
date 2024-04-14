@@ -198,7 +198,7 @@ namespace HomeAssistant.Controllers
 			{
 				var shoppingList=await _shoppingListService.GetShoppingList(GetUserId());
 
-				StringBuilder sb = new();
+				StringBuilder sb = new($"Products Added to Fridge:\r\n");
 
                 foreach (var item in shoppingList.Products)
                 {
@@ -212,14 +212,15 @@ namespace HomeAssistant.Controllers
 					sb.AppendLine($" ({item.QuantityToBuy})");
 				}
 
-                var notificationId=await _notificationService.CreateNotificationForAllUsers(
+                var notificationId=await _notificationService.CreateNotificationForAllUsersExceptOne(
 					"Shopping Finished",
 					sb.ToString().TrimEnd(),
+					GetUserId(),
 					HttpContext.Request.Path.ToString(),
 					GetUserId());
 
 				await _notificationHubContext.Clients
-					.All
+					.AllExcept(GetUserId())
 					.SendAsync("PushNotfication",await _notificationService.GetNotification(notificationId));
 
 				await _shoppingListService.SaveBoughtProducts(GetUserId());

@@ -138,18 +138,49 @@ namespace HomeAssistant.Core.Services
 			return model;
 		}
 
-		public async Task DismissNotification(string userId, int notificationId)
-		{
-			var notification=await _dbcontext.NotificationsUsers
-				.FirstOrDefaultAsync(x => x.UserId == userId && x.NotificationId == notificationId);
 
-            if (notification==null)
+        public async Task<int> CreateNotificationForAllUsersExceptOne(
+			string title,
+			string description,
+			string exceptUserId,
+			string invokerURL,
+			string? invokerId)
+        {
+
+            var notificationModel = new Notification()
             {
-				throw new ArgumentNullException();
+                Title = title,
+                Description = description,
+                InvokedBy = invokerId,
+                InvokerURL = invokerURL,
+                CreatedOn = DateTime.Now,
+                NotificationsUsers = (await _userService.GetAllApprovedNotDeletedUsersAsync())
+				.Where(x=>x.Id!=exceptUserId)
+                .Select(x => new NotificationUser()
+                {
+                    UserId = x.Id
+                }).ToList()
+            };
+
+            _dbcontext.Notifications.Add(notificationModel);
+            await _dbcontext.SaveChangesAsync();
+
+            return notificationModel.Id;
+        }
+
+        public async Task DismissNotification(string userId, int notificationId)
+        {
+            var notification = await _dbcontext.NotificationsUsers
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.NotificationId == notificationId);
+
+            if (notification == null)
+            {
+                throw new ArgumentNullException();
             }
 
-			notification.IsDismissed = true;
-			await _dbcontext.SaveChangesAsync();
+            notification.IsDismissed = true;
+            await _dbcontext.SaveChangesAsync();
         }
-	}
+
+    }
 }

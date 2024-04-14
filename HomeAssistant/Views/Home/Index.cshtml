@@ -110,7 +110,7 @@
 
 							@if (notification.Invoker.Photo.Length != 0 && notification.Invoker.Photo!=null)
 							{
-								<div>
+								<div class="notification-img-container">
 									<div class="smallpfp">
 										<img src="data:image/jpeg;base64,@Convert.ToBase64String(notification.Invoker.Photo)" alt="Profile Picture" />
 									</div>

@@ -1,8 +1,12 @@
 ﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Models.Product;
+using HomeAssistant.Core.Services;
+using HomeAssistant.Hubs;
+using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace HomeAssistant.Controllers
@@ -11,12 +15,16 @@ namespace HomeAssistant.Controllers
 	public class FridgeController : Controller
 	{
 		private readonly IProductService _productService;
+        private readonly IHubContext<NotificationsHub> _notificationHubContext;
+        private readonly INotificationService _notificationService;
 
-		public FridgeController(IProductService productService)
+        public FridgeController(IProductService productService, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService)
 		{
 			_productService = productService;
+            _notificationHubContext= notificationHubContext;
+			_notificationService= notificationService;
 
-		}
+        }
 
 		[HttpGet]
 		public async Task<IActionResult> Index
@@ -54,11 +62,22 @@ namespace HomeAssistant.Controllers
 
 		[HttpPost]
 		public async Task<IActionResult> DecreaseProductQuantity(int productId)
-		{
-			try
-			{
-				await _productService.DecreaseQuantityByOne(productId);
-			}
+        {
+            try
+            {
+                await _productService.DecreaseQuantityByOne(productId);
+
+                var product = await _productService.GetProduct(productId);
+
+                var notificationId = await _notificationService.CreateNotificationForAllUsers(
+                    product.Name+ " removed from fridge",
+                     "Remaining: "+ product.Count,
+                     HttpContext.Request.Path.ToString(),
+                GetUserId());
+                await _notificationHubContext.Clients
+                    .All
+                    .SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+            }
 			catch (ArgumentNullException)
 			{
 				return RedirectToAction(nameof(Index), new
@@ -85,7 +104,18 @@ namespace HomeAssistant.Controllers
 			try
 			{
 				await _productService.IncreaseQuantityByOne(productId);
-			}
+
+                var product = await _productService.GetProduct(productId);
+
+                var notificationId = await _notificationService.CreateNotificationForAllUsers(
+                    product.Name + " added to fridge",
+                     "Product Quantity: " + product.Count,
+                     HttpContext.Request.Path.ToString(),
+                GetUserId());
+                await _notificationHubContext.Clients
+                    .All
+                    .SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+            }
 			catch (ArgumentNullException)
 			{
 				return RedirectToAction(nameof(Index), new

@@ -646,8 +646,8 @@ namespace HomeAssistant.Core.Services
 		{
 			var alreadyNotifiedUsers = (await _dbcontext.NotificationsUsers
 				.AsNoTracking()
-				.Include(x=>x.Notification)
-				.Where(x => !x.IsDismissed && x.Notification.InvokerURL.Contains("Recipe"))
+				.Include(x => x.Notification)
+				.Where(x => !x.IsDismissed && x.Notification.InvokerURL.Contains("RecipeStep?recipeId="))
 				.ToListAsync())
 				.Select(x =>new { recipeId=int.Parse(x.Notification.InvokerURL.Split("=")[1]),userId=x.UserId })
 				.ToList();

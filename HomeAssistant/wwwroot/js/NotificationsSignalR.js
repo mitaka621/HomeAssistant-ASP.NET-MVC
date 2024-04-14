@@ -18,7 +18,7 @@ connection.on("PushNotfication", function (notification) {
 								${notification.source}
 							</figcaption>														
 						</div>						
-						<div>								
+						<div class="notification-img-container">								
 							<div class="smallpfp">
 								<img src="data:image/jpeg;base64,${notification.invoker.photo}" alt="Profile Picture" />
 							</div>
@@ -28,7 +28,7 @@ connection.on("PushNotfication", function (notification) {
 				</h2>
 				<div id="n${notification.id}" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
 					<div class="accordion-body">
-						${notification.description}						
+						${notification.description.replaceAll("\r\n", "<br />")}						
 					</div>
 					<a id="b${notification.id}" class="btn btn-danger dismiss" onclick="Dismiss(this)">Dismiss</a>
 				</div>`

@@ -1,8 +1,8 @@
 ﻿@media only screen and (max-width: 1000px) {
-    p, a{
-        font-size:1.5em;
+    p, a, h3, h4, h5 {
+        font-size: 1.5em;
     }
-    h2, h3, h4, h5 {
+    h1,h2{
         font-size: 1.2em;
     }
     .main-container{
@@ -204,6 +204,12 @@ div.not-container-title svg {
     margin: 0 0.2em 0.2em 0.2em;
 }
 
+.notification-img-container{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
 .ShoppingList {
     color: #4aa031;
 }
@@ -213,4 +219,8 @@ div.not-container-title svg {
 
 .Recipe {
     color: #638dff;
+}
+
+.Fridge {
+    color:#2d0690;
 }
