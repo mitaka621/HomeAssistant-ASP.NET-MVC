@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\animations.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\animations.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Areas\Identity\Pages\Account\Login.cshtml.cs" />
     <Content Include="Areas\Identity\Pages\Account\Manage\Index.cshtml.cs" />
     <Content Include="Areas\Identity\Pages\Account\Manage\ManageNavPages.cs" />
@@ -35,6 +43,10 @@
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="wwwroot\audio\" />
     <Folder Include="wwwroot\svg\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\animations.js" />
   </ItemGroup>
 
   <ItemGroup>

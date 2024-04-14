@@ -26,183 +26,190 @@
 </div>
 
 <div class="main-container">
-	<div>
-		@if (ViewBag.Available)
-		{
-			<h1>Available Products</h1>
-		}
-		else
-		{
-			<h1>Products Out of Stock</h1>
-		}
-		<div class="filter-btns">
-			<div>
-				<a asp-route-isAvailable="true"
-				   asp-route-categoryId="@ViewBag.CategoryId"
-				   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
-				   class="btn @(ViewBag.Available ? "btn-danger" : "btn-outline-danger")">
-					Available
-				</a>
-				<a asp-route-isAvailable="false"
-				   asp-route-categoryId="@ViewBag.CategoryId"
-				   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
-				   class="btn @(ViewBag.Available ?"btn-outline-danger" : "btn-danger" )">
-					Unavailable
-				</a>
-			</div>
-
-		</div>
-	<div class="product-container">
-		<div>
-			<div class="dropdown">
-				<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-					@if (ViewBag.CategoryId != null)
-					{
-						@(((IEnumerable<CategoryViewModel>)ViewBag.Categories).First(x => x.Id == ViewBag.CategoryId).Name)
-					}
-					else
-					{
-						@("All Categories")
-					}
-				</button>
-				<ul class="dropdown-menu">
-					<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available" asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">All Categories</a></li>
-					@foreach (var category in (IEnumerable<CategoryViewModel>)ViewBag.Categories)
-					{
-						<li>
-							<a class="dropdown-item"
-							   asp-action="Index"
-							   asp-route-isAvailable="@ViewBag.Available"
-							   asp-route-categoryId="@category.Id"
-							   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">
-								@category.Name
-							</a>
-						</li>
-					}
-				</ul>
-			</div>
-			<div class="dropdown">
-				<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-					Order By: @(((OrderBy)ViewBag.OrderBy).ToString())
-				</button>
-				<ul class="dropdown-menu">
-					@foreach (var option in Enum.GetValues(typeof(OrderBy)))
-					{
-						<li>
-							<a class="dropdown-item"
-							   asp-action="Index"
-							   asp-route-isAvailable="@ViewBag.Available"
-							   asp-route-categoryId="@ViewBag.CategoryId"
-							   asp-route-orderBy="@option">
-								@option
-							</a>
-						</li>
-					}
-				</ul>
-			</div>
-		</div>
-		<div>
-			@foreach (var product in Model.Products)
+	<div class="outer-layer-fridge">
+		<div class="container-animation">
+			@if (ViewBag.Available)
 			{
-				<div class="product">
-					<div class="left">
-						<p class="product-name">
-							@product.Name
-							@if (product.Weight == null)
-								@("-- g")
-							else
-								@(product.Weight + " g")
-
-
-						</p>
-						@{
-							var duration = DateTime.Now - product.AddedOn;
-
-							string convertedDuration = "Added ";
-							if (duration.TotalDays >= 1)
-							{
-								convertedDuration += Math.Round(duration.TotalDays) + (Math.Round(duration.TotalDays) == 1 ? " day" : " days") + " ago";
-							}
-							else if (duration.TotalHours >= 1)
-							{
-								convertedDuration += Math.Round(duration.TotalHours) + (Math.Round(duration.TotalHours) == 1 ? " hour" : " hours") + " ago";
-							}
-							else if (duration.TotalMinutes >= 1)
-							{
-								convertedDuration += Math.Round(duration.TotalMinutes) + (Math.Round(duration.TotalMinutes) == 1 ? " minute" : " minutes") + " ago";
-							}
-							else
-							{
-								convertedDuration += " less than a minute ago";
-							}
-							<p class="text-muted">@convertedDuration</p>
-						}
-
-						<figcaption class="blockquote-footer">
-							@product.ProductCategory.Name
-						</figcaption>
-					</div>
-					<div class="right">
-						<form method="post"
-							  asp-action="DecreaseProductQuantity"
-							  asp-route-productId="@product.Id">
-							<button class="btn">
-								<img src="~/svg/minus-circle.svg" />
-							</button>
-						</form>
-						<p class="product-count @(product.Count==0?"text-danger fw-bold":"")">@product.Count</p>
-						<form method="post"
-							  asp-action="IncreaseProductQuantity"
-							  asp-route-productId="@product.Id">
-							<button class="btn">
-								<img src="~/svg/plus-Circle.svg" />
-							</button>
-						</form>
-					</div>
-				</div>
+				<h1>Available Products</h1>
 			}
+			else
+			{
+				<h1>Products Out of Stock</h1>
+			}
+			<div class="filter-btns">
+				<div>
+					<a asp-route-isAvailable="true"
+					   asp-route-categoryId="@ViewBag.CategoryId"
+					   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
+					   class="btn @(ViewBag.Available ? "btn-danger" : "btn-outline-danger")">
+						Available
+					</a>
+					<a asp-route-isAvailable="false"
+					   asp-route-categoryId="@ViewBag.CategoryId"
+					   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
+					   class="btn @(ViewBag.Available ?"btn-outline-danger" : "btn-danger" )">
+						Unavailable
+					</a>
+				</div>
+
+			</div>
 		</div>
-		@if (Model.PageCount != 0)
-		{
-			<nav aria-label="Page navigation example">
-				<ul class="pagination">
-					<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-						<a class="page-link"
-						   asp-action="Index"
-						   asp-route-isAvailable="@ViewBag.Available"
-						   asp-route-categoryId="@ViewBag.CategoryId"
-						   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
-						   asp-route-page="@((Model.CurrentPage)-1)">
-							Previous
-						</a>
-					</li>
-					@for (int i = 1; i <= Model.PageCount; i++)
-					{
-						<li class="page-item @(Model.CurrentPage == @i ? "active" : "")">
+		<div class="product-container">
+			<a class="btn expand" onclick="TogleFridgeAnimation()">
+				<svg class="svg-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM135.1 217.4l107.1-99.9c3.8-3.5 8.7-5.5 13.8-5.5s10.1 2 13.8 5.5l107.1 99.9c4.5 4.2 7.1 10.1 7.1 16.3c0 12.3-10 22.3-22.3 22.3H304v96c0 17.7-14.3 32-32 32H240c-17.7 0-32-14.3-32-32V256H150.3C138 256 128 246 128 233.7c0-6.2 2.6-12.1 7.1-16.3z" /></svg>
+			</a>
+			<h1><b>Fridge</b></h1>
+			<div class="btn-filters">
+				<div class="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						@if (ViewBag.CategoryId != null)
+						{
+							@(((IEnumerable<CategoryViewModel>)ViewBag.Categories).First(x => x.Id == ViewBag.CategoryId).Name)
+						}
+						else
+						{
+							@("All Categories")
+						}
+					</button>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available" asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">All Categories</a></li>
+						@foreach (var category in (IEnumerable<CategoryViewModel>)ViewBag.Categories)
+						{
+							<li>
+								<a class="dropdown-item"
+								   asp-action="Index"
+								   asp-route-isAvailable="@ViewBag.Available"
+								   asp-route-categoryId="@category.Id"
+								   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">
+									@category.Name
+								</a>
+							</li>
+						}
+					</ul>
+				</div>
+				<div class="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Order By: @(((OrderBy)ViewBag.OrderBy).ToString())
+					</button>
+					<ul class="dropdown-menu">
+						@foreach (var option in Enum.GetValues(typeof(OrderBy)))
+						{
+							<li>
+								<a class="dropdown-item"
+								   asp-action="Index"
+								   asp-route-isAvailable="@ViewBag.Available"
+								   asp-route-categoryId="@ViewBag.CategoryId"
+								   asp-route-orderBy="@option">
+									@option
+								</a>
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+			<div>
+				@foreach (var product in Model.Products)
+				{
+					<div class="product">
+						<div class="left">
+							<p class="product-name">
+								@product.Name
+								@if (product.Weight == null)
+									@("-- g")
+								else
+									@(product.Weight + " g")
+
+
+
+							</p>
+							@{
+								var duration = DateTime.Now - product.AddedOn;
+
+								string convertedDuration = "Added ";
+								if (duration.TotalDays >= 1)
+								{
+									convertedDuration += Math.Round(duration.TotalDays) + (Math.Round(duration.TotalDays) == 1 ? " day" : " days") + " ago";
+								}
+								else if (duration.TotalHours >= 1)
+								{
+									convertedDuration += Math.Round(duration.TotalHours) + (Math.Round(duration.TotalHours) == 1 ? " hour" : " hours") + " ago";
+								}
+								else if (duration.TotalMinutes >= 1)
+								{
+									convertedDuration += Math.Round(duration.TotalMinutes) + (Math.Round(duration.TotalMinutes) == 1 ? " minute" : " minutes") + " ago";
+								}
+								else
+								{
+									convertedDuration += " less than a minute ago";
+								}
+								<p class="text-muted">@convertedDuration</p>
+							}
+
+							<figcaption class="blockquote-footer">
+								@product.ProductCategory.Name
+							</figcaption>
+						</div>
+						<div class="right">
+							<form method="post"
+								  asp-action="DecreaseProductQuantity"
+								  asp-route-productId="@product.Id">
+								<button class="btn">
+									<img src="~/svg/minus-circle.svg" />
+								</button>
+							</form>
+							<p class="product-count @(product.Count==0?"text-danger fw-bold":"")">@product.Count</p>
+							<form method="post"
+								  asp-action="IncreaseProductQuantity"
+								  asp-route-productId="@product.Id">
+								<button class="btn">
+									<img src="~/svg/plus-Circle.svg" />
+								</button>
+							</form>
+						</div>
+					</div>
+				}
+			</div>
+			@if (Model.PageCount != 0)
+			{
+				<nav aria-label="Page navigation example">
+					<ul class="pagination">
+						<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
 							<a class="page-link"
 							   asp-action="Index"
 							   asp-route-isAvailable="@ViewBag.Available"
 							   asp-route-categoryId="@ViewBag.CategoryId"
 							   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
-							   asp-route-page="@i">
-								@i
+							   asp-route-page="@((Model.CurrentPage)-1)">
+								Previous
 							</a>
 						</li>
-					}
-					<li class="page-item @(Model.CurrentPage == Model.PageCount ? "disabled" : "")">
-						<a class="page-link"
-						   asp-action="Index"
-						   asp-route-isAvailable="@ViewBag.Available"
-						   asp-route-categoryId="@ViewBag.CategoryId"
-						   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
-						   asp-route-page="@((Model.CurrentPage)+1)">
-							Next
-						</a>
-					</li>
-				</ul>
-			</nav>
-		}
-	</div>
+						@for (int i = 1; i <= Model.PageCount; i++)
+						{
+							<li class="page-item @(Model.CurrentPage == @i ? "active" : "")">
+								<a class="page-link"
+								   asp-action="Index"
+								   asp-route-isAvailable="@ViewBag.Available"
+								   asp-route-categoryId="@ViewBag.CategoryId"
+								   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
+								   asp-route-page="@i">
+									@i
+								</a>
+							</li>
+						}
+						<li class="page-item @(Model.CurrentPage == Model.PageCount ? "disabled" : "")">
+							<a class="page-link"
+							   asp-action="Index"
+							   asp-route-isAvailable="@ViewBag.Available"
+							   asp-route-categoryId="@ViewBag.CategoryId"
+							   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
+							   asp-route-page="@((Model.CurrentPage)+1)">
+								Next
+							</a>
+						</li>
+					</ul>
+				</nav>
+			}
+		</div>
 	</div>
 	<div class="right-panel">
 		<div class="not-container-title">
@@ -260,6 +267,7 @@
 </div>
 
 @section Scripts {
+	<script src="~/js/animations.js"></script>
 	<script src="~/js/toastPopup.js"></script>
 	<script src="~/js/productSearch.js"></script>
 }
