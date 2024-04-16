@@ -264,6 +264,5 @@ namespace HomeAssistant.Core.Services
 
 			await _dbContext.SaveChangesAsync();
 		}
-
 	}
 }

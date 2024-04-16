@@ -3,11 +3,6 @@ using HomeAssistant.Core.Models.Message;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Services
 {
@@ -80,7 +75,6 @@ namespace HomeAssistant.Core.Services
 			await _dbContext.SaveChangesAsync();
 
 		}
-
 
 		public async Task<IEnumerable<MessageViewModel>> LoadMessagesRange(int chatroomId, int skip, int take)
 		{

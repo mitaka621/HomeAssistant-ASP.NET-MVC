@@ -1,12 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
-using HomeAssistant.Infrastructure.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Services
 {
@@ -14,13 +7,11 @@ namespace HomeAssistant.Core.Services
 	{
 		private readonly string apiKey;
 		private readonly HttpClient httpClient;
-		private readonly UserManager<HomeAssistantUser> userManager;
 
-		public WeatherService(HttpClient _httpClient,IConfiguration configuration,UserManager<HomeAssistantUser> _userManager)
+		public WeatherService(HttpClient _httpClient,IConfiguration configuration)
 		{
 			apiKey = configuration.GetSection("ExternalServiceApiKeys")["weatherApi"];
 			httpClient = _httpClient;
-			userManager= _userManager;
 
 			httpClient.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/");
 		}

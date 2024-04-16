@@ -95,8 +95,8 @@ namespace HomeAssistant.Core.Services
 				.OrderByDescending(x => x.CreatedOn)
 				.ToListAsync();
 
-			var userPhotos=await _imageService
-				.GetPfpRange(notifications.Where(x=>x.Invoker.Id!=null).Select(x => x.Invoker.Id).Distinct().ToArray());
+			var userPhotos = await _imageService
+				.GetPfpRange(notifications.Where(x => x.Invoker.Id != null).Select(x => x.Invoker.Id).Distinct().ToArray());
 
 			notifications
 				.ForEach(x => x.Invoker.Photo = userPhotos.FirstOrDefault(y => y.Key == x.Invoker.Id).Value ?? new byte[0]);
@@ -104,7 +104,7 @@ namespace HomeAssistant.Core.Services
 
 			notifications
 				.ForEach(x => x.Source = x.Source.Split("/")[1]);
-			
+
 			return notifications;
 		}
 
