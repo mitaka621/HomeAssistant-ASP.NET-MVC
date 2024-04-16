@@ -14,7 +14,8 @@ namespace HomeAssistant.Infrastructure.Data.Models
     public class NotificationUser
     {
         [Comment("User Identifier")]
-        public string UserId { get; set; } = string.Empty;
+        public string UserId { get; set; } =string.Empty;
+
         [ForeignKey(nameof(UserId))]
         public HomeAssistantUser User { get; set; } = null!;
 

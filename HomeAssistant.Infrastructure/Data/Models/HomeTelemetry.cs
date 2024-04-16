@@ -14,12 +14,12 @@ namespace HomeAssistant.Infrastructure.Data.Models
 
         public DateTime DateTime { get; set; }
 
-        public int Humidity { get; set; }
+        public double Humidity { get; set; }
 
-		public int Tempreture { get; set; }
+		public double Temperature { get; set; }
 
-		public int CPM { get; set; }
+		public double CPM { get; set; }
 
-		public int Radiation { get; set; }
+		public double Radiation { get; set; }
 	}
 }

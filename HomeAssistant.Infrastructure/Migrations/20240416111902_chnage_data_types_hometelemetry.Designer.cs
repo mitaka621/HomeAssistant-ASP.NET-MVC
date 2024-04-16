@@ -4,6 +4,7 @@ using HomeAssistant.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeAssistant.Infrastructure.Migrations
 {
     [DbContext(typeof(HomeAssistantDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240416111902_chnage_data_types_hometelemetry")]
+    partial class chnage_data_types_hometelemetry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,9 +216,9 @@ namespace HomeAssistant.Infrastructure.Migrations
                             Longitude = 0.0,
                             NormalizedEmail = "admin",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFNeSp8kPANRsiihmwCjz57l8bphILoIi68h9NuLmyHVhFiLeM0kp/UmYxtsp6Mbig==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEPK2wzcyrekSUPv7ertCwhf6OjdDMjNoeJWRUJZHIqflL3xE9eYLTcXu7Bf/I8vuw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9c041d08-cd4d-451a-ab00-d704b83e693c",
+                            SecurityStamp = "70bbead2-249b-4488-8cfc-4922b96c113a",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -242,7 +244,7 @@ namespace HomeAssistant.Infrastructure.Migrations
                     b.Property<double>("Radiation")
                         .HasColumnType("float");
 
-                    b.Property<double>("Temperature")
+                    b.Property<double>("Tempreture")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
