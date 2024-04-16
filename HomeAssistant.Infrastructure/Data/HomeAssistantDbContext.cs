@@ -25,6 +25,7 @@ namespace HomeAssistant.Infrastructure.Data
         public DbSet<RecipeProductStep> RecipesProductsSteps { get; set; }
         public DbSet<ChatRoom> ChatRooms { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<HomeTelemetry> homeTelemetries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
