@@ -1,4 +1,4 @@
-//getting the user's geolocation, otherwise using default location (Sofia) or last known location if availible
+//getting the user's geolocation, otherwise using default location (Sofia) or last known location if availible in the db
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
         function (position) {
@@ -19,13 +19,15 @@ if (navigator.geolocation) {
     );
 } 
 
-fetch('/api/Weather/Weather')
+fetch('/api/Weather/GetWeather')
     .then(r => r.json())
     .then(json => {
         document.querySelector(".temp").innerHTML = Math.round(json.main.temp);
         document.querySelector(".weather-icon").src = `https://openweathermap.org/img/wn/${json.weather[0].icon}@2x.png`
         document.querySelector(".location").innerHTML = json.name;
         document.querySelector(".desc").innerHTML = json.weather[0].main;
+        document.querySelector("div.status").innerHTML = `<svg class="ok" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>`;
+
 
         let hatSvg = document.querySelector(".hat-svg");
         let hatDesc = document.querySelector(".hat-desc");

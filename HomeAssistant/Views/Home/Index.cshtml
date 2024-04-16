@@ -5,23 +5,32 @@
 <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
 
 <div class="main-container">
+
 	<div class="left">
-		<p class="location"></p>
-		<h2 class="weather-container"><span class="temp">--</span>C&deg; <img class="weather-icon"><span class="desc"></span></h2>
-		<h3>Outfit recommendations:</h3>
-		<div class="outfit-container">
-			<div class="left-side">
-				<img class="hat-svg" src="~/svg/not-available.svg" />
-				<p class="hat-desc">Not available!</p>
-				<img class="shirt-svg" src="~/svg/not-available.svg" />
-				<p class="shirt-desc">Not available!</p>
+		<div class="weather">
+			<div class="status">
+				<svg class="error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" /></svg>
 			</div>
-			<div class="right-side">
-				<img class="umbrella-svg" src="~/svg/uumbrella-closed.svg" />
-				<p class="umbrella-desc">No Umbrella Needed!</p>
+			<p class="location"></p>
+			<h2 class="weather-container"><span class="temp">--</span>C&deg; <img class="weather-icon"><span class="desc"></span></h2>
+			<h3>Outfit recommendations:</h3>
+			<div class="outfit-container">
+				<div class="left-side">
+					<img class="hat-svg" src="~/svg/not-available.svg" />
+					<p class="hat-desc">Not available!</p>
+					<img class="shirt-svg" src="~/svg/not-available.svg" />
+					<p class="shirt-desc">Not available!</p>
+				</div>
+				<div class="right-side">
+					<img class="umbrella-svg" src="~/svg/uumbrella-closed.svg" />
+					<p class="umbrella-desc">No Umbrella Needed!</p>
+				</div>
 			</div>
 		</div>
+		
 	</div>
+
+
 
 	<div class="text-center">
 		<div class="greeting">
@@ -47,101 +56,122 @@
 				<span>Fridge</span>
 			</a>
 			<a class="btn shoppinglist-btn" asp-controller="ShoppingList" asp-action="Index">
-				<img src="~/svg/basket.png" />			
+				<img src="~/svg/basket.png" />
 				<span>Shopping List</span>
 			</a>
 			<a class="btn recepies-btn" asp-controller="Recipe" asp-action="Index">
 				<img src="~/svg/notebook.png" />
 				<span>Recepies</span>
-				</a>
+			</a>
 			<a class="btn message-btn" asp-controller="Message" asp-action="Index">
 				<img src="~/svg/message.png" />
 				<span>Messeges</span>
-				</a>
+			</a>
 		</div>
 	</div>
 
 	<div class="right">
-		<div class="not-container-title">
-			<h3>Notifications:</h3>
-			<a class="btn btn-danger" onclick="DismissAll()">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM64 256c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" /></svg>
-			</a>
-		</div>
-		<div class="notifications">
-			@if (!Model.Notifications.Any())
-			{
-				<p>No notifications!</p>
-			}
+		<div class="notifications-container">
+			<div class="not-container-title">
+				<h3>Notifications:</h3>
+				<a class="btn btn-danger" onclick="DismissAll()">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM64 256c0-17.7 14.3-32 32-32H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z" /></svg>
+				</a>
+			</div>
+			<div class="notifications">
+				@if (!Model.Notifications.Any())
+				{
+					<p>No notifications!</p>
+				}
 
-			@foreach (var notification in Model.Notifications)
-			{
-				<div class="accordion-item">
-					<h2 class="accordion-header" id="headingTwo">
-						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#n@(notification.Id)" aria-expanded="false" aria-controls="@notification.Id">
-							<div class="notf-title">
-								<p>@notification.Title</p>
-								@{
-									var duration = DateTime.Now - notification.CreatedOn;
+				@foreach (var notification in Model.Notifications)
+				{
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingTwo">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#n@(notification.Id)" aria-expanded="false" aria-controls="@notification.Id">
+								<div class="notf-title">
+									<p>@notification.Title</p>
+									@{
+										var duration = DateTime.Now - notification.CreatedOn;
 
-									string convertedDuration = "";
-									if (duration.TotalDays >= 1)
-									{
-										convertedDuration += Math.Round(duration.TotalDays) + (Math.Round(duration.TotalDays) == 1 ? " day" : " days") + " ago";
+										string convertedDuration = "";
+										if (duration.TotalDays >= 1)
+										{
+											convertedDuration += Math.Round(duration.TotalDays) + (Math.Round(duration.TotalDays) == 1 ? " day" : " days") + " ago";
+										}
+										else if (duration.TotalHours >= 1)
+										{
+											convertedDuration += Math.Round(duration.TotalHours) + (Math.Round(duration.TotalHours) == 1 ? " hour" : " hours") + " ago";
+										}
+										else if (duration.TotalMinutes >= 1)
+										{
+											convertedDuration += Math.Round(duration.TotalMinutes) + (Math.Round(duration.TotalMinutes) == 1 ? " minute" : " minutes") + " ago";
+										}
+										else
+										{
+											convertedDuration += "Less than a minute ago";
+										}
+										<p class="text-muted">@convertedDuration</p>
 									}
-									else if (duration.TotalHours >= 1)
+									@if (!String.IsNullOrEmpty(notification.Source))
 									{
-										convertedDuration += Math.Round(duration.TotalHours) + (Math.Round(duration.TotalHours) == 1 ? " hour" : " hours") + " ago";
-									}
-									else if (duration.TotalMinutes >= 1)
-									{
-										convertedDuration += Math.Round(duration.TotalMinutes) + (Math.Round(duration.TotalMinutes) == 1 ? " minute" : " minutes") + " ago";
+										<figcaption figcaption class="blockquote-footer @notification.Source">
+											@notification.Source
+										</figcaption>
 									}
 									else
 									{
-										convertedDuration += "Less than a minute ago";
+										<figcaption figcaption class="blockquote-footer">
+											System
+										</figcaption>
 									}
-									<p class="text-muted">@convertedDuration</p>
-								}
-								@if (!String.IsNullOrEmpty(notification.Source))
-								{
-									<figcaption figcaption class="blockquote-footer @notification.Source">
-										@notification.Source
-									</figcaption>
-								}
-								else
-								{
-									<figcaption figcaption class="blockquote-footer">
-										System
-									</figcaption>
-								}
-							</div>
-
-							@if (notification.Invoker.Photo != null && notification.Invoker.Photo.Length != 0)
-							{
-								<div class="notification-img-container">
-									<div class="smallpfp">
-										<img src="data:image/jpeg;base64,@Convert.ToBase64String(notification.Invoker.Photo)" alt="Profile Picture" />
-									</div>
-									@notification.Invoker.FirstName
 								</div>
-							}
-						</button>
-					</h2>
-					<div id="n@(notification.Id)" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-						<div class="accordion-body">
-							@(Html.Raw(notification.Description.Replace("\r\n", "<br />")))
+
+								@if (notification.Invoker.Photo != null && notification.Invoker.Photo.Length != 0)
+								{
+									<div class="notification-img-container">
+										<div class="smallpfp">
+											<img src="data:image/jpeg;base64,@Convert.ToBase64String(notification.Invoker.Photo)" alt="Profile Picture" />
+										</div>
+										@notification.Invoker.FirstName
+									</div>
+								}
+							</button>
+						</h2>
+						<div id="n@(notification.Id)" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+							<div class="accordion-body">
+								@(Html.Raw(notification.Description.Replace("\r\n", "<br />")))
+							</div>
+							<a id="b@(notification.Id)" class="btn btn-danger dismiss" onclick="Dismiss(this)">Dismiss</a>
 						</div>
-						<a id="b@(notification.Id)" class="btn btn-danger dismiss" onclick="Dismiss(this)">Dismiss</a>
 					</div>
-				</div>
-			}
+				}
+			</div>
+		</div>
+		
+
+		<div class="telemetry">
+			<div class="status">
+				<svg class="error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" /></svg>
+			</div>
+			
+			<h2>House Telemetry</h2>
+			<h3>Indoor Tempreture: <span id="house-temp">--</span> C&deg;</h3>
+			<h3>Indoor Humidity: <span id="house-humidity">-- </span> %</h3>
+			<div class="rad">
+				<h3>Indoor Radiation: <span id="house-rad">--</span> μSv</h3>
+				<h3>CPM (Counts per min): <span id="house-cpm">--</span></h3>
+			</div>
+			<div class="info">
+				<p class="text-warning">The telemetry system has not been set up. More info <a href="https://github.com/mitaka621/HomeTelemetryStation">GitHub</a></p>
+			</div>
 		</div>
 	</div>
 </div>
 
 
 @section Scripts {
+	<script src="~/js/HomeTelemetry.js"></script>
 	<script src="~/js/weather.js"></script>
 	<script src="~/js/signalr/dist/browser/signalr.js"></script>
 	<script src="~/js/NotificationsSignalR.js"></script>

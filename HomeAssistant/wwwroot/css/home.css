@@ -8,14 +8,24 @@
     .main-container{
         flex-wrap:wrap;
     }
-    div.right{
-        order:-1;
+    div.right {
+        order: 0;
+        min-width: 80%;
+       
     }
     .text-center{
-        order:0;
+        order:-1;
     }
     .left{
         order:1;
+    }
+    .notifications-container {
+        width: 100%;
+        min-height: 32em;
+    }
+
+    .telemetry{
+        min-width:100%;
     }
 }
 
@@ -73,10 +83,12 @@ div.main-container>div.left{
 h1 {
     margin-bottom: 0.5em;
 }
-div.left {
+.weather {
     background-color: #d9f3f2;
     padding: 2em;
+    padding-bottom:1em;
     border-radius: 30px;
+    margin-bottom:1em;
 }
 .outfit-container img {
     width: 100px;
@@ -127,15 +139,27 @@ div.main-menu img{
 
 
 div.right {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 2em;
+    width:25em;
+}
+
+.notifications-container {
     background-color: #d9f3f2;
     padding: 1em;
     border-radius: 20px;
     overflow: hidden;
-    height:35em;
-    display:flex;
-    gap:1em;
-    flex-direction:column;
-    width:25em;
+    height: 13em;
+    display: flex;
+    gap: 1em;
+    flex-direction: column;
+    transition: height 0.5s ease;
+    width:20em;
+}
+div.notifications-container:hover {
+    height: 32em;
 }
 
 .notifications {
@@ -252,5 +276,62 @@ figcaption{
     font-weight: 600;
     text-shadow: 4px 2px 5px rgba(0,0,0,0.6);
 }
+div.status {
+    width: fit-content;
+    position: absolute;
+    margin-top: -1em;
+    margin-left:-1em;
+}
+div.status svg.error {
+    width: 2em;
+    fill: red;
+}
 
+div.status svg.ok {
+    width: 2em;
+    fill: #54d359;
+}
 
+.telemetry {
+    text-align: center;
+    padding: 1.6em 1.6em;
+    background-color: #3b3838;
+    border-radius: 30px;
+    color: white;
+    width: 20em;
+}
+
+div.telemetry h3{
+    font-size:1.3em;
+    
+}
+
+.rad {
+    margin-top: 1em;
+    background-color: #efa02a;
+    border-radius: 10px;
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    color: black;
+}
+
+div.rad h3{
+    margin:0;
+}
+.info a{
+    color:white;
+}
+.info p{
+    margin:0;
+}
+
+.telemetry .status{
+    margin-top:-1em;
+    margin-left:-1em;
+}
+.telemetry span {
+    font-weight: 600;
+    text-shadow: 2px 2px 2px rgba(0,0,0,0.6);
+}

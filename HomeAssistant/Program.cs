@@ -54,6 +54,9 @@ builder.Services.AddMvc(options=>options.Filters.Add(new AutoValidateAntiforgery
 builder.Services
     .AddHttpClient<IWeatherService, WeatherService>();
 
+builder.Services
+	.AddHttpClient<IHomeTelemetryService, HomeTelemetryService>();
+
 
 
 var app = builder.Build();

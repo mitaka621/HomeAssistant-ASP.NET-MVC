@@ -27,7 +27,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Weather()
+		public async Task<IActionResult> GetWeather()
 		{
 			var user = await _userService.GetUserByIdAsync(GetUserId());
 			string result = await _weatherService.GetWeatherJsonString(user.Latitude, user.Longitude);
