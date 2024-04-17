@@ -80,7 +80,7 @@ namespace HomeAssistant.Controllers
                      HttpContext.Request.Path.ToString(),
                 GetUserId());
 
-                _=_notificationHubContext.Clients
+                await _notificationHubContext.Clients
                     .AllExcept(GetUserId())
                     .SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
             }
@@ -113,18 +113,18 @@ namespace HomeAssistant.Controllers
 
                 var product = await _productService.GetProduct(productId);
 
-                var notificationId = await _notificationService.CreateNotificationForSpecificUser(
+                var notificationId = await _notificationService.CreateNotificationForAllUsersExceptOne(
                     product.Name + " added to fridge",
                      "Product Quantity: " + product.Count,
 					 GetUserId(),
                      HttpContext.Request.Path.ToString(),
                 GetUserId());
 
-               _=_notificationHubContext.Clients
+				await _notificationHubContext.Clients
 					.AllExcept(GetUserId())
 					.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
             }
-			catch (ArgumentNullException)
+			catch (ArgumentNullException ex)
 			{
 				return RedirectToAction(nameof(Index), new
 				{
