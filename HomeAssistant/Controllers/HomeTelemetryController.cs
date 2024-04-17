@@ -1,6 +1,9 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Services;
+using HomeAssistant.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Net.Sockets;
 using System.Text.Json;
 using ZstdSharp.Unsafe;
@@ -13,10 +16,14 @@ namespace HomeAssistant.Controllers
 	public class HomeTelemetryController : Controller
 	{
 		private readonly IHomeTelemetryService _service;
+		private readonly IHubContext<NotificationsHub> _notificationHubContext;
+		private readonly INotificationService _notificationService;
 
-		public HomeTelemetryController(IHomeTelemetryService service)
+		public HomeTelemetryController(IHomeTelemetryService service, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService)
 		{
 			_service = service;
+			_notificationHubContext = notificationHubContext;
+			_notificationService = notificationService;
 		}
 
 		[HttpGet]
@@ -31,7 +38,15 @@ namespace HomeAssistant.Controllers
 
 			await _service.SaveData(result);
 
-			JsonDocument jsonDocument = JsonDocument.Parse(result);
+			var notificationId = await _service.CreateNotificationIfDataIsAbnormal(result);
+
+
+			if (notificationId!=-1)
+            {
+				await _notificationHubContext.Clients.All.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+			}
+
+            JsonDocument jsonDocument = JsonDocument.Parse(result);
 
 			return new JsonResult(jsonDocument);
 		}
