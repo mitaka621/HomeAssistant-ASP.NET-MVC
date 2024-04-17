@@ -1,6 +1,4 @@
-﻿
-using HomeAssistant.Core.Contracts;
-using HomeAssistant.Core.Services;
+﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Hubs;
 using Microsoft.AspNetCore.SignalR;
 

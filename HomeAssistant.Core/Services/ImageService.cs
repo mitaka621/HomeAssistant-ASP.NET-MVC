@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
-using System.IO;
 
 namespace HomeAssistant.Core.Services
 {

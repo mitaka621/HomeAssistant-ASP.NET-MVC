@@ -5,14 +5,8 @@ using HomeAssistant.Infrastructure.Data.Models;
 using HomeAssistant.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Internal;
 using HomeAssistant.Infrastructure.Data.Enums;
-using System.Runtime.ExceptionServices;
 
 namespace UnitTests
 {
@@ -283,7 +277,7 @@ namespace UnitTests
 			var result = await _service.GetAllRecipes(userId, page, productsOnPage);
 
 			 
-			Assert.IsNotNull(result); // Ensure a non-null result
+			Assert.IsNotNull(result);
 			Assert.AreEqual(2, result.Recipes.Count());
 			Assert.AreEqual(1, result.Recipes.First().Id);
 			Assert.AreEqual(true, result.Recipes.First().AnySteps);
@@ -519,7 +513,7 @@ namespace UnitTests
 			Assert.AreEqual(recipeId, result.Id);
 			Assert.AreEqual("Test Recipe", result.Name);
 			Assert.AreEqual("Test Description", result.Description);
-			// Add more assertions as needed
+			  
 		}
 
 		[Test]

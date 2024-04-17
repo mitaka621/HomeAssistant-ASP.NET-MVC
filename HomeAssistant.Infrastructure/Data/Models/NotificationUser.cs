@@ -1,16 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeAssistant.Infrastructure.Data.Models
 {
-    [Comment("Which user has seen what notification")]
+	[Comment("Which user has seen what notification")]
     public class NotificationUser
     {
         [Comment("User Identifier")]
@@ -24,6 +17,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
         [ForeignKey(nameof(NotificationId))]
         public Notification Notification { get; set; } = null!;
 
-        public bool IsDismissed { get; set; }
+		[Comment("Is notification dismissed by a certain user")]
+		public bool IsDismissed { get; set; }
     }
 }

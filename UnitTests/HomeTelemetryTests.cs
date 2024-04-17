@@ -86,7 +86,7 @@ namespace UnitTests
 			 
 			var savedData = await _dbContext.homeTelemetries.FirstOrDefaultAsync();
 			Assert.IsNotNull(savedData);
-			// Add more specific assertions if needed
+
 		}
 
 		[Test]
@@ -101,7 +101,7 @@ namespace UnitTests
 			 
 			Assert.AreEqual(0, await _dbContext.Notifications.CountAsync());
 			Assert.AreEqual(-1, result);
-			// Add more specific assertions if needed
+
 		}
 
 		[Test]

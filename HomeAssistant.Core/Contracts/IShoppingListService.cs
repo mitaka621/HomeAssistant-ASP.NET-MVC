@@ -1,14 +1,8 @@
-﻿using HomeAssistant.Core.Models.Product;
-using HomeAssistant.Core.Models.ShoppingList;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HomeAssistant.Core.Models.ShoppingList;
 
 namespace HomeAssistant.Core.Contracts
 {
-    public interface IShoppingListService
+	public interface IShoppingListService
 	{
 		public Task<bool> IsStarted(string userId);
 

@@ -1,15 +1,10 @@
 ﻿using HomeAssistant.Core.Contracts;
-using HomeAssistant.Core.Models.Fridge;
 using HomeAssistant.Core.Models.Recipe;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Enums;
 using HomeAssistant.Infrastructure.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver.Core.Operations;
 using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace HomeAssistant.Core.Services
 {

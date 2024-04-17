@@ -1,15 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeAssistant.Infrastructure.Data.Models
 {
-    [Comment("Notification")]
+	[Comment("Notification")]
     public class Notification
     {
         [Key]
@@ -26,10 +21,12 @@ namespace HomeAssistant.Infrastructure.Data.Models
         [Comment("Date and time when the notification was created")]
         public DateTime CreatedOn { get; set; }
 
+        [Comment("The user who caused the notification to be generated (could be null)")]
         public string? InvokedBy { get; set; }
         [ForeignKey(nameof(InvokedBy))]
         public HomeAssistantUser? User { get; set; }
 
+        [Comment("The system controller and route from where the create notification was called")]
         public string InvokerURL { get; set; }= string.Empty;
 
         public IEnumerable<NotificationUser> NotificationsUsers { get; set; } = new List<NotificationUser>();

@@ -2,12 +2,6 @@
 using HomeAssistant.Core.Models;
 using HomeAssistant.Core.Models.Fridge;
 using HomeAssistant.Core.Models.Product;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Contracts
 {

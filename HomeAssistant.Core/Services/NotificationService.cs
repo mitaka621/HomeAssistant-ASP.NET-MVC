@@ -2,7 +2,6 @@
 using HomeAssistant.Core.Models.Notification;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeAssistant.Core.Services

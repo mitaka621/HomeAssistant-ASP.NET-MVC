@@ -1,6 +1,4 @@
-﻿using HomeAssistant.Infrastructure.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using static HomeAssistant.Core.Constants.ErrorMessages;
 using static HomeAssistant.Core.Constants.DataValidationConstants;
@@ -8,7 +6,7 @@ using System.ComponentModel;
 
 namespace HomeAssistant.Core.Models.Product
 {
-    public class ProductFormViewModel
+	public class ProductFormViewModel
     {
         public int Id { get; set; }
 

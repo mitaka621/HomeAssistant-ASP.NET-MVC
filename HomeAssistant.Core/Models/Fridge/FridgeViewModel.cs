@@ -1,13 +1,8 @@
 ﻿using HomeAssistant.Core.Models.Notification;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Models.Fridge
 {
-    public class FridgeViewModel
+	public class FridgeViewModel
     {
         public int PageCount { get; set; }
 

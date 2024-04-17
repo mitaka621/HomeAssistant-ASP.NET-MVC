@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static HomeAssistant.Core.Constants.ErrorMessages;
 using static HomeAssistant.Core.Constants.DataValidationConstants;
 using Microsoft.AspNetCore.Http;
-using System.Globalization;
 
 namespace HomeAssistant.Core.Models.Recipe
 {

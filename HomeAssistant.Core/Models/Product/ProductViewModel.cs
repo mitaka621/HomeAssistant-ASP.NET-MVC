@@ -1,17 +1,8 @@
-﻿using HomeAssistant.Infrastructure.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomeAssistant.Core.Models.Product;
+﻿using HomeAssistant.Core.Models.Product;
 
 namespace HomeAssistant.Core.Models
 {
-    public class ProductViewModel
+	public class ProductViewModel
 	{
 		public int Id { get; set; }
 
