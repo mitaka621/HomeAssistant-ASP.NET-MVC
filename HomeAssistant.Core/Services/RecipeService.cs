@@ -146,7 +146,12 @@ namespace HomeAssistant.Core.Services
 			int newStepNumber = lastStep == null ? 1
 				: lastStep.StepNumber + 1;
 
-			_dbcontext.Steps.Add(new Step()
+            if (step.StepType==StepType.TimerStep &&step.Duration==null)
+            {
+				step.Duration = 1;
+			}
+
+            _dbcontext.Steps.Add(new Step()
 			{
 				RecipeId = step.RecipeId,
 				StepNumber = newStepNumber,
@@ -427,9 +432,14 @@ namespace HomeAssistant.Core.Services
 
 			step.Name = s.Name;
 			step.Description = s.Description;
-			step.DurationInMin = s.Duration;
 			step.StepNumber = s.StepNumber;
 
+			step.DurationInMin = s.Duration;
+			if (step.StepType == StepType.TimerStep && s.Duration == null)
+			{
+				step.DurationInMin = 1;
+			}
+			
 			var oldProdForStep = await _dbcontext.RecipesProductsSteps
 				.Where(x => x.RecipeId == s.RecipeId && x.StepNumber == s.StepNumber)
 				.ToListAsync();
