@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\animations.js" />
+    <Content Remove="wwwroot\svg\fridge.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,11 +43,14 @@
   <ItemGroup>
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="wwwroot\audio\" />
-    <Folder Include="wwwroot\svg\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\js\animations.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="wwwroot\svg\fridge.png" />
   </ItemGroup>
 
   <ItemGroup>

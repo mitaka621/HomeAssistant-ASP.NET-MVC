@@ -127,6 +127,7 @@ div.main-menu a{
     display:flex;
     flex-direction:column;
     justify-content:center;
+    align-items:center;
     width:12em;
     height:12em;
     border-radius:20px;
@@ -134,16 +135,19 @@ div.main-menu a{
 }
 
 div.main-menu img{
-    height:10em;
+    width:8em;
+}
+img.fridge{
+    width:6em !important;
 }
 
 
 div.right {
     display: flex;
     flex-direction: column;
-    align-items:center;
+    align-items: center;
     gap: 2em;
-    width:25em;
+    width: 25em;
 }
 
 .notifications-container {
@@ -308,7 +312,7 @@ div.telemetry h3{
 
 .rad {
     margin-top: 1em;
-    background-color: #efa02a;
+    background-color: #fcff00;
     border-radius: 10px;
     padding: 0.5em;
     display: flex;

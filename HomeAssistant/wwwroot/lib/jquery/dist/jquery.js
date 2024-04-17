@@ -3470,7 +3470,7 @@ jQuery.Callbacks = function( options ) {
 		// Flag to prevent firing
 		locked,
 
-		// Actual callback list
+		  ual callback list
 		list = [],
 
 		// Queue of execution data for repeatable lists
@@ -3524,7 +3524,7 @@ jQuery.Callbacks = function( options ) {
 			}
 		},
 
-		// Actual Callbacks object
+		  ual Callbacks object
 		self = {
 
 			// Add a callback or a collection of callbacks to the list
@@ -3690,7 +3690,7 @@ jQuery.extend( {
 	Deferred: function( func ) {
 		var tuples = [
 
-				// action, add listener, callbacks,
+				  ion, add listener, callbacks,
 				// ... .then handlers, argument index, [final state]
 				[ "notify", "progress", jQuery.Callbacks( "memory" ),
 					jQuery.Callbacks( "memory" ), 2 ],
