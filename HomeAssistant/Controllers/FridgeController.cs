@@ -178,6 +178,17 @@ namespace HomeAssistant.Controllers
             try
 			{
 				await _productService.EditProduct(GetUserId(), product);
+
+				var notificationId = await _notificationService.CreateNotificationForAllUsersExceptOne(
+				   product.Name + " was edited. Quantity: "+product.Count,
+					"Edited on: " + DateTime.Now,
+					GetUserId(),
+					"/Fridge/EditProduct",
+			   GetUserId());
+
+				await _notificationHubContext.Clients
+					.AllExcept(GetUserId())
+					.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
 			}
 			catch (ArgumentNullException)
 			{
@@ -215,6 +226,17 @@ namespace HomeAssistant.Controllers
 
 			await _productService.AddProduct(GetUserId(), product);
 
+			var notificationId = await _notificationService.CreateNotificationForAllUsersExceptOne(
+				   product.Name + " added to fridge for the first time",
+					"Product Count: " + product.Count,
+					GetUserId(),
+					HttpContext.Request.Path.ToString(),
+			   GetUserId());
+
+			await _notificationHubContext.Clients
+				.AllExcept(GetUserId())
+				.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+
 			return RedirectToAction(nameof(Index), new
 			{
 				ToastTitle = "Success",
@@ -226,8 +248,21 @@ namespace HomeAssistant.Controllers
 		public async Task<IActionResult> DeleteProduct(int productId)
 		{
 			try
-			{
+			{			
+				var product=await _productService.GetProduct(productId);
+
+				var notificationId = await _notificationService.CreateNotificationForAllUsersExceptOne(
+				   product.Name + " deleted from fridge",
+					"Deleted on: " + DateTime.Now,
+					GetUserId(),
+					HttpContext.Request.Path.ToString(),
+			   GetUserId());
+
 				await _productService.DeleteProduct(productId);
+
+				await _notificationHubContext.Clients
+					.AllExcept(GetUserId())
+					.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
 			}
 			catch (ArgumentNullException)
 			{
