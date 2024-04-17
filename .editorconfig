@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# NUnit2006: Consider using Assert.That(actual, Is.Not.EqualTo(expected)) instead of Assert.AreNotEqual(expected, actual)
+dotnet_diagnostic.NUnit2006.severity = none

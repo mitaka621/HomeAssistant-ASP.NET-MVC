@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeAssistant.Core", "HomeA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeAssistant.Infrastructure", "HomeAssistant.Infrastructure\HomeAssistant.Infrastructure.csproj", "{1887737D-55DA-4451-9C74-E5E6C2CF31A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A59E2CE6-FF20-44E3-ABAF-C85BB82AC98F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{A59E2CE6-FF20-44E3-ABAF-C85BB82AC98F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
