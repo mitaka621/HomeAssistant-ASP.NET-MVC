@@ -5,6 +5,7 @@ using HomeAssistant.Hubs;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using HomeAssistant.Middlewares;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HomeAssistantDbContext>(options =>
-    options.UseSqlServer(connectionString));
+options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddSignalR();
@@ -61,6 +62,11 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+	ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -96,5 +102,7 @@ app.MapHub<SignalRShoppingCartHub>("/cartHub");
 app.MapHub<NotificationsHub>("/notificationHub");
 
 app.MapHub<MessageHub>("/messageHub");
+
+app.MapHub<FridgeHub>("/fridgeHub");
 
 app.Run();

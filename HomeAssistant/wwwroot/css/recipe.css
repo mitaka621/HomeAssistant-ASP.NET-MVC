@@ -207,7 +207,7 @@ h1.step-counter{
     text-align: center;
     margin: 2em auto;
     width: 50em;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .float-container{

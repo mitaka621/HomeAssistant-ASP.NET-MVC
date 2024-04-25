@@ -15,6 +15,7 @@ div.main-create:first-child:only-child {
 
 .center {
     width: 60%;
+    text-align:center;
 }
 
 .product {

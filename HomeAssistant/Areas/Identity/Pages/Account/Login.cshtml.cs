@@ -110,6 +110,8 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
 
 			ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+
+
 			if (ModelState.IsValid)
 			{
 				var user = await _signInManager

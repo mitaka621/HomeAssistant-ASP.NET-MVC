@@ -24,6 +24,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HomeAssistant.Areas.Identity.Pages.Account
 {
+    [Authorize(Roles ="Admin")]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<HomeAssistantUser> _signInManager;
@@ -128,13 +129,16 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
 
-                user.FirstName= Input.FirstName;
+				user.ClientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+
+				user.FirstName= Input.FirstName;
                 user.LastName= Input.LastName;
                 user.CreatedOn=DateTime.Now;
 

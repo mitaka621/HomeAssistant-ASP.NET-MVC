@@ -11,6 +11,10 @@
 
 .notification-img-container{
     text-align:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
 }
 
 .product-container > div {
@@ -25,7 +29,8 @@ div.main-container h1{
 }
 
 .product {
-    border: 1px solid black;
+    border:solid black;
+    border-width:1px;
     width: fit-content;
     border-radius: 10px;
     background-color: white;
@@ -33,7 +38,11 @@ div.main-container h1{
     justify-content: space-between;
     width: 20em;
     gap: 1em;
-    padding:0.5em 0 0 1em;;
+    padding: 0.5em 0 0 1em;
+    max-width: 999px;
+    overflow: hidden;
+    opacity: 100%;
+    transition: max-width 0.5s ease-in,padding 0.5s ease-in-out,opacity 1s ease-in-out,border-width 0.5s ease-in-out;
 }
 
 div.product p{
@@ -116,7 +125,7 @@ div.right-panel {
 
 .accordion-button {
     gap: 1em;
-    padding: 1em 0;
+    padding: 1em 0.6em;
     justify-content: center;
 }
 

@@ -20,5 +20,7 @@
 
         public byte[] Photo { get; set; } = new byte[0];
 
+        public string Ip { get; set; } = string.Empty;
+
     }
 }

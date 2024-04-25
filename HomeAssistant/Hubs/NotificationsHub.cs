@@ -18,9 +18,6 @@ namespace HomeAssistant.Hubs
 		public async Task MarkAsDismissed(int notificationId)
 		{
 			await _notificationService.DismissNotification(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty, notificationId);
-
-
-
 		}
 	}
 }

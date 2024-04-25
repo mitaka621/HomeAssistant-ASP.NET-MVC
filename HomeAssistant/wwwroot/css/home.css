@@ -44,6 +44,10 @@ footer>div.text-center {
     padding:0;
 }
 
+button.accordion-button{
+    padding:1em 0.7em;
+}
+
 div.text-center {
     display: flex;
     flex-direction: column;

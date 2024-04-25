@@ -11,9 +11,9 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<IEnumerable<CategoryViewModel>> GetAllCategories();
 
-		Task IncreaseQuantityByOne(int productId);
+		Task<int> IncreaseQuantityByOne(int productId);
 
-		Task DecreaseQuantityByOne(int productId);
+		Task<int> DecreaseQuantityByOne(int productId);
 
 		Task<IEnumerable<ProductViewModel>> SearchProducts(string keyphrase);
 

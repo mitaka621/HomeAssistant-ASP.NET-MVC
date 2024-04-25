@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\animations.js" />
-    <Content Remove="wwwroot\svg\fridge.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,10 +46,6 @@
 
   <ItemGroup>
     <None Include="wwwroot\js\animations.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="wwwroot\svg\fridge.png" />
   </ItemGroup>
 
   <ItemGroup>

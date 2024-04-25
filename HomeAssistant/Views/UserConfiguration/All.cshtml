@@ -17,6 +17,7 @@
 				<th scope="col">Last Name</th>
 				<th scope="col">Roles</th>
 				<th scope="col">Created on</th>
+				<th scope="col">Ip</th>
 				<th scope="col">Actions</th>
 			</tr>
 		</thead>
@@ -36,6 +37,7 @@
 							</div>
 						</td>
 						<td class="col">@user.CreatedOn</td>
+						<td class="col">@user.Ip</td>
 						<td class="formCol">
 							<a asp-action="Edit" asp-route-Id="@user.Id" class="btn btn-warning">Edit</a>
 							<form asp-action="DeleteById" asp-route-Id="@user.Id" method="post">

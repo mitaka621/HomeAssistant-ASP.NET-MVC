@@ -114,7 +114,7 @@ namespace HomeAssistant.Core.Services
 				}).ToListAsync();
 		}
 
-		public async Task IncreaseQuantityByOne(int productId)
+		public async Task<int> IncreaseQuantityByOne(int productId)
 		{
 			var product = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);
 
@@ -132,9 +132,11 @@ namespace HomeAssistant.Core.Services
 			product.AddedOn = DateTime.Now;
 
 			await _dbContext.SaveChangesAsync();
+
+			return product.Count;
 		}
 
-		public async Task DecreaseQuantityByOne(int productId)
+		public async Task<int> DecreaseQuantityByOne(int productId)
 		{
 			var product = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);
 
@@ -150,6 +152,8 @@ namespace HomeAssistant.Core.Services
 
 			product.Count--;
 			await _dbContext.SaveChangesAsync();
+
+			return product.Count;
 		}
 
 		public async Task<IEnumerable<ProductViewModel>> SearchProducts(string keyphrase)
@@ -186,7 +190,9 @@ namespace HomeAssistant.Core.Services
 
 		public async Task<ProductFormViewModel> GetProduct(int id)
 		{
-			var product = await _dbContext.Products.Include(x => x.Category)
+			var product = await _dbContext.Products
+				.AsNoTracking()
+				.Include(x => x.Category)
 				.FirstOrDefaultAsync(x => x.Id == id);
 
 			if (product == null)

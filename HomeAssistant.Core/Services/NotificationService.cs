@@ -153,11 +153,11 @@ namespace HomeAssistant.Core.Services
                 InvokedBy = invokerId,
                 InvokerURL = invokerURL,
                 CreatedOn = DateTime.Now,
-                NotificationsUsers = (await _userService.GetAllApprovedNotDeletedUsersAsync())
-				.Where(x=>x.Id!=exceptUserId)
+                NotificationsUsers = (await _userService.GetAllApprovedNotDeletedUsersIds())
+				.Where(x=>x!=exceptUserId)
                 .Select(x => new NotificationUser()
                 {
-                    UserId = x.Id
+                    UserId = x
                 }).ToList()
             };
 

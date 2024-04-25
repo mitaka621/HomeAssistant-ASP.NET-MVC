@@ -44,6 +44,7 @@ namespace HomeAssistant.Core.Services
 					Email = u.Email,
 					CreatedOn = u.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
 					Roles = roles,
+					Ip = u.ClientIpAddress
 				});
 			}
 
@@ -74,6 +75,7 @@ namespace HomeAssistant.Core.Services
 						Email = u.Email,
 						CreatedOn = u.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
 						Roles = roles,
+						Ip=u.ClientIpAddress,
 					});
 
 				}
@@ -284,13 +286,16 @@ namespace HomeAssistant.Core.Services
 			users
 				.ForEach(x => x.Photo = userPhotos.FirstOrDefault(y => y.Key == x.Id).Value ?? new byte[0]);
 
-			for (int i = 0; i < users.Count; i++)
-			{
-				users[i].Photo = await imageService.GetPFP(users[i].Id);
-			}
-
 			return users;
 
+		}
+
+		public async Task<IEnumerable<string>> GetAllApprovedNotDeletedUsersIds()
+		{
+			return (await userManager
+				.GetUsersInRoleAsync("StandardUser"))
+				.Where(x => !x.IsDeleted)
+				.Select(x => x.Id);
 		}
 	}
 }

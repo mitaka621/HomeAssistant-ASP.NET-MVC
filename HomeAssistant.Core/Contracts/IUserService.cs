@@ -30,5 +30,7 @@ namespace HomeAssistant.Core.Contracts
 		Task<bool> RestoreByIdAsync(string Id);
 
 		Task<bool> AddUserLocation(string Id,double latitude, double longitude);
+
+		Task<IEnumerable<string>> GetAllApprovedNotDeletedUsersIds();
 	}
 }

@@ -27,7 +27,7 @@
 
 <div class="main-container">
 	<div class="outer-layer-fridge">
-		<div class="container-animation">
+		<div class="container-animation" style="@(ViewBag.Available ? "" : "max-height: 999px; ")">
 			@if (ViewBag.Available)
 			{
 				<h1>Available Products</h1>
@@ -110,7 +110,7 @@
 			<div>
 				@foreach (var product in Model.Products)
 				{
-					<div class="product">
+					<div class="product" id="p@(product.Id)">
 						<div class="left">
 							<p class="product-name">
 								@product.Name
@@ -118,9 +118,6 @@
 									@("-- g")
 								else
 									@(product.Weight + " g")
-
-
-
 							</p>
 							@{
 								var duration = DateTime.Now - product.AddedOn;
@@ -150,21 +147,13 @@
 							</figcaption>
 						</div>
 						<div class="right">
-							<form method="post"
-								  asp-action="DecreaseProductQuantity"
-								  asp-route-productId="@product.Id">
-								<button class="btn">
+							<button @(product.Count == 0 ? "disabled" : "") class="btn" onclick="DecreaseProduct(@product.Id)">
 									<img src="~/svg/minus-circle.svg" />
 								</button>
-							</form>
 							<p class="product-count @(product.Count==0?"text-danger fw-bold":"")">@product.Count</p>
-							<form method="post"
-								  asp-action="IncreaseProductQuantity"
-								  asp-route-productId="@product.Id">
-								<button class="btn">
+							<button class="btn" onclick="IncreaseProduct(@product.Id)">
 									<img src="~/svg/plus-Circle.svg" />
 								</button>
-							</form>
 						</div>
 					</div>
 				}
@@ -270,4 +259,6 @@
 	<script src="~/js/animations.js"></script>
 	<script src="~/js/toastPopup.js"></script>
 	<script src="~/js/productSearch.js"></script>
+	<script src="~/js/signalr/dist/browser/signalr.js"></script>
+	<script src="~/js/fridgeProductsSignalR.js"></script>
 }
