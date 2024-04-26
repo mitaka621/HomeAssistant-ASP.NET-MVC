@@ -1,10 +1,21 @@
 var connection = new signalR.HubConnectionBuilder().withUrl("/fridgeHub").build();
 
-connection.on("UpdateProductQuantity", function (productId, count) {
+connection.on("UpdateProductQuantity", function (productId, shouldIncrease) {
     var currentProduct = document.querySelector("div#p" + productId);
 
+    console.log("here");
+
     if (currentProduct) {
-        currentProduct.querySelector(".product-count").textContent = count;
+
+        var productsCount = parseInt(currentProduct.querySelector(".product-count").textContent);
+
+        if (shouldIncrease) {
+            currentProduct.querySelector(".product-count").textContent = productsCount+1;
+        }
+        else {
+            currentProduct.querySelector(".product-count").textContent = productsCount - 1;
+        }
+        
     }
 });
 
@@ -27,6 +38,8 @@ function IncreaseProduct(productId) {
 
         setTimeout(()=>currentProduct.remove(), 600);      
     }
+
+    currentProduct.querySelector(".product-count").textContent = productsCount + 1;
 
     connection
         .invoke("IncreaseProductQuantity", productId)
@@ -55,6 +68,8 @@ function DecreaseProduct(productId) {
 
         setTimeout(() => currentProduct.remove(), 600);
     }
+
+    currentProduct.querySelector(".product-count").textContent = productsCount - 1;
 
     connection
         .invoke("DecreaseProductQuantity", productId)
