@@ -32,7 +32,6 @@ namespace HomeAssistant.BackgroundServiceJobs
 						var timerManager = scope.ServiceProvider.GetRequiredService<IRecipeService>();
 						var usersWithExpiredTimers = await timerManager.GetUsersWithExpiredTimers();
 
-
 						foreach (var tuple in usersWithExpiredTimers)
 						{
 							var notificationId = await _notificationService.CreateNotificationForSpecificUser(
