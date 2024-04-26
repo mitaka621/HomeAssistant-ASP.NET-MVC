@@ -20,6 +20,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddSignalR();
 builder.Services.AddHostedService<CheckTimerExpirationService>();
+builder.Services.AddHostedService<WriteHomeTelemetryDataToDb>();
 
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -81,7 +82,7 @@ else
 	app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();

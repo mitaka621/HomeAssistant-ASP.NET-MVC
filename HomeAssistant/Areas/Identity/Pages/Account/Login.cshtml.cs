@@ -17,18 +17,21 @@ using Microsoft.Extensions.Logging;
 using HomeAssistant.Infrastructure.Data.Models;
 using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
+using HomeAssistant.Infrastructure.Data;
 
 namespace HomeAssistant.Areas.Identity.Pages.Account
 {
 	public class LoginModel : PageModel
 	{
 		private readonly SignInManager<HomeAssistantUser> _signInManager;
+		private readonly HomeAssistantDbContext _homeAssistantDbContext;
 		private readonly ILogger<LoginModel> _logger;
 
-		public LoginModel(SignInManager<HomeAssistantUser> signInManager, ILogger<LoginModel> logger)
+		public LoginModel(SignInManager<HomeAssistantUser> signInManager, ILogger<LoginModel> logger, HomeAssistantDbContext homeAssistantDbContext)
 		{
 			_signInManager = signInManager;
 			_logger = logger;
+			_homeAssistantDbContext= homeAssistantDbContext;
 		}
 
 		/// <summary>
@@ -133,6 +136,8 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
 				if (result.Succeeded)
 				{
 					_logger.LogInformation("User logged in.");
+					_homeAssistantDbContext.Users.First(x=>x.Id==user.Id).ClientIpAddress= HttpContext.Connection.RemoteIpAddress.ToString();
+					await _homeAssistantDbContext.SaveChangesAsync();
 					return LocalRedirect(returnUrl);
 				}
 				if (result.RequiresTwoFactor)

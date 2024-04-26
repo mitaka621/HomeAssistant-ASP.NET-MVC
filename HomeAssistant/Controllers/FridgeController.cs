@@ -63,87 +63,6 @@ namespace HomeAssistant.Controllers
 			return View(fridgeViewModel);
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> DecreaseProductQuantity(int productId)
-        {
-            try
-            {
-                await _productService.DecreaseQuantityByOne(productId);
-
-			
-                var product = await _productService.GetProduct(productId);
-
-                var notificationId = await _notificationService.CreateNotificationForAllUsersExceptOne(
-                    product.Name+ " removed from fridge",
-                     "Remaining: "+ product.Count,
-					 GetUserId(),
-                     HttpContext.Request.Path.ToString(),
-                GetUserId());
-
-                await _notificationHubContext.Clients
-                    .AllExcept(GetUserId())
-                    .SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
-            }
-			catch (ArgumentNullException)
-			{
-				return RedirectToAction(nameof(Index), new
-				{
-					ToastTitle = "Error",
-					ToastMessage = "Internal server error!"
-				});
-			}
-			catch (InvalidOperationException)
-			{
-				return RedirectToAction(nameof(Index), new
-				{
-					ToastTitle = "Error",
-					ToastMessage = "You can't decrease product quantity less than 0!",
-				});
-			}
-
-			return Redirect(Request.Headers["Referer"].ToString());
-		}
-
-		[HttpPost]
-		public async Task<IActionResult> IncreaseProductQuantity(int productId)
-		{
-			try
-			{
-				await _productService.IncreaseQuantityByOne(productId);
-
-                var product = await _productService.GetProduct(productId);
-
-                var notificationId = await _notificationService.CreateNotificationForAllUsersExceptOne(
-                    product.Name + " added to fridge",
-                     "Product Quantity: " + product.Count,
-					 GetUserId(),
-                     HttpContext.Request.Path.ToString(),
-                GetUserId());
-
-				await _notificationHubContext.Clients
-					.AllExcept(GetUserId())
-					.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
-            }
-			catch (ArgumentNullException ex)
-			{
-				return RedirectToAction(nameof(Index), new
-				{
-					ToastTitle = "Error",
-					ToastMessage = "Internal server error!"
-				});
-			}
-			catch (InvalidOperationException)
-			{
-				return RedirectToAction(nameof(Index), new
-				{
-					ToastTitle = "Error",
-					ToastMessage = "Internal server error!"
-				});
-			}
-
-			return Redirect(Request.Headers["Referer"].ToString());
-		}
-
 		[HttpGet]
 		public async Task<IActionResult> ProductSearch(string keyphrase)
 		{
@@ -187,7 +106,7 @@ namespace HomeAssistant.Controllers
 			   GetUserId());
 
 				await _notificationHubContext.Clients
-					.AllExcept(GetUserId())
+					.All
 					.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
 			}
 			catch (ArgumentNullException)

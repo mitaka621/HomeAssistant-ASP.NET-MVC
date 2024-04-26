@@ -36,16 +36,6 @@ namespace HomeAssistant.Controllers
 				return StatusCode(501);
 			}
 
-			await _service.SaveData(result);
-
-			var notificationId = await _service.CreateNotificationIfDataIsAbnormal(result);
-
-
-			if (notificationId!=-1)
-            {
-				await _notificationHubContext.Clients.All.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
-			}
-
             JsonDocument jsonDocument = JsonDocument.Parse(result);
 
 			return new JsonResult(jsonDocument);

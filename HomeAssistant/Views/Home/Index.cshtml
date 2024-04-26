@@ -26,12 +26,8 @@
 					<p class="umbrella-desc">No Umbrella Needed!</p>
 				</div>
 			</div>
-		</div>
-		
+		</div>		
 	</div>
-
-
-
 	<div class="text-center">
 		<div class="greeting">
 			@if (DateTime.Now.Hour < 12)
@@ -47,7 +43,7 @@
 				<h1 class="display-4">Good Evening @Model.FirstName!</h1>
 			}
 
-			<h3>The time is @DateTime.Now.ToString("HH:mm")</h3>
+			<h3>The time is <span id="clock">@DateTime.Now.ToString("HH:mm")</span></h3>
 			<h3>@DateTime.Now.ToString("dd/MM/yyyy")</h3>
 		</div>
 		<div class="main-menu">
@@ -171,6 +167,7 @@
 
 
 @section Scripts {
+	<script src="~/js/Clock.js"></script>
 	<script src="~/js/HomeTelemetry.js"></script>
 	<script src="~/js/weather.js"></script>
 	<script src="~/js/signalr/dist/browser/signalr.js"></script>

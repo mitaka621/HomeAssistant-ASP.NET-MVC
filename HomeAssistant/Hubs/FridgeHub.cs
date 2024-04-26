@@ -31,15 +31,15 @@ namespace HomeAssistant.Hubs
 				product.Name + " removed from fridge",
 				 "Remaining: " + product.Count,
 				 GetUserId(),
-				 "/Fridge",
+				 "/Fridge/DecreaseProductQuantity",
 			GetUserId());
 
 			await Clients
-				.All
-				.SendAsync("UpdateProductQuantity", productId, newCount);
+				.AllExcept(Context.ConnectionId)
+				.SendAsync("UpdateProductQuantity", productId, false);
 
 			await _notificationHubContext.Clients
-				.AllExcept(GetUserId())
+				.AllExcept(Context.ConnectionId)
 				.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
 
 		}
@@ -55,16 +55,16 @@ namespace HomeAssistant.Hubs
 				product.Name + " added to fridge",
 				 "Product Quantity: " + product.Count,
 				 GetUserId(),
-				 "/Fridge",
+				 "/Fridge/IncreaseProductQuantity",
 			GetUserId());
 
 
 			await Clients
-			.All
-				.SendAsync("UpdateProductQuantity", productId, newCount);
+				.AllExcept(Context.ConnectionId)
+				.SendAsync("UpdateProductQuantity", productId, true);
 
 			await _notificationHubContext.Clients
-				.AllExcept(GetUserId())
+				.AllExcept(Context.ConnectionId)
 				.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
 		}
 

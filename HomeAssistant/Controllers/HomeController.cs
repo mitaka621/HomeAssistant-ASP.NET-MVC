@@ -26,11 +26,18 @@ namespace HomeAssistant.Controllers
             try
             {
                 var roles = (await _userService.GetUserByIdAsync(GetUserId())).UserRoles;
-                if (!roles.Contains("StandardUser"))
+
+				if (roles.Contains("Admin")&&!roles.Contains("StandardUser"))
+				{
+					return LocalRedirect("/UserConfiguration");
+				}
+
+				if (!roles.Contains("StandardUser"))
                 {
                     return RedirectToAction(nameof(WaitingApproval));
                 }
-            }
+				
+			}
             catch (ArgumentNullException) 
             {
 				return RedirectToAction(nameof(WaitingApproval));
