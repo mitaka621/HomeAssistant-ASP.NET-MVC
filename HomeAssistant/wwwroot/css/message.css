@@ -1,4 +1,61 @@
-﻿.selection-container {
+﻿@media only screen and (max-width: 1000px) {
+    nav[class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"]{
+        margin:0 !important;
+    }
+    .container {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+    }
+    footer{
+        display:none;
+    }
+    .card{
+        height:90vh;
+    }
+    .send-container{
+        padding:0 !important;
+        width:95% !important;
+        margin:0 auto;
+    }
+    .message-and-time{
+        width:90% !important;
+    }
+    .message-text{
+        max-width:70vw !important;
+    }
+    body{
+        margin:0;
+    }
+    button.sendBtn{
+        width:45px !important;
+        height:40px !important;
+    }
+    div.other-user-message > div.smallpfp{
+        width:25px;
+        height:25px;
+    }
+    div.other-user-message img{
+        width:25px;
+    }
+    .other-user-message{
+        gap:0.5em !important;
+    }
+
+    div.current-user-message > div.smallpfp {
+        width: 25px;
+        height: 25px;
+    }
+
+    div.current-user-message img {
+        width: 25px;
+    }
+
+    .current-user-message {
+        gap: 0.5em !important;
+    }
+}
+.selection-container {
     width: 100%;
     min-height: 80vh;
     max-height: fit-content;
@@ -84,7 +141,7 @@ div.other-user-message p{
 .other-user-message {
     display: flex;
     width: 100%;
-    align-items: center;
+    align-items: flex-end;
     justify-content: flex-start;
     margin-bottom: 1em;
     gap: 1.3em;

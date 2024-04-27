@@ -10,9 +10,11 @@
 	ViewBag.previousPages = previousPages;
 }
 
+<link rel="stylesheet" href="~/css/fridge.css" asp-append-version="true" />
+
 <h1>Edit Product</h1>
 
-<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteModal">
+<button type="button" class="btn btn-danger del-btn" data-bs-toggle="modal" data-bs-target="#DeleteModal">
 	Delete Product
 </button>
 
@@ -41,7 +43,7 @@
 	</div>
 </div>
 
-<form method="post">
+<form method="post" class="edit-form">
 	<div class="mb-3">
 		<label asp-for="Name">Product Name</label>
 		<input class="form-control" asp-for="Name">
@@ -73,7 +75,7 @@
 		</select>
 		<span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
 	</div>
-	<button type="submit" class="btn btn-primary">Edit Product</button>
+	<button type="submit" class="btn btn-primary edit-btn">Edit Product</button>
 </form>
 
 

@@ -10,9 +10,11 @@
 	ViewBag.previousPages = previousPages;
 }
 
+<link rel="stylesheet" href="~/css/fridge.css" asp-append-version="true" />
+
 <h1>Add Product</h1>
 
-<form method="post" asp-controller="Fridge" asp-action="AddProduct">
+<form class="edit-form" method="post" asp-controller="Fridge" asp-action="AddProduct">
 	<div class="mb-3">
 		<label asp-for="Name">Product Name</label>
 		<input class="form-control" asp-for="Name" value="@ViewBag.ProductName">
@@ -37,7 +39,7 @@
 		</select>
 		<span asp-validation-for="SelectedCategoryId" class="text-danger"></span>
 	</div>
-	<button type="submit" class="btn btn-primary">Add Product</button>
+	<button type="submit" class="btn btn-primary edit-btn">Add Product</button>
 </form>
 
 

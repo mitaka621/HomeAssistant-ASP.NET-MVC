@@ -1,4 +1,85 @@
-﻿.product-container {
+﻿@media only screen and (max-width: 1000px) {
+    .container{
+        margin:0 auto;
+        width:100vw !important;
+    }
+    .right-panel {
+        display: none !important;
+    }
+    .product-container {
+        width: 100% !important;
+    }
+    h1{
+        font-size:3em;
+    }
+    p, figcaption,a{
+        font-size:1.5em;
+    }
+    .product{
+        width:90% !important;
+    }
+
+    .btn-filters{
+        margin-bottom:3em !important;
+    }
+
+
+
+    button.dropdown-toggle p, a p{
+        margin: 0;
+    }
+
+    button.btn > img {
+        width: 2em !important;
+    }
+    form.edit-form {
+        text-align: center !important;
+        font-size: 2em;
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 1em;
+    }
+    input, select {
+        font-size: 0.7em !important;
+        margin-bottom:1.8em;
+    }
+    #form1 {
+        font-size: 1.6em !important;
+        margin-bottom: 0em;
+    }
+    input{
+        font-weight:700 !important;
+    }
+    .del-btn{
+        display:block;
+        text-align:center;
+        margin: 1em auto;
+            font-size:1.5em;
+    }
+    select{
+        text-align:center;
+    }
+    .edit-btn {
+        font-size: 0.8em;
+    }
+    a[href="/Fridge/addProduct?prodName=sasas"]{
+        font-size: 1.5em;
+       margin-top:0.5em;
+    }
+    .input-form{
+        width:70vw !important;
+    }
+}
+button.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+ button.dropdown-toggle p{
+     margin:0;
+ }
+.product-container {
     background-color: #9edc2a;
     width: 50em;
     height: fit-content;

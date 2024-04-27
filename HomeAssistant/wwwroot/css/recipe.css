@@ -1,4 +1,7 @@
-﻿div.steps{
+﻿@media only screen and (max-width: 1000px) {
+
+}
+div.steps{
     display:flex;
     gap:1em;
     flex-wrap:wrap;

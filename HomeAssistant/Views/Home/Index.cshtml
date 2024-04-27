@@ -77,7 +77,7 @@
 			<div class="notifications">
 				@if (!Model.Notifications.Any())
 				{
-					<p>No notifications!</p>
+					<p class="no-notifications">No notifications!</p>
 				}
 
 				@foreach (var notification in Model.Notifications)

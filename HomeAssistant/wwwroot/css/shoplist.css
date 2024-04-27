@@ -1,4 +1,169 @@
-﻿﻿h1 {
+﻿@media only screen and (max-width: 1000px) {
+    .info-container-left {
+        order: -1;
+        width: fit-content;
+        overflow: hidden;
+        max-height: 60px;
+        transition: max-height 0.6s ease;
+        margin:0 !important;
+    }
+
+    .info-container-left:hover {
+        max-height: 999px;
+    }
+
+    .left {
+        position: initial !important;
+        margin-left: 0 !important;
+        width: 95vw !important;
+    }
+    .main-create{
+       flex-direction:column;
+       justify-content:center;
+       align-items:center;
+    }
+    .out-of-stock-right {
+        position: initial !important;
+        width: 95vw !important;
+    }
+    .info-container {
+        order: -2;
+        width: 95vw;
+    }
+    .out-of-stock-right {
+        width: fit-content;
+        overflow: hidden;
+        max-height: 60px;
+        transition: max-height 0.6s ease;
+        margin:0 !important;
+    }
+
+    .out-of-stock-right:hover {
+        max-height: 999px;
+    }
+    form{
+        width:100% !important;
+    }
+    .out-of-stock {
+        width: 100% !important;
+    }
+    .input-form {
+        width: 90vw !important;
+    }
+    .center {
+        width: 95vw !important;
+    }
+ tr th:nth-child(3), td.category-name, tr th:nth-child(5), td.price {
+        display: none;
+    }
+    table{
+        width:100% !important;
+    }
+    form.delete-form{
+        width:fit-content !important;
+        margin: 0;
+        min-width:0;
+    }
+    .active-shoppinglists{
+        display:none !important;
+    }
+
+    .shopping-progress {
+        flex-direction: column;
+        overflow: auto !important;
+    }
+
+    .shopping-progress .actual-progress {
+        position: sticky !important;
+        position: -webkit-sticky; /* for Safari */
+        top: 0;
+        align-self: flex-start; /* <-- this is the fix */
+
+        transform-origin: 0 0;
+        -webkit-transform: rotate(0deg) !important;
+        -moz-transform: rotate(0deg) !important;
+        -o-transform: rotate(0deg) !important;
+        -ms-transform: rotate(0deg) !important;
+        transform: rotate(0deg) !important;
+        margin: 0;
+        width: 100% !important;
+    }
+    .shopping-progress .right{
+        box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.7);
+    }
+    .actual-progress {
+        position: sticky !important;
+    }
+    .percentage {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg) !important;
+    }
+
+    .bought-products-container-small{
+        flex-direction:row !important;
+        height:fit-content !important;
+        flex-wrap:wrap;
+        justify-content:flex-start !important;
+        margin-left:2em;
+        overflow-x:initial !important;
+    }
+    div.bought-products-container-small form{
+        width:fit-content !important;
+        min-width:0;
+        margin:0;
+    }
+    div.bought-products-container-small form>button{
+         width:fit-content;
+    }
+    .shopping-progress .right {
+        position: initial !important;
+        height:fit-content;
+        width:100%;
+    }
+
+    .main-container{
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .middle{
+        padding:1em !important;
+        width:100% !important;
+    }
+    .products-container{
+        margin-left:2em !important;
+        width:98% !important;
+    }
+
+    form.prod button.btn{
+        padding:0.5em;
+    }
+    .container{
+        padding:0;
+    }
+    .btn-danger{
+        display:block;
+        margin:0 auto;
+    }
+    .bought-products-container{
+        overflow:initial !important;
+    }
+    li.nav-item >form{
+        min-width:0;
+    }
+
+}
+
+.pagination {
+    display:flex;
+    justify-content:center;
+}
+
+﻿h1 {
     text-align: center;
     margin-bottom: 1em;
 }
@@ -15,7 +180,7 @@ div.main-create:first-child:only-child {
 
 .center {
     width: 60%;
-    text-align:center;
+    text-align: center;
 }
 
 .product {
@@ -42,7 +207,7 @@ div.main-create:first-child:only-child {
 
 form {
     width: fit-content;
-    min-width:10em;
+    min-width: 10em;
     margin: 0 auto;
 }
 
@@ -104,12 +269,12 @@ input {
     justify-content: center;
     border-radius: 15px;
     background-color: white;
-    margin:0 !important;
+    margin: 0 !important;
 }
 
-div.middle>form{
-    width:fit-content;
-    min-width:0;
+div.middle > form {
+    width: fit-content;
+    min-width: 0;
 }
 
 .middle {

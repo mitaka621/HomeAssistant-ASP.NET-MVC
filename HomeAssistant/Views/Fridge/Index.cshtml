@@ -42,13 +42,13 @@
 					   asp-route-categoryId="@ViewBag.CategoryId"
 					   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
 					   class="btn @(ViewBag.Available ? "btn-danger" : "btn-outline-danger")">
-						Available
+						<p>Available</p>
 					</a>
 					<a asp-route-isAvailable="false"
 					   asp-route-categoryId="@ViewBag.CategoryId"
 					   asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())"
 					   class="btn @(ViewBag.Available ?"btn-outline-danger" : "btn-danger" )">
-						Unavailable
+						<p>Unavailable</p>
 					</a>
 				</div>
 
@@ -62,14 +62,16 @@
 			<div class="btn-filters">
 				<div class="dropdown">
 					<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-						@if (ViewBag.CategoryId != null)
-						{
-							@(((IEnumerable<CategoryViewModel>)ViewBag.Categories).First(x => x.Id == ViewBag.CategoryId).Name)
-						}
-						else
-						{
-							@("All Categories")
-						}
+						<p>
+							@if (ViewBag.CategoryId != null)
+							{
+								@(((IEnumerable<CategoryViewModel>)ViewBag.Categories).First(x => x.Id == ViewBag.CategoryId).Name)
+							}
+							else
+							{
+								@("All Categories")
+							}
+						</p>
 					</button>
 					<ul class="dropdown-menu">
 						<li><a class="dropdown-item" asp-action="Index" asp-route-isAvailable="@ViewBag.Available" asp-route-orderBy="@(((OrderBy)ViewBag.OrderBy).ToString())">All Categories</a></li>
@@ -89,7 +91,7 @@
 				</div>
 				<div class="dropdown">
 					<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Order By: @(((OrderBy)ViewBag.OrderBy).ToString())
+						<p>Order By: @(((OrderBy)ViewBag.OrderBy).ToString())</p>
 					</button>
 					<ul class="dropdown-menu">
 						@foreach (var option in Enum.GetValues(typeof(OrderBy)))

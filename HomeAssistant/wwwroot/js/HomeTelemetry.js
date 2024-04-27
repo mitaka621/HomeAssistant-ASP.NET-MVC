@@ -12,7 +12,11 @@ async function fetchTelemetryData() {
             document.getElementById("house-humidity").textContent = json.Humidity;
             document.getElementById("house-rad").textContent = json.Radiation;
             document.getElementById("house-cpm").textContent = json.CPM;
-            document.querySelector(".info").remove();
+
+            if (document.querySelector(".info")) {
+                document.querySelector(".info").remove();
+            }
+           
         });
 }
 

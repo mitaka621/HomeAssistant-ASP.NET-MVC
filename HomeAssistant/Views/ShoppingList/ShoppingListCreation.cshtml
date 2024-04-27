@@ -94,11 +94,11 @@
 						<tr id="@prod.Id">
 							<th scope="row">@(count++)</th>
 							<td class="fs-5"><b>@prod.Name</b></td>
-							<td>@prod.CategoryName</td>
+							<td class="category-name">@prod.CategoryName</td>
 							<td>@prod.QuantityToBuy</td>
-							<td>@($"{prod.Price:f2} lv")</td>
+							<td class="price">@($"{prod.Price:f2} lv")</td>
 							<td>
-								<form method="post">
+								<form method="post" class="delete-form">
 									<button class="btn btn-danger" asp-controller="ShoppingList" asp-action="Delete" asp-route-prodId="@prod.Id">
 										Delete
 									</button>

@@ -8,7 +8,7 @@
     .main-container{
         flex-wrap:wrap;
     }
-    div.right {
+    div.right,div.left {
         order: 0;
         min-width: 80%;
        
@@ -20,15 +20,17 @@
         order:1;
     }
     .notifications-container {
-        width: 100%;
+        width: 95%;
         min-height: 32em;
     }
-
-    .telemetry{
-        min-width:100%;
+    main{
+        width:initial !important;
     }
 }
-
+main{
+    margin:0 auto;
+    width:80em;
+}
 div.main-container {
     display: flex;
     justify-content: center;

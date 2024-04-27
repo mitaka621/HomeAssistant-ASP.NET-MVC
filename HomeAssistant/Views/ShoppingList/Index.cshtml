@@ -20,7 +20,7 @@
 <div class="main-container">
 	@if (shoppingLists.Any())
 	{
-		<div class="info-container">
+		<div class="info-container active-shoppinglists">
 			<div class="left">
 				<h2>Active Shopping Lists</h2>
 				<div class="bought-products-container">
@@ -124,7 +124,7 @@
 	</div>
 	@if (Model.BoughtProducts.Any())
 	{
-		<div class="info-container">
+		<div class="info-container shopping-progress">
 			<div class="right">
 				<h2>Bought Products</h2>
 				<div class="bought-products-container-small">
