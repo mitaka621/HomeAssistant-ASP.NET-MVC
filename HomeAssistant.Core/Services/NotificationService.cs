@@ -73,7 +73,7 @@ namespace HomeAssistant.Core.Services
 
 		}
 
-		public async Task<IEnumerable<NotificationViewModel>> GetNotificationsForUser(string userId)
+		public async Task<IEnumerable<NotificationViewModel>> GetNotificationsForUser(string userId, int take = 30,int skip=0)
 		{
 			var notifications = await _dbcontext.NotificationsUsers
 				.AsNoTracking()
@@ -92,17 +92,18 @@ namespace HomeAssistant.Core.Services
 					}
 				})
 				.OrderByDescending(x => x.CreatedOn)
+				.Skip(skip)
+				.Take(take)
 				.ToListAsync();
 
 			var userPhotos = await _imageService
 				.GetPfpRange(notifications.Where(x => x.Invoker.Id != null).Select(x => x.Invoker.Id).Distinct().ToArray());
 
 			notifications
-				.ForEach(x => x.Invoker.Photo = userPhotos.FirstOrDefault(y => y.Key == x.Invoker.Id).Value ?? new byte[0]);
-
-
-			notifications
-				.ForEach(x => x.Source = x.Source.Split("/")[1]);
+				.ForEach(x => {
+					x.Invoker.Photo = userPhotos.FirstOrDefault(y => y.Key == x.Invoker.Id).Value ?? new byte[0];
+					x.Source = x.Source.Split("/")[1];
+					});
 
 			return notifications;
 		}
@@ -247,5 +248,14 @@ namespace HomeAssistant.Core.Services
 
 			return model;
         }
-    }
+
+		public async Task DismissAllNotificationsForUser(string userId)
+		{
+			var notifications = await _dbcontext.NotificationsUsers.Where(x => x.UserId == userId).ToListAsync();
+
+			notifications.ForEach(x => x.IsDismissed = true);
+
+			await _dbcontext.SaveChangesAsync();
+		}
+	}
 }

@@ -1,9 +1,8 @@
-function fetchTelemetryData() {
+async function fetchTelemetryData() {
 
-    fetch('/api/HomeTelemetry/data')
+    await fetch('/api/HomeTelemetry/data')
         .then(r =>r.json())
         .then(json => {
-            console.log(json);
             if (json.status == 501) {
                 return;
             }
