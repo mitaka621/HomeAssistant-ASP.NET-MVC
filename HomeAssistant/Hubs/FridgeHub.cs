@@ -1,5 +1,7 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Models.Notification;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -13,17 +15,20 @@ namespace HomeAssistant.Hubs
 		private readonly IProductService _productService;
 		private readonly IHubContext<NotificationsHub> _notificationHubContext;
 		private readonly INotificationService _notificationService;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public FridgeHub(IProductService productService, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService)
+		public FridgeHub(IProductService productService, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService, IHttpContextAccessor httpContextAccessor)
 		{
 			_productService = productService;
 			_notificationHubContext = notificationHubContext;
 			_notificationService = notificationService;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public async Task DecreaseProductQuantity(int productId)
 		{
-			var newCount=await _productService.DecreaseQuantityByOne(productId);
+			
+			await _productService.DecreaseQuantityByOne(productId);
 
 			var product = await _productService.GetProduct(productId);
 
@@ -34,20 +39,35 @@ namespace HomeAssistant.Hubs
 				 "/Fridge/DecreaseProductQuantity",
 			GetUserId());
 
-			await Clients
+
+
+			_ = Clients
 				.AllExcept(Context.ConnectionId)
 				.SendAsync("UpdateProductQuantity", productId, false);
 
-			await _notificationHubContext.Clients
+			var httpContext = _httpContextAccessor.HttpContext;
+			_ = _notificationHubContext.Clients
 				.AllExcept(Context.ConnectionId)
-				.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
-
+				.SendAsync("PushNotfication", new NotificationViewModel()
+				{
+					Id = notificationId,
+					CreatedOn = DateTime.Now,
+					Description = "Remaining: " + product.Count,
+					Invoker = new NotificationUserViewModel()
+					{
+						Id = GetUserId(),
+						FirstName = Context.User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
+						Photo = httpContext.Items["ProfilePicture"] as byte[] ?? new byte[0]
+					},
+					Source= "Fridge",
+					Title= product.Name + " removed from fridge"
+				});
 		}
 
 		public async Task IncreaseProductQuantity(int productId)
 		{
-			
-			var newCount=await _productService.IncreaseQuantityByOne(productId);
+
+			await _productService.IncreaseQuantityByOne(productId);
 
 			var product = await _productService.GetProduct(productId);
 
@@ -59,13 +79,28 @@ namespace HomeAssistant.Hubs
 			GetUserId());
 
 
-			await Clients
+			_ = Clients
 				.AllExcept(Context.ConnectionId)
 				.SendAsync("UpdateProductQuantity", productId, true);
 
-			await _notificationHubContext.Clients
+			var httpContext = _httpContextAccessor.HttpContext;
+			_ = _notificationHubContext.Clients
 				.AllExcept(Context.ConnectionId)
-				.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+				.SendAsync("PushNotfication", new NotificationViewModel()
+				{
+					Id = notificationId,
+					CreatedOn = DateTime.Now,
+					Description = "Product Quantity: " + product.Count,
+					Invoker = new NotificationUserViewModel()
+					{
+						Id = GetUserId(),
+						FirstName = Context.User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
+						Photo= httpContext.Items["ProfilePicture"] as byte[]??new byte[0]
+					},
+					Source = "Fridge",
+					Title =product.Name + " added to fridge",
+				});
+			
 		}
 
 		private string GetUserId()

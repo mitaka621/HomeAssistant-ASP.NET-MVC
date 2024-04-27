@@ -346,7 +346,7 @@ namespace HomeAssistant.Core.Services
 			var shoppingLists = await _dbcontext.ShoppingLists
 				.AsNoTracking()
 				.Take(20)
-				.Where(x => x.UserId != userId && x.IsStarted)
+				.Where(x => x.UserId != userId && x.IsStarted &&!x.User.IsDeleted)
 				.Select(sl => new ShoppingListViewModel()
 				{
 					UserId = sl.UserId,

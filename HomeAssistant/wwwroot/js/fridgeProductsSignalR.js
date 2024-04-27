@@ -23,7 +23,7 @@ connection.start().catch(function (err) {
     return console.error(err.toString());
 });
 
-function IncreaseProduct(productId) {
+async function IncreaseProduct(productId) {
     var currentProduct = document.querySelector("div#p" + productId);
 
     var productsCount = parseInt(currentProduct.querySelector(".product-count").textContent);
@@ -41,7 +41,9 @@ function IncreaseProduct(productId) {
 
     currentProduct.querySelector(".product-count").textContent = productsCount + 1;
 
-    connection
+    console.log("here");
+
+    await connection
         .invoke("IncreaseProductQuantity", productId)
         .catch(function (error) {
             currentProduct.classList += (" alert alert-danger");
@@ -49,7 +51,7 @@ function IncreaseProduct(productId) {
         });
 }
 
-function DecreaseProduct(productId) {
+async function DecreaseProduct(productId) {
     var currentProduct = document.querySelector("div#p" + productId);
 
     var productsCount = parseInt(currentProduct.querySelector(".product-count").textContent);
@@ -71,7 +73,7 @@ function DecreaseProduct(productId) {
 
     currentProduct.querySelector(".product-count").textContent = productsCount - 1;
 
-    connection
+    await connection
         .invoke("DecreaseProductQuantity", productId)
         .catch(function (error) {
             currentProduct.classList += (" alert alert-danger");
