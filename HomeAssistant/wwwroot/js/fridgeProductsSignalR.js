@@ -3,8 +3,6 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/fridgeHub").build(
 connection.on("UpdateProductQuantity", function (productId, shouldIncrease) {
     var currentProduct = document.querySelector("div#p" + productId);
 
-    console.log("here");
-
     if (currentProduct) {
 
         var productsCount = parseInt(currentProduct.querySelector(".product-count").textContent);
@@ -17,6 +15,17 @@ connection.on("UpdateProductQuantity", function (productId, shouldIncrease) {
         }
         
     }
+});
+
+connection.on("RequestLimitReached", function () {
+    var checkbox = document.querySelector(`input[onchange='togleInstantProductChange(this);']`);
+
+    checkbox.checked = false;
+    checkbox.disabled = true;
+
+    document.querySelectorAll(".action-btn").forEach(btn => {
+        btn.setAttribute("onclick", `CountProducts(this)`)
+    });
 });
 
 connection.start().catch(function (err) {
@@ -41,13 +50,12 @@ async function IncreaseProduct(productId) {
 
     currentProduct.querySelector(".product-count").textContent = productsCount + 1;
 
-    console.log("here");
-
     await connection
         .invoke("IncreaseProductQuantity", productId)
         .catch(function (error) {
             currentProduct.classList += (" alert alert-danger");
             currentProduct.querySelector(".product-count").style.color = "orange";
+            currentProduct.querySelector(".product-count").textContent = productsCount;
         });
 }
 
@@ -71,6 +79,10 @@ async function DecreaseProduct(productId) {
         setTimeout(() => currentProduct.remove(), 600);
     }
 
+    if (productsCount ===0) {
+
+        return;
+    }
     currentProduct.querySelector(".product-count").textContent = productsCount - 1;
 
     await connection
@@ -78,5 +90,62 @@ async function DecreaseProduct(productId) {
         .catch(function (error) {
             currentProduct.classList += (" alert alert-danger");
             currentProduct.querySelector(".product-count").style.color = "orange";
+            currentProduct.querySelector(".product-count").textContent = productsCount;
         });
+}
+
+let prodtoChnageCount = 0;
+function CountProducts(e) {
+    document.querySelector(".save-message-container").style.display = "flex";
+    window.onbeforeunload = function () {
+        return true;
+    };
+
+    var product = e.parentElement.parentElement
+    var counter = product.querySelector(".product-count");
+
+    counter.style.color = "orange";
+    counter.style.fontWeight = "700";
+
+    let count = parseInt(counter.textContent);
+
+    if (e.classList.contains("min")) {
+        if (count===0) {
+            return;
+        }
+
+        counter.textContent = --count;
+    }
+    else {
+        counter.textContent = ++count;
+    }
+
+    var existingInput=document.getElementById("i" + e.parentElement.parentElement.id.split("p")[1]);
+
+    if (existingInput) {
+        existingInput.setAttribute("value", `${count}`);
+        return;
+    }
+
+    document.querySelector(".multiple-products-update").innerHTML += `
+        <input hidden name="products[${prodtoChnageCount}].Key" value="${e.parentElement.parentElement.id.split("p")[1]}" />
+		<input hidden id="i${e.parentElement.parentElement.id.split("p")[1]}" name="products[${prodtoChnageCount}].Value" value="${count}" />`;   
+    prodtoChnageCount++;
+
+}
+
+function togleInstantProductChange(checkbox) {
+
+    if (checkbox.checked == true) {
+        location.reload();
+    } else {
+        document.querySelectorAll(".action-btn").forEach(btn => {
+            btn.setAttribute("onclick", `CountProducts(this)`)
+        });
+    }
+}
+
+function reload() {
+    window.onbeforeunload = null;
+    location.reload();
 }

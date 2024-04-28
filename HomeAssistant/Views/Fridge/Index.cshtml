@@ -24,8 +24,16 @@
 		</tbody>
 	</table>
 </div>
-
+<div class="save-message-container">
+	<div class="shadow-outline"></div>
+	<h2>You have made changes to one or more products in the fridge. Save?</h2>
+	<form class="multiple-products-update" method="post" asp-controller="Fridge" asp-action="UpdateMultipleQuantities">
+		<button class="submit-hidden-form btn btn-primary" onclick="window.onbeforeunload = null;" type="submit">Save</button>
+		<button class="btn btn-danger" type="button" onclick="reload()">Cancel</button>
+	</form>
+</div>
 <div class="main-container">
+	
 	<div class="outer-layer-fridge">
 		<div class="container-animation" style="@(ViewBag.Available ? "" : "max-height: 999px; ")">
 			@if (ViewBag.Available)
@@ -50,7 +58,13 @@
 					   class="btn @(ViewBag.Available ?"btn-outline-danger" : "btn-danger" )">
 						<p>Unavailable</p>
 					</a>
+					<div class="form-check form-switch">
+						<label class="form-check-label" for="flexSwitchCheckChecked">Instant product updates</label>
+						<input class="form-check-input" onchange='togleInstantProductChange(this);' type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+					</div>
 				</div>
+
+
 
 			</div>
 		</div>
@@ -120,6 +134,7 @@
 									@("-- g")
 								else
 									@(product.Weight + " g")
+
 							</p>
 							@{
 								var duration = DateTime.Now - product.AddedOn;
@@ -149,13 +164,13 @@
 							</figcaption>
 						</div>
 						<div class="right">
-							<button @(product.Count == 0 ? "disabled" : "") class="btn" onclick="DecreaseProduct(@product.Id)">
-									<img src="~/svg/minus-circle.svg" />
-								</button>
+							<button @(product.Count == 0 ? "disabled" : "") class="btn action-btn min" onclick="DecreaseProduct(@product.Id)">
+								<img src="~/svg/minus-circle.svg" />
+							</button>
 							<p class="product-count @(product.Count==0?"text-danger fw-bold":"")">@product.Count</p>
-							<button class="btn" onclick="IncreaseProduct(@product.Id)">
-									<img src="~/svg/plus-Circle.svg" />
-								</button>
+							<button class="btn action-btn plus" onclick="IncreaseProduct(@product.Id)">
+								<img src="~/svg/plus-Circle.svg" />
+							</button>
 						</div>
 					</div>
 				}

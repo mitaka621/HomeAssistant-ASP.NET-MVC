@@ -199,8 +199,28 @@ namespace HomeAssistant.Controllers
 			});
 		}
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateMultipleQuantities(Dictionary<int, int> products)
+		{
+			try
+			{
+				await _productService.UpdateMultipleProductsQuantities(products);
+			}
+			catch (Exception)
+			{
 
-		private string GetUserId()
+				throw;
+			}
+
+			return RedirectToAction(nameof(Index), new
+			{
+				ToastTitle = "Success",
+				ToastMessage = "Products updated!"
+			});
+		}
+
+
+        private string GetUserId()
 		{
 			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 		}

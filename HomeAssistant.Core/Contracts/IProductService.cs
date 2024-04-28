@@ -25,5 +25,7 @@ namespace HomeAssistant.Core.Contracts
 
 		Task EditProduct(string userId, ProductFormViewModel productViewModel);
 
+		Task UpdateMultipleProductsQuantities(Dictionary<int, int> products);
+
 	}
 }

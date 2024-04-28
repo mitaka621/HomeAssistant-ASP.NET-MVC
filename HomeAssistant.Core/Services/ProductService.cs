@@ -270,5 +270,17 @@ namespace HomeAssistant.Core.Services
 
 			await _dbContext.SaveChangesAsync();
 		}
+
+		public async Task UpdateMultipleProductsQuantities(Dictionary<int, int> products)
+		{
+			var dbProducts=await _dbContext.Products.Where(x => products.Keys.Contains(x.Id)).ToListAsync();
+
+            foreach (var item in dbProducts)
+            {
+				item.Count = products[item.Id];
+			}
+
+			await _dbContext.SaveChangesAsync();
+        }
 	}
 }

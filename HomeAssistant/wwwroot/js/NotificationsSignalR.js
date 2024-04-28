@@ -117,8 +117,6 @@ function LoadMoreMessages() {
 
             skip += take;
 
-			console.log(data);
-
             data.forEach(notification => {
                 const notificationElement = createNotificationElement(notification);
                 notificationsContainer.appendChild(notificationElement);				
