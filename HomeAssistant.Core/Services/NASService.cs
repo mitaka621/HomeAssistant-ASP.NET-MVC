@@ -151,10 +151,11 @@ namespace HomeAssistant.Core.Services
 
 				await Task.WhenAll(tasks);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
-				_logger.LogInformation("Host has not been found. Timeout Reached");
+				_logger.LogInformation(ex,"Host has not been found. Timeout Reached");
 			}
+
 			        
             foreach (var request in tasks)
             {

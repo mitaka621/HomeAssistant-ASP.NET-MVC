@@ -20,17 +20,23 @@ NAS - <span>@ViewBag.Path</span>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.OrderBy(x=>x.IsFile))
+        @if (@Model.First().DisplayName == "Go Back..")
+        {
+            <tr>
+                <td> <img src="~/svg/arrow-back-solid-svgrepo-com.svg" width="50" height="50"> <a asp-controller="NAS" asp-action="Index" asp-route-path="@Model.First().Path">@Model.First().DisplayName</a></td>
+            </tr>
+        }      
+        @foreach (var item in Model.Skip(1).OrderBy(x=>x.IsFile))
         {
             if (item.IsFile==1)
             {
                 <tr>
-                    <td><a asp-controller="NAS" asp-action="DownloadFile" asp-route-path="@item.Path">@item.DisplayName</a></td>
+                    <td> <img src="~/svg/file.svg" width="50" height="50"> <a asp-controller="NAS" asp-action="DownloadFile" asp-route-path="@item.Path">@item.DisplayName</a></td>
                 </tr>
             }
             else{
             <tr>
-                <td><a asp-controller="NAS" asp-action="Index" asp-route-path="@item.Path">@item.DisplayName</a></td>
+                <td><img src="~/svg/folder.svg" width="50" height="50"><a asp-controller="NAS" asp-action="Index" asp-route-path="@item.Path">@item.DisplayName</a></td>
             </tr>
             }
         }
