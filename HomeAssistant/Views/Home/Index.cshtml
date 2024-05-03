@@ -63,6 +63,13 @@
 				<img src="~/svg/message.png" />
 				<span>Messeges</span>
 			</a>
+			@if (User.IsInRole("NASUser"))
+			{
+				<a class="btn bg-secondary" asp-controller="NAS" asp-action="Index">
+					<img src="~/svg/server-svgrepo-com.svg" />
+					<span class="text-light">NAS</span>
+				</a>
+			}
 		</div>
 	</div>
 

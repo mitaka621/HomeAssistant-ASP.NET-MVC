@@ -1,0 +1,40 @@
+﻿@using HomeAssistant.Core.Models.NAS
+@model IEnumerable<DirViewModel>
+
+@{
+	Dictionary<string, string> previousPages = new();
+
+	previousPages.Add($"NAS", "#");
+	ViewBag.previousPages = previousPages;
+}
+
+<h1>
+NAS - <span>@ViewBag.Path</span>
+</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">File/Dir</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderBy(x=>x.IsFile))
+        {
+            if (item.IsFile==1)
+            {
+                <tr>
+                    <td><a asp-controller="NAS" asp-action="DownloadFile" asp-route-path="@item.Path">@item.DisplayName</a></td>
+                </tr>
+            }
+            else{
+            <tr>
+                <td><a asp-controller="NAS" asp-action="Index" asp-route-path="@item.Path">@item.DisplayName</a></td>
+            </tr>
+            }
+        }
+        
+      
+    </tbody>
+</table>

@@ -1,0 +1,22 @@
+﻿@using System.Text
+@model string
+
+<script>
+        // Create a blob from the file content
+        var blob = new Blob([@Html.Raw(Json.Serialize(Model))]);
+
+        // Create a temporary URL for the blob
+        var url = window.URL.createObjectURL(blob);
+
+        // Create a link element
+        var link = document.createElement("a");
+        link.href = url;
+
+        // Append the link to the body and click it to trigger the download
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up the temporary URL
+        window.URL.revokeObjectURL(url);
+    
+</script>

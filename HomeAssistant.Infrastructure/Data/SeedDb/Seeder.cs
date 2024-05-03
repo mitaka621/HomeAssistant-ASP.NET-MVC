@@ -13,6 +13,7 @@ namespace HomeAssistant.Infrastructure.Data.SeedDb
 		string adminGUID = "e2246145-9dd8-4902-ae41-68096b5ca738";
 		string adminRoleGUID = "f23e50cd-3de0-4420-ae9b-6ce529f3128f";
 		string standardUserGUID = "7e2d4805-c978-4600-9663-a9cafa2a54be";
+		string nasRoleGuid = "af0ff461-d2f4-43e6-a50e-14f73c120761";
 
 		public HomeAssistantUser CreateAdminUser()
 		{
@@ -50,7 +51,14 @@ namespace HomeAssistant.Infrastructure.Data.SeedDb
 					NormalizedName = "Admin",
 					Id = adminRoleGUID,
 					ConcurrencyStamp=adminRoleGUID,
-				}
+				},
+				new IdentityRole()
+				{
+					Name= "NASUser",
+					NormalizedName = "NASUSER",
+					Id = nasRoleGuid,
+					ConcurrencyStamp=nasRoleGuid,
+				},
 			};
 		}
 

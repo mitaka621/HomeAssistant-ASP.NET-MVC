@@ -59,6 +59,9 @@ builder.Services
 builder.Services
 	.AddHttpClient<IHomeTelemetryService, HomeTelemetryService>();
 
+builder.Services
+    .AddHttpClient<INASService, NASService>();
+
 
 
 var app = builder.Build();
