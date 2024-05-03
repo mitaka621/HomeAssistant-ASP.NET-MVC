@@ -137,7 +137,9 @@ namespace HomeAssistant.Core.Services
 
 			tempClient.Timeout = TimeSpan.FromMilliseconds(50);
 
-			List<Task> tasks = new();
+			List<Task<HttpResponseMessage>> tasks = new();
+
+			
 
 			try
 			{
@@ -145,8 +147,8 @@ namespace HomeAssistant.Core.Services
 				{
 					HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"http://{ip + i}:3000/");
 					request.Headers.Add("token", Token);
-
-					tasks.Add(tempClient.SendAsync(request));
+                      
+                    tasks.Add(tempClient.SendAsync(request));
 				}
 
 				await Task.WhenAll(tasks);
