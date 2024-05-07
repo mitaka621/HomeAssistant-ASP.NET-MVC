@@ -1,4 +1,5 @@
-﻿@using HomeAssistant.Core.Models.NAS
+﻿@using HomeAssistant.Core.Constants
+@using HomeAssistant.Core.Models.NAS
 @model IEnumerable<DirViewModel>
 
 @{
@@ -9,38 +10,55 @@
 }
 
 <h1>
-NAS - <span>@ViewBag.Path</span>
+	NAS - <span id="path">@ViewBag.Path</span>
 </h1>
 
 <table class="table">
-    <thead>
-        <tr>
-            <th scope="col">File/Dir</th>
+	<thead>
+		<tr>
+			<th scope="col" style="width:80% !important; max-width:70%;">File/Dir</th>
+			<th scope="col" style="width:10% !important; text-align:center">Size</th>
+			<th scope="col" style="width:10% !important; text-align:center">Date modified</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (@Model.First().DisplayName == "Go Back..")
+		{
+			<tr>
+				<td> <img src="~/svg/arrow-back-solid-svgrepo-com.svg" width="50" height="50"> <a asp-controller="NAS" asp-action="Index" asp-route-path="@Model.First().Path">@Model.First().DisplayName</a></td>
+				<td></td>
+				<td></td>
+			</tr>
+		}
+		@foreach (var item in Model.Skip(1).OrderBy(x => x.IsFile))
+		{
+			if (item.IsFile == 1)
+			{
+				<tr>
+					<td style="overflow:hidden;text-overflow: ellipsis;"> <img src="~/svg/file.svg" width="50" height="50"> <a asp-controller="NAS" asp-action="DownloadFile" asp-route-path="@item.Path">@item.DisplayName</a></td>
+					<td style="text-align:center"> @String.Format($"{item.Size:F2}") MB</td>
+					<td style="text-align:center"> @item.DateModified.ToString(DataValidationConstants.DateTimeFormat)</td>
+				</tr>
+			}
+			else
+			{
+				<tr>
+					<td style="overflow:hidden; text-overflow: ellipsis !important;"><img src="~/svg/folder.svg" width="50" height="50"><a asp-controller="NAS" asp-action="Index" asp-route-path="@item.Path">@item.DisplayName</a></td>
+					<td></td>
+					<td></td>
+				</tr>
+			}
+		}
 
-        </tr>
-    </thead>
-    <tbody>
-        @if (@Model.First().DisplayName == "Go Back..")
-        {
-            <tr>
-                <td> <img src="~/svg/arrow-back-solid-svgrepo-com.svg" width="50" height="50"> <a asp-controller="NAS" asp-action="Index" asp-route-path="@Model.First().Path">@Model.First().DisplayName</a></td>
-            </tr>
-        }      
-        @foreach (var item in Model.Skip(1).OrderBy(x=>x.IsFile))
-        {
-            if (item.IsFile==1)
-            {
-                <tr>
-                    <td> <img src="~/svg/file.svg" width="50" height="50"> <a asp-controller="NAS" asp-action="DownloadFile" asp-route-path="@item.Path">@item.DisplayName</a></td>
-                </tr>
-            }
-            else{
-            <tr>
-                <td><img src="~/svg/folder.svg" width="50" height="50"><a asp-controller="NAS" asp-action="Index" asp-route-path="@item.Path">@item.DisplayName</a></td>
-            </tr>
-            }
-        }
-        
-      
-    </tbody>
+
+	</tbody>
 </table>
+<div class="spinner-container">
+	<div class="spinner-border" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="~/js/Nas.js"></script>
+}

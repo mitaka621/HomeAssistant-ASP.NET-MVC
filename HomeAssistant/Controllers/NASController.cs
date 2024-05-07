@@ -1,5 +1,6 @@
 ﻿using HomeAssistant.Core.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -34,9 +35,20 @@ namespace HomeAssistant.Controllers
 		{
 			var data = await _service.GetFileString(path);
 
+            if (data.Content.Headers.ContentLength.HasValue)
+            {
+				Response.Headers.SetCommaSeparatedValues("Content-Length", data.Content.Headers.ContentLength.Value.ToString());
+            }
+
             Stream stream = await data.Content.ReadAsStreamAsync();
-            return File(stream, "application/octet-stream", Path.GetFileName(path));
+
+            return File(stream, "application/octet-stream", Path.GetFileName(path),true);
         }
+
+		public async Task<IActionResult> GetFilesJson(string path,int skip,int take)
+		{
+			return Json((await _service.GetData(path, skip, take)).Skip(1));
+		}
 
     }
 }

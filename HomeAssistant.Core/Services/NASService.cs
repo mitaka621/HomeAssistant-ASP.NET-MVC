@@ -39,7 +39,7 @@ namespace HomeAssistant.Core.Services
 
         public string Token { get; set; } = string.Empty;
 
-        public async Task<IEnumerable<DirViewModel>?> GetData(string path)
+        public async Task<IEnumerable<DirViewModel>?> GetData(string path,int skip=0, int take=100)
         {
             if (!await CheckConnection())
             {
@@ -53,7 +53,7 @@ namespace HomeAssistant.Core.Services
             try
             {
                 var data = await httpClient
-                .GetStringAsync($"http://{currentHostIp}:3000/getDir?path=" + path);
+                .GetStringAsync($"http://{currentHostIp}:3000/getDir?path={path}&skip={skip}&take={take}" );
                 if (!String.IsNullOrEmpty(data))
                 {
                     return JsonSerializer.Deserialize<IEnumerable<DirViewModel>>(data);
@@ -155,7 +155,7 @@ namespace HomeAssistant.Core.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning(ex, "hi");
+                    _logger.LogWarning(ex, $"Error reaching http://{ip + i}:3000/ - NAS host is not there");
                 }
 
             }

@@ -18,5 +18,11 @@ namespace HomeAssistant.Core.Models.NAS
 
         [JsonPropertyName("isFile")]
         public int IsFile { get; set; }
+
+        [JsonPropertyName("size")]
+        public double Size { get; set; }=0;
+
+        [JsonPropertyName("dateModified")]
+        public DateTime DateModified { get; set; }
     }
 }

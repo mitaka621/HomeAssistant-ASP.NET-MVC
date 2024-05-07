@@ -9,7 +9,7 @@ namespace HomeAssistant.Core.Contracts
 {
 	public interface INASService
 	{
-		Task<IEnumerable<DirViewModel>?> GetData(string path);
+		Task<IEnumerable<DirViewModel>?> GetData(string path,int skip= 0, int take = 100);
 
 		Task<HttpResponseMessage?> GetFileString(string path);
 
