@@ -7,15 +7,18 @@ function LoadMoreMessages() {
     fetch(`NAS/GetFilesJson?skip=${skip}&take=${take}&path=${document.getElementById("path").textContent}`)
         .then(r => r.json())
         .then(data => {
-            document.querySelector(".spinner-container").remove();
 
+            if (document.querySelector(".spinner-container")) {
+                document.querySelector(".spinner-container").remove();
+            }
+          
             if (data.length === 0 || !document.getElementById("path").textContent) {
                 return;
             }
 
             skip += take;
 
-           
+
 
             data.forEach(item => {
 
@@ -31,7 +34,7 @@ function LoadMoreMessages() {
 
                 const formattedDateTime = item.dateModified.toLocaleString('en-GB', options);
 
-                var tbody=document.querySelector("tbody");
+                var tbody = document.querySelector("tbody");
 
                 if (item.isFile === 1) {
                     const row = document.createElement('tr');
@@ -65,7 +68,7 @@ function LoadMoreMessages() {
                     const cell2 = document.createElement('td');
                     row.appendChild(cell2);
                     const cell3 = document.createElement('td');
-                    row.appendChild(cell3); 
+                    row.appendChild(cell3);
 
                     tbody.appendChild(row);
                 }
@@ -78,6 +81,11 @@ function LoadMoreMessages() {
 
             let observer = new IntersectionObserver(handleIntersection, options);
             observer.observe(document.querySelector(".spinner-container"));
+        })
+        .catch(() => {
+            if (document.querySelector(".spinner-container")) {
+                document.querySelector(".spinner-container").remove();
+            }
         });
 }
 
@@ -96,4 +104,72 @@ function handleIntersection(entries, observer) {
             LoadMoreMessages();
         }
     });
+}
+
+function GetPhotos() {
+    document.querySelector("table").remove();
+
+    document.querySelector("main").innerHTML += `<div class="main-photo-container"></div>`;
+
+    skip = 0;
+
+
+    fetch(`NAS/GetFilesJson?skip=${skip}&take=${take}&path=${document.getElementById("path").textContent}`)
+        .then(r => r.json())
+        .then(async data => {
+            if (document.querySelector(".spinner-container")) {
+                document.querySelector(".spinner-container").remove();
+            }
+        
+
+            if (data.length === 0 || !document.getElementById("path").textContent) {
+                return;
+            }
+
+            skip += take;
+            let promises = [];
+            for (var i = 0; i < data.length; i++) {
+                await loadImage(data[i]);           
+            }
+
+            document.querySelectorAll("img.photo").forEach(x => {
+                x.src = "/nas/getimage?path=" + x.id;
+            })
+          
+        });
+
+   
+
+}
+
+function loadImage(item) {
+    return new Promise((resolve, reject) => {
+        const validFormats = ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'];
+        const ext = item.path.slice(item.path.lastIndexOf('.')).toLowerCase();
+
+        if (item.isFile !== 1 || !validFormats.includes(ext)) {
+            resolve(); // Skip loading invalid or non-file items
+        } else {
+            const currentImg = document.createElement("img");
+            currentImg.id = item.path;
+            currentImg.classList.add("photo");
+
+            currentImg.onload = () => {
+                resolve(); // Resolve the promise when the image is loaded
+            };
+
+            currentImg.onerror = () => {
+                console.error(`Failed to load image: ${item.path}`);
+                resolve(); // Resolve the promise even if the image fails to load
+            };
+
+            currentImg.src = "/svg/loading.gif";
+            document.querySelector(".main-photo-container").appendChild(currentImg);
+        }
+    });
+}
+
+function DownloadImg(path) {
+        return fetch(`/NAS/GetImage?path=${path}`);
+    
 }

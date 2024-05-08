@@ -5,9 +5,11 @@
 @{
 	Dictionary<string, string> previousPages = new();
 
-	previousPages.Add($"NAS", "#");
+	previousPages.Add($"NAS", "/nas/index");
 	ViewBag.previousPages = previousPages;
 }
+
+<button type="button" class="btn btn-primary" onclick="GetPhotos()">Photo Viewer</button>
 
 <h1>
 	NAS - <span id="path">@ViewBag.Path</span>
@@ -34,7 +36,7 @@
 		{
 			if (item.IsFile == 1)
 			{
-				<tr>
+				<tr class="item">
 					<td style="overflow:hidden;text-overflow: ellipsis;"> <img src="~/svg/file.svg" width="50" height="50"> <a asp-controller="NAS" asp-action="DownloadFile" asp-route-path="@item.Path">@item.DisplayName</a></td>
 					<td style="text-align:center"> @String.Format($"{item.Size:F2}") MB</td>
 					<td style="text-align:center"> @item.DateModified.ToString(DataValidationConstants.DateTimeFormat)</td>
@@ -42,7 +44,7 @@
 			}
 			else
 			{
-				<tr>
+				<tr class="item">
 					<td style="overflow:hidden; text-overflow: ellipsis !important;"><img src="~/svg/folder.svg" width="50" height="50"><a asp-controller="NAS" asp-action="Index" asp-route-path="@item.Path">@item.DisplayName</a></td>
 					<td></td>
 					<td></td>

@@ -100,13 +100,33 @@ namespace HomeAssistant.Core.Services
 
         }
 
-        private async Task<bool> CheckConnection()
+		public async Task<HttpResponseMessage?> GetPhoto(string path)
+		{
+			try
+			{
+				httpClient.Timeout = TimeSpan.FromSeconds(10);
+
+				var data = await httpClient
+				    .GetAsync($"http://{currentHostIp}:3000/getphoto?path=" + path);
+
+				return data;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogInformation(ex, $"Host {currentHostIp} unavailable. Trying to look for other host");
+
+				return null;
+			}
+
+		}
+
+		private async Task<bool> CheckConnection()
         {
             try
             {
                 HttpClient tempclient = new();
 
-                tempclient.Timeout = TimeSpan.FromSeconds(1);
+                tempclient.Timeout = TimeSpan.FromMilliseconds(50);
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"http://{currentHostIp}:3000/");
                 request.Headers.Add("token", Token);
 
@@ -147,7 +167,7 @@ namespace HomeAssistant.Core.Services
                     var result = await tempClient.SendAsync(request);
 
                 
-                    if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                    if (result.StatusCode == System.Net.HttpStatusCode.OK) 
                     {
                         currentHostIp = ip + i;
                         return true;

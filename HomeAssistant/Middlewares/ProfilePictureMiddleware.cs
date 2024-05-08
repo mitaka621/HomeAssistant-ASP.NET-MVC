@@ -2,6 +2,8 @@
 using HomeAssistant.Core.Services;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
+using System.Security.Claims;
 
 namespace HomeAssistant.Middlewares
 {
@@ -14,23 +16,24 @@ namespace HomeAssistant.Middlewares
 			_next = next;	
 		}
 
-		public async Task Invoke(HttpContext context, UserManager<HomeAssistantUser> userManager, IimageService _ImageService)
+		public async Task Invoke(HttpContext context, IimageService _ImageService,IMemoryCache _cache)
 		{
-			// Fetch the profile picture
-			var user = await userManager.GetUserAsync(context.User);
-            if (user==null)
-            {
-				await _next(context);
-				return;
+			if (!_cache.TryGetValue(GetUserId(context), out byte[] profilePicture))
+			{
+				profilePicture = await _ImageService.GetPFP(GetUserId(context));
+
+				_cache.Set(GetUserId(context), profilePicture, TimeSpan.FromMinutes(10)); 
+
 			}
 
-            byte[] profilePicture = await _ImageService.GetPFP(user.Id);
-
-			// Store the profile picture in the HttpContext.Items
 			context.Items["ProfilePicture"] = profilePicture;
 
-			// Continue processing the request pipeline
 			await _next(context);
+		}
+
+		private string GetUserId(HttpContext context)
+		{
+			return context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 		}
 	}
 }

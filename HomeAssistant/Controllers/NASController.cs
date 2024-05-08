@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace HomeAssistant.Controllers
 {
@@ -35,7 +36,7 @@ namespace HomeAssistant.Controllers
 		{
 			var data = await _service.GetFileString(path);
 
-            if (data.Content.Headers.ContentLength.HasValue)
+            if (data!=null&&data.Content.Headers.ContentLength.HasValue)
             {
 				Response.Headers.SetCommaSeparatedValues("Content-Length", data.Content.Headers.ContentLength.Value.ToString());
             }
@@ -45,9 +46,32 @@ namespace HomeAssistant.Controllers
             return File(stream, "application/octet-stream", Path.GetFileName(path),true);
         }
 
+		[HttpGet]
+		public async Task<IActionResult> GetImage(string path)
+		{
+			Stopwatch sw = Stopwatch.StartNew();
+			var data = await _service.GetPhoto(path);
+			
+            if (data!=null&&data.IsSuccessStatusCode)
+            {
+				byte[] imageBytes = await data.Content.ReadAsByteArrayAsync();
+
+				sw.Stop();
+				return File(imageBytes, "image/webp"); 
+
+			}
+
+			return StatusCode(503);
+		}
+
 		public async Task<IActionResult> GetFilesJson(string path,int skip,int take)
 		{
-			return Json((await _service.GetData(path, skip, take)).Skip(1));
+			var files = await _service.GetData(path, skip, take);
+            if (files!=null)
+            {
+				return Json(files.Skip(1));
+			}
+			return StatusCode(503);
 		}
 
     }
