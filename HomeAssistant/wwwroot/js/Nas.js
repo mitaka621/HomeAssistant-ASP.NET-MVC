@@ -62,7 +62,7 @@ function LoadMoreMessages() {
                     const cell1 = document.createElement('td');
                     cell1.style.overflow = 'hidden';
                     cell1.style.textOverflow = 'ellipsis';
-                    cell1.innerHTML = `<img src="/svg/folder.svg" width="50" height="50"><a href="/NAS?path=${item.path}}">${item.displayName}</a>`;
+                    cell1.innerHTML = `<img src="/svg/folder.svg" width="50" height="50"><a href="/NAS?path=${item.path}">${item.displayName}</a>`;
                     row.appendChild(cell1);
 
                     const cell2 = document.createElement('td');
@@ -106,13 +106,34 @@ function handleIntersection(entries, observer) {
     });
 }
 
-function GetPhotos() {
-    document.querySelector("table").remove();
+let options2 = {
+    root: null,
+    rootMargin: '2000px',
+    threshold: 0.1
+};
 
-    document.querySelector("main").innerHTML += `<div class="main-photo-container"></div>`;
 
-    skip = 0;
+function handleIntersectionForPhoto(entries, observer) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            var photosToSkip = skip + take;
+            GetPhotos(photosToSkip);
+        }
+    });
+}
 
+let photosOnRow = [];
+function GetPhotos(skipnum = 0) {
+    if (document.querySelector("button.viewer")) {
+        document.querySelector("button.viewer").remove();
+        document.querySelector("table").remove();
+        document.querySelector("main").innerHTML += `<button class="btn btn-primary" type="button" onclick="location.reload()">Go to File Explorer</button>
+    <div class="main-photo-container"></div>`;
+       
+    }
+
+    skip = skipnum;
+   
 
     fetch(`NAS/GetFilesJson?skip=${skip}&take=${take}&path=${document.getElementById("path").textContent}`)
         .then(r => r.json())
@@ -121,50 +142,133 @@ function GetPhotos() {
                 document.querySelector(".spinner-container").remove();
             }
         
-
             if (data.length === 0 || !document.getElementById("path").textContent) {
                 return;
             }
-
-            skip += take;
-            let promises = [];
             for (var i = 0; i < data.length; i++) {
-                await loadImage(data[i]);           
+                await loadImage(data[i]);    
+               
             }
+
+            let promises = [];
 
             document.querySelectorAll("img.photo").forEach(x => {
                 x.src = "/nas/getimage?path=" + x.id;
-            })
-          
+
+                promises.push(new Promise((resolve, reject) => {
+                    x.onload = () => {
+                        x.classList.remove("loading");
+                        resolve();
+                    }
+                }));
+            });
+
+            await Promise.all(promises);
+
+         
+
+            document.querySelector("main").innerHTML += `<div class="spinner-container">
+				<div class="spinner-border" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
+			</div>`;
+
+            let observer2 = new IntersectionObserver(handleIntersectionForPhoto, options2);
+            observer2.observe(document.querySelector(".spinner-container"));
         });
-
-   
-
 }
 
+let counter = 0;
 function loadImage(item) {
+    
+
     return new Promise((resolve, reject) => {
+       
         const validFormats = ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'];
         const ext = item.path.slice(item.path.lastIndexOf('.')).toLowerCase();
 
         if (item.isFile !== 1 || !validFormats.includes(ext)) {
-            resolve(); // Skip loading invalid or non-file items
+            resolve();
         } else {
             const currentImg = document.createElement("img");
+            
             currentImg.id = item.path;
-            currentImg.classList.add("photo");
+            currentImg.classList = "photo loading";
 
             currentImg.onload = () => {
-                resolve(); // Resolve the promise when the image is loaded
+                resolve();
             };
 
             currentImg.onerror = () => {
                 console.error(`Failed to load image: ${item.path}`);
-                resolve(); // Resolve the promise even if the image fails to load
+                resolve(); 
             };
 
             currentImg.src = "/svg/loading.gif";
-            document.querySelector(".main-photo-container").appendChild(currentImg);
+
+            const btn = document.createElement("button");
+
+            btn.id = `b${counter++}`;
+
+            btn.classList = "btn btn-add";
+            let reducePercentage = (20000.0 / item.height) / 100;
+
+            let width = item.width * reducePercentage;
+            let height = item.height * reducePercentage;
+
+            let spaceAvb = document.querySelector(".main-photo-container").getBoundingClientRect().width;
+            spaceAvb -= (photosOnRow.length - 1)*5;
+            spaceAvb -= photosOnRow.reduce((total, current) => total + current.width, 0);
+
+            let shouldWriteToRow = true;
+
+            if (spaceAvb < 110) {
+               
+                photosOnRow.forEach(x => {
+                   
+                    let newWidth = x.width + (spaceAvb / photosOnRow.length);
+
+                   
+
+                    document.getElementById(x.obj).style.width = `${newWidth}px`;
+                    document.getElementById(x.obj).querySelector("img").style.width = `${newWidth}px`;
+                })
+
+               
+                photosOnRow = [];
+            }
+            else if (spaceAvb < width) {
+
+
+                shouldWriteToRow = false;
+
+                var spaceToReduce = ((photosOnRow.length) * 5) + photosOnRow.reduce((total, current) => total + current.width, 0) + width - document.querySelector(".main-photo-container").getBoundingClientRect().width;
+
+                width -= (spaceToReduce / (photosOnRow.length + 1));
+
+                
+
+                photosOnRow.forEach(x => {
+
+                    let newWidth = x.width - (spaceToReduce / (photosOnRow.length+1));
+
+                    document.getElementById(x.obj).style.width = `${newWidth}px`;
+                })
+
+                
+                photosOnRow = [];
+            }
+
+
+            btn.style.width = `${width}px`;
+            btn.style.height = `${height}px`;
+            btn.appendChild(currentImg);
+            document.querySelector(".main-photo-container").appendChild(btn);
+
+            if (shouldWriteToRow) {
+                photosOnRow.push({ obj: btn.id, width: width, height: height });
+            }
+           
         }
     });
 }

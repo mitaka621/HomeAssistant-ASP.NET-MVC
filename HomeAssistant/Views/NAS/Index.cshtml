@@ -9,7 +9,9 @@
 	ViewBag.previousPages = previousPages;
 }
 
-<button type="button" class="btn btn-primary" onclick="GetPhotos()">Photo Viewer</button>
+<link rel="stylesheet" href="~/css/Nas.css" asp-append-version="true" />
+
+<button type="button" class="btn btn-primary viewer" onclick="GetPhotos()">Photo Viewer</button>
 
 <h1>
 	NAS - <span id="path">@ViewBag.Path</span>

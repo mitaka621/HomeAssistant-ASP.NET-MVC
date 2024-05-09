@@ -24,5 +24,11 @@ namespace HomeAssistant.Core.Models.NAS
 
         [JsonPropertyName("dateModified")]
         public DateTime DateModified { get; set; }
+
+		[JsonPropertyName("width")]
+		public int Width { get; set; } = 0;
+
+		[JsonPropertyName("height")]
+		public int Height { get; set; } = 0;
     }
 }
