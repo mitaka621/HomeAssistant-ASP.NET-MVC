@@ -59,3 +59,9 @@ main svg {
     
     padding: 1em;
 }
+
+.title-section{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
