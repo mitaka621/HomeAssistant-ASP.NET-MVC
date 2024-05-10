@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace HomeAssistant.Controllers
 				return StatusCode(503);
 			}
 
-
+			ViewBag.currentHostIP = NASService.currentHostIp;
             return View(data);
 		}
 
@@ -47,17 +48,22 @@ namespace HomeAssistant.Controllers
         }
 
 		[HttpGet]
-		public async Task<IActionResult> GetImage(string path)
+		public async Task<IActionResult> GetImage(string path,bool isFull=false)
 		{
-			Stopwatch sw = Stopwatch.StartNew();
-			var data = await _service.GetPhoto(path);
-			
+			HttpResponseMessage? data =await _service.GetPhoto(path, isFull);
+
+            if (isFull&& data!=null)
+            {
+				 Stream stream = await data.Content.ReadAsStreamAsync();
+
+				return File(stream, "application/octet-stream", Path.GetFileName(path), true);
+			}
+
             if (data!=null&&data.IsSuccessStatusCode)
             {
 				byte[] imageBytes = await data.Content.ReadAsByteArrayAsync();
 
-				sw.Stop();
-				return File(imageBytes, "image/webp"); 
+				return File(imageBytes, "image/webp");
 
 			}
 
@@ -73,6 +79,19 @@ namespace HomeAssistant.Controllers
 			}
 			return StatusCode(503);
 		}
+
+		public async Task<IActionResult> GetPrevAndNextPathsForPhoto(string path)
+		{
+			var data = await _service.GetPrevAndNextPhotoLocation(path);
+
+            if (data!=null)
+            {
+				return Json(data);
+            }
+
+			return StatusCode(500);
+
+        }
 
     }
 }

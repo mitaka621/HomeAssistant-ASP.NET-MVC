@@ -16,3 +16,46 @@ img.loading{
     align-items: center;
     background-color:#ecf0f1
 }
+
+.popup-img {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9); /* Semi-transparent background */
+    z-index: 9999; /* Ensure it's above other content */
+
+    padding:1em;
+}
+div.popup-img > img {
+    max-height: 90%;
+    max-width: 90%;
+}
+a.close-btn {
+    position: absolute;
+    top: 2vh;
+    left: 95vw;
+}
+main svg {
+    width: 2em;
+    fill: white;
+   
+}
+.prev-btn, .next-btn {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.next-btn {
+    justify-content:flex-end;
+}
+.prev-btn svg, .next-btn svg {
+    width: 5em;
+    
+    padding: 1em;
+}

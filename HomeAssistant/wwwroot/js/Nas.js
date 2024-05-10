@@ -208,7 +208,10 @@ function loadImage(item) {
 
             const btn = document.createElement("button");
 
+          
             btn.id = `b${counter++}`;
+ 
+            btn.setAttribute("onclick", "DisplayImageFull(this)");
 
             btn.classList = "btn btn-add";
             let reducePercentage = (20000.0 / item.height) / 100;
@@ -265,6 +268,8 @@ function loadImage(item) {
             btn.appendChild(currentImg);
             document.querySelector(".main-photo-container").appendChild(btn);
 
+          
+
             if (shouldWriteToRow) {
                 photosOnRow.push({ obj: btn.id, width: width, height: height });
             }
@@ -274,6 +279,185 @@ function loadImage(item) {
 }
 
 function DownloadImg(path) {
-        return fetch(`/NAS/GetImage?path=${path}`);
+        return fetch(`/NAS/GetImage?path=${path}`);  
+}
+
+async function DisplayImageFull(e) {
+
+    disableScroll();
+
+    let closeBtn = document.createElement("a");
+
+    closeBtn.classList = "btn close-btn";
+    closeBtn.setAttribute("onclick", "closePopUp(this)");
+
+    closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>`;
+
+    let div = document.createElement("div");
+    div.appendChild(closeBtn);
+    div.classList = "popup-img";
+
+    let img = document.createElement("img")
+
+    let actualimg = e.querySelector("img");
+
+    let nextBtn, prevBtn;
+
+    await fetch("/Nas/GetPrevAndNextPathsForPhoto?path=" + actualimg.id)
+        .then(x => x.json())
+        .then(x => {
+
+            if (x.nextImg) {
+                nextBtn = document.createElement("a");
+
+                nextBtn.classList = "btn next-btn";
+                nextBtn.setAttribute("onclick", `OpenNextPhotoFull(this)`);
+                nextBtn.id = x.nextImg;
+
+                nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM294.6 135.1c-4.2-4.5-10.1-7.1-16.3-7.1C266 128 256 138 256 150.3V208H160c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32h96v57.7c0 12.3 10 22.3 22.3 22.3c6.2 0 12.1-2.6 16.3-7.1l99.9-107.1c3.5-3.8 5.5-8.7 5.5-13.8s-2-10.1-5.5-13.8L294.6 135.1z"/></svg>`;
+            }
+            else {
+                nextBtn = document.createElement("a");
+
+                nextBtn.classList = "btn next-btn";
+            }
+
+            if (x.prevImg) {
+                prevBtn = document.createElement("a");
+
+                prevBtn.classList = "btn prev-btn";
+                prevBtn.setAttribute("onclick", `OpenNextPhotoFull(this)`);
+
+                prevBtn.id = x.prevImg;
+
+                prevBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M48 256a208 208 0 1 1 416 0A208 208 0 1 1 48 256zm464 0A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM217.4 376.9c4.2 4.5 10.1 7.1 16.3 7.1c12.3 0 22.3-10 22.3-22.3V304h96c17.7 0 32-14.3 32-32V240c0-17.7-14.3-32-32-32H256V150.3c0-12.3-10-22.3-22.3-22.3c-6.2 0-12.1 2.6-16.3 7.1L117.5 242.2c-3.5 3.8-5.5 8.7-5.5 13.8s2 10.1 5.5 13.8l99.9 107.1z"/></svg>`;
+
+            }
+            else {
+                prevBtn = document.createElement("a");
+
+                prevBtn.classList = "btn prev-btn";
+            }
+        })
+
+    img.src = `/nas/getimage?path=${actualimg.id}&isFull=true`;
+
+    if (prevBtn) {
+        div.appendChild(prevBtn);
+    }
+   
+    div.appendChild(img);
+
+    if (nextBtn) {
+        div.appendChild(nextBtn);
+    }
+   
+
+    let main = document.querySelector("main");
+
+    main.insertBefore(div, main.firstChild);
+}
+
+function closePopUp(e) {
+    enableScroll();
+    e.parentElement.remove();
+}
+
+async function OpenNextPhotoFull(e) {
     
+    if (document.querySelector("div.popup-img")) {
+
+        document.querySelector("div.popup-img>img").src = `/nas/getimage?path=${e.id}&isFull=true`;
+
+        await fetch("/Nas/GetPrevAndNextPathsForPhoto?path=" + e.id)
+            .then(x => x.json())
+            .then(x => {
+                if (x.nextImg) {
+
+                    document.querySelector(".next-btn").setAttribute("onclick", `OpenNextPhotoFull(this)`);
+                    document.querySelector(".next-btn").id = x.nextImg;
+
+                    document.querySelector(".next-btn").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM294.6 135.1c-4.2-4.5-10.1-7.1-16.3-7.1C266 128 256 138 256 150.3V208H160c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32h96v57.7c0 12.3 10 22.3 22.3 22.3c6.2 0 12.1-2.6 16.3-7.1l99.9-107.1c3.5-3.8 5.5-8.7 5.5-13.8s-2-10.1-5.5-13.8L294.6 135.1z"/></svg>`;
+                                                 
+
+                } else {
+                    document.querySelector(".next-btn").setAttribute("onclick", ``);
+                    document.querySelector(".next-btn").id = "";
+
+                    document.querySelector(".next-btn").innerHTML = ``;
+                }
+
+                if (x.prevImg) {
+
+                        document.querySelector(".prev-btn").id = x.prevImg;
+                        document.querySelector(".prev-btn").setAttribute("onclick", `OpenNextPhotoFull(this)`);
+
+                        document.querySelector(".prev-btn").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M48 256a208 208 0 1 1 416 0A208 208 0 1 1 48 256zm464 0A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM217.4 376.9c4.2 4.5 10.1 7.1 16.3 7.1c12.3 0 22.3-10 22.3-22.3V304h96c17.7 0 32-14.3 32-32V240c0-17.7-14.3-32-32-32H256V150.3c0-12.3-10-22.3-22.3-22.3c-6.2 0-12.1 2.6-16.3 7.1L117.5 242.2c-3.5 3.8-5.5 8.7-5.5 13.8s2 10.1 5.5 13.8l99.9 107.1z"/></svg>`;
+
+                    
+                }
+                else {
+   
+                    document.querySelector(".prev-btn").setAttribute("onclick", ``);
+
+
+                    document.querySelector(".prev-btn").innerHTML = ``;
+
+
+                }
+            })
+
+    }
+}
+
+var keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
+
+function preventDefault(e) {
+    e.preventDefault();
+}
+
+function preventDefaultForScrollKeys(e) {
+    if (keys[e.keyCode]) {
+        preventDefault(e);
+        return false;
+    }
+}
+
+var supportsPassive = false;
+try {
+    window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+        get: function () { supportsPassive = true; }
+    }));
+} catch (e) { }
+
+var wheelOpt = supportsPassive ? { passive: false } : false;
+var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
+
+
+function disableScroll() {
+    window.addEventListener('DOMMouseScroll', preventDefault, false); // older FF
+    window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
+    window.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
+    window.addEventListener('keydown', preventDefaultForScrollKeys, false);
+}
+
+function enableScroll() {
+    window.removeEventListener('DOMMouseScroll', preventDefault, false);
+    window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
+    window.removeEventListener('touchmove', preventDefault, wheelOpt);
+    window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
+}
+
+//
+window.addEventListener('scroll', checkIfAtBottom);
+
+function checkIfAtBottom() {
+    if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight) / 4 * 3) {
+        myFunction();
+    }
+}
+
+function myFunction() {
+    console.log('You have scrolled to the bottom!');
+    window.removeEventListener('scroll', checkIfAtBottom);
 }

@@ -13,7 +13,9 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<HttpResponseMessage?> GetFileString(string path);
 
-		Task<HttpResponseMessage?> GetPhoto(string path);
+		Task<HttpResponseMessage?> GetPhoto(string path,bool isFull=false);
+
+		Task<PhotoPrevNextPaths?> GetPrevAndNextPhotoLocation(string currentPhotoPath);
 
     }
 }
