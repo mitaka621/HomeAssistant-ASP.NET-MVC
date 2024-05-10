@@ -129,6 +129,27 @@ namespace HomeAssistant.Core.Services
 
 		}
 
+		public async Task<DirViewModel?> GetPhotoInfo(string path)
+		{
+			try
+			{
+				var data = await httpClient
+				.GetStringAsync($"http://{currentHostIp}:3000/getPhotoInfo?path={path}");
+				if (!String.IsNullOrEmpty(data))
+				{
+					return JsonSerializer.Deserialize<DirViewModel>(data);
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogInformation(ex, $"Host {currentHostIp} unavailable. Trying to look for other host");
+
+				return null;
+			}
+
+			return null;
+		}
+
 		public async Task<PhotoPrevNextPaths?> GetPrevAndNextPhotoLocation(string currentPhotoPath)
 		{
 			try

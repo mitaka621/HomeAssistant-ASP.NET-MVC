@@ -17,5 +17,7 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<PhotoPrevNextPaths?> GetPrevAndNextPhotoLocation(string currentPhotoPath);
 
+		Task<DirViewModel?> GetPhotoInfo(string path);
+
     }
 }

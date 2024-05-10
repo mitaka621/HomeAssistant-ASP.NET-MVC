@@ -22,17 +22,8 @@ function LoadMoreMessages() {
 
             data.forEach(item => {
 
-                const options = {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false
-                };
-
-                const formattedDateTime = item.dateModified.toLocaleString('en-GB', options);
+                var startDate = new Date(item.dateModified);
+                var formattedDateTime = formatDate(startDate);
 
                 var tbody = document.querySelector("tbody");
 
@@ -126,12 +117,11 @@ let photosOnRow = [];
 function GetPhotos(skipnum = 0) {
     window.removeEventListener('scroll', checkIfAtBottom);
 
-    if (document.querySelector("button.viewer")) {
-        document.querySelector("button.viewer").remove();
+    if (document.querySelector("table")) {
         document.querySelector("table").remove();
-        document.querySelector("main").innerHTML += `<button class="btn btn-primary" type="button" onclick="location.reload()">Go to File Explorer</button>
-    <div class="main-photo-container"></div>`;
-
+        const mainPhotosContainer = document.createElement("div");
+        mainPhotosContainer.className += "main-photo-container";
+        document.querySelector("main").appendChild(mainPhotosContainer);
     }
 
     skip = skipnum;
@@ -157,7 +147,6 @@ function GetPhotos(skipnum = 0) {
                 x.src = "/nas/getimage?path=" + x.id;
                 x.onload = () => {
                     x.classList.remove("loading");
-                    resolve();
                 }
             });
 
@@ -165,7 +154,6 @@ function GetPhotos(skipnum = 0) {
         });
 }
 
-window.addEventListener('scroll', checkIfAtBottom);
 
 function checkIfAtBottom() {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2000) {
@@ -297,8 +285,10 @@ async function DisplayImageFull(e) {
     closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>`;
 
     let div = document.createElement("div");
-    div.appendChild(closeBtn);
+    
     div.classList = "popup-img";
+
+   
 
     let img = document.createElement("img")
 
@@ -345,16 +335,22 @@ async function DisplayImageFull(e) {
 
     img.src = `/nas/getimage?path=${actualimg.id}&isFull=true`;
 
+    
+    div.appendChild(closeBtn);
+
+    div.innerHTML += `<button class="btn btn-primary download-btn" onclick="OpenModal()">
+	                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+                                 </button>`;
+
     if (prevBtn) {
         div.appendChild(prevBtn);
     }
-
+   
     div.appendChild(img);
 
     if (nextBtn) {
         div.appendChild(nextBtn);
     }
-
 
     let main = document.querySelector("main");
 
@@ -370,7 +366,7 @@ async function OpenNextPhotoFull(e) {
 
     if (document.querySelector("div.popup-img")) {
 
-        document.querySelector("div.popup-img>img").src = `/nas/getimage?path=${e.id}&isFull=true`;
+        document.querySelector("div.popup-img img").src = `/nas/getimage?path=${e.id}&isFull=true`;
 
         await fetch("/Nas/GetPrevAndNextPathsForPhoto?path=" + e.id)
             .then(x => x.json())
@@ -451,4 +447,65 @@ function enableScroll() {
     window.removeEventListener('keydown', preventDefaultForScrollKeys, false);
 }
 
-//
+
+function OpenModal() {
+
+    const url = document.querySelector("div.popup-img img").src.split("&")[0];
+
+    let currentpath = url.split("=")[1];
+
+
+
+    fetch("/nas/GetPhotoInfo?path=" + currentpath)
+        .then(r => r.json())
+        .then(x => {
+            currentpath = currentpath.split("\\");
+            currentpath.splice(-1);
+
+            document.getElementById("file-path").textContent = currentpath.join("\\");
+            document.getElementById("file-size").textContent = x.size.toFixed(2) + " MB";
+            document.getElementById("file-width").textContent = x.width;
+            document.getElementById("file-height").textContent = x.height;
+            document.getElementById("file-name").textContent = x.path.split("\\").splice(-1);
+            document.querySelector(".submit-btn").href ="/nas/DownloadFile?path="+ x.path;
+
+            document.querySelector(".submit-btn").setAttribute("onmousedown", "CloseModal()");
+
+            var startDate = new Date(x.dateModified);
+            var formattedDateTime = formatDate(startDate);
+
+            document.getElementById("file-date").textContent = formattedDateTime;
+        })
+
+
+    document.getElementById("open-modal").click();
+}
+
+
+function formatDate(date) {
+    var day = date.getDate().toString().padStart(2, '0');
+    var month = (date.getMonth() + 1).toString().padStart(2, '0');
+    var year = date.getFullYear();
+    var hours = date.getHours().toString().padStart(2, '0');
+    var minutes = date.getMinutes().toString().padStart(2, '0');
+    var seconds = date.getSeconds().toString().padStart(2, '0');
+    return day + '-' + month + '-' + year + ' ' + hours + ':' + minutes + ':' + seconds;
+}
+
+function CloseModal() {
+    document.querySelector(".btn-close").click();
+}
+
+let clicked = false;
+
+function togle(e) {
+
+    if (!clicked) {
+        clicked = true;
+        GetPhotos();
+    }
+    else {
+        location.reload();
+    }
+    
+}

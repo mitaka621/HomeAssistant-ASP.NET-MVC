@@ -93,5 +93,20 @@ namespace HomeAssistant.Controllers
 
         }
 
-    }
+
+
+		public async Task<IActionResult> GetPhotoInfo(string path)
+		{
+			var data = await _service.GetPhotoInfo(path);
+
+			if (data != null)
+			{
+				return Json(data);
+			}
+
+			return StatusCode(500);
+
+		}
+
+	}
 }

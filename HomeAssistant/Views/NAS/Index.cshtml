@@ -11,19 +11,23 @@
 
 <link rel="stylesheet" href="~/css/Nas.css" asp-append-version="true" />
 
-<button type="button" class="btn btn-primary viewer" onclick="GetPhotos()">Photo Viewer</button>
-<div class="title-section">
+
 	<h1>
 		NAS - <span id="path">@ViewBag.Path</span>
 	</h1>
-	<h4>Current Host IP: @ViewBag.currentHostIP</h4>
-</div>
 
+
+<div class="form-check form-switch">
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z" /></svg>
+	
+	<input class="form-check-input" type="checkbox" id="flexSwitchCheck" onchange="togle(this)">
+	<label class="form-check-label" for="flexSwitchCheck"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM323.8 202.5c-4.5-6.6-11.9-10.5-19.8-10.5s-15.4 3.9-19.8 10.5l-87 127.6L170.7 297c-4.6-5.7-11.5-9-18.7-9s-14.2 3.3-18.7 9l-64 80c-5.8 7.2-6.9 17.1-2.9 25.4s12.4 13.6 21.6 13.6h96 32H424c8.9 0 17.1-4.9 21.2-12.8s3.6-17.4-1.4-24.7l-120-176zM112 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z" /></svg></label>
+</div>
 
 <table class="table">
 	<thead>
 		<tr>
-			<th scope="col" style="width:80% !important; max-width:70%;">File/Dir</th>
+			<th scope="col" class="first" style="width:80% !important; max-width:70%;">File/Dir</th>
 			<th scope="col" style="width:10% !important; text-align:center">Size</th>
 			<th scope="col" style="width:10% !important; text-align:center">Date modified</th>
 		</tr>
@@ -65,6 +69,38 @@
 		<span class="visually-hidden">Loading...</span>
 	</div>
 </div>
+
+<button hidden id="open-modal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+	Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">Download Photo</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<h3><span id="file-name">Hi</span></h3>
+				<div class="flex-body">			
+					<ul>
+						<li>Path: <span id="file-path">path....</span></li>
+						<li>Size: <span id="file-size">sioze....</span></li>					
+	
+						<li>Resolution: <span id="file-width"></span> x <span id="file-height"></span></li>
+						<li>Date Modified: <span id="file-date">path....</span></li>
+					</ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a type="button" class="btn btn-primary submit-btn">Download</a>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 @section Scripts {
 	<script src="~/js/Nas.js"></script>
