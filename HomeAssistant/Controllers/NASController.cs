@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace HomeAssistant.Controllers
 {
-	[Authorize(Roles ="StandardUser,NASUser")]
+	[Authorize(Roles ="NASUser")]
 	public class NASController : Controller
 	{
 		private readonly INASService _service;

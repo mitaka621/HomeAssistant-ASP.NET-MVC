@@ -104,14 +104,6 @@ let options2 = {
 };
 
 
-function handleIntersectionForPhoto(entries, observer) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            var photosToSkip = skip + take;
-            GetPhotos(photosToSkip);
-        }
-    });
-}
 
 let photosOnRow = [];
 function GetPhotos(skipnum = 0) {
@@ -499,8 +491,10 @@ function CloseModal() {
 let clicked = false;
 
 function togle(e) {
-
     if (!clicked) {
+        if (document.querySelector(".spinner-container")) {
+            document.querySelector(".spinner-container").remove();
+        }
         clicked = true;
         GetPhotos();
     }

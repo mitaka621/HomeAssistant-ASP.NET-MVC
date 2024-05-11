@@ -3,6 +3,7 @@
         width: fit-content !important;
         height: fit-content !important;
         margin-bottom:3em;
+        
     }
     .prev-btn{
         order:1;
@@ -14,14 +15,17 @@
     .popup-img {
         flex-wrap: wrap;
         max-width: 100% !important;
+        max-height: 100% !important;
         padding: 0 !important;
         align-items: flex-end !important;
-        gap:0 !important;
+        justify-content: center !important;
+        gap: 0 !important;
+        
     }
 
     .popup-img img{
         max-width:100% !important;
-        
+        flex-basis:75%;
     }
 
     tbody{
