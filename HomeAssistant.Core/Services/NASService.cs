@@ -241,7 +241,7 @@ namespace HomeAssistant.Core.Services
 			{
 				try
 				{
-					if (item.IsCanceled) 
+					if (item.IsCanceled)
 					{
 						continue;
 					}
