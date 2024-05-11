@@ -26,6 +26,11 @@
     main{
         width:initial !important;
     }
+
+    .nas-status {
+        position: absolute;
+        margin: -150px 0 0 -150px !important;
+    }
 }
 main{
     margin:0 auto;
