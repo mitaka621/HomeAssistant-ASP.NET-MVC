@@ -108,5 +108,25 @@ namespace HomeAssistant.Controllers
 
 		}
 
+		public async Task<IActionResult> CheckConnection()
+		{
+            if (await _service.CheckConnection())
+            {
+				return StatusCode(200);
+            }
+
+			return StatusCode(503);
+		}
+
+		public async Task<IActionResult> ScanForAvailibleHosts()
+		{
+			if (await _service.ScanForAvailibleHost())
+			{
+				return StatusCode(200);
+			}
+
+			return StatusCode(503);
+		}
+
 	}
 }

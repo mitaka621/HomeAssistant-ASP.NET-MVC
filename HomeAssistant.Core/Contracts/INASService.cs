@@ -19,5 +19,10 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<DirViewModel?> GetPhotoInfo(string path);
 
-    }
+		Task<bool> CheckConnection();
+
+		Task<bool> ScanForAvailibleHost();
+
+
+	}
 }

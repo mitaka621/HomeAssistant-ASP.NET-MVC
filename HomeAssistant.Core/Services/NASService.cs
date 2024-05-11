@@ -174,7 +174,7 @@ namespace HomeAssistant.Core.Services
 			}
 		}
 
-		private async Task<bool> CheckConnection()
+		public async Task<bool> CheckConnection()
 		{
 			try
 			{
@@ -201,7 +201,7 @@ namespace HomeAssistant.Core.Services
 
 		}
 
-		private async Task<bool> ScanForAvailibleHost()
+		public async Task<bool> ScanForAvailibleHost()
 		{
 			int start = 10;
 
