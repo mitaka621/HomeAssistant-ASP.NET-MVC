@@ -164,7 +164,7 @@ namespace HomeAssistant.Core.Services
 					return JsonSerializer.Deserialize<PhotoPrevNextPaths>(data);
 				}
 
-				return null;	
+				return null;
 			}
 			catch (Exception ex)
 			{
@@ -211,31 +211,53 @@ namespace HomeAssistant.Core.Services
 
 			tempClient.Timeout = TimeSpan.FromMilliseconds(50);
 
-
+			List<Task<HttpResponseMessage>> tasks = new List<Task<HttpResponseMessage>>();
 			for (int i = start; i < 255; i++)
 			{
 				HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"http://{ip + i}:3000/");
 				request.Headers.Add("token", Token);
 				try
 				{
-					var result = await tempClient.SendAsync(request);
+					tasks.Add(tempClient.SendAsync(request));
+				}
+				catch (Exception ex)
+				{
+					_logger.LogInformation(ex, $"Error reaching http://{ip + i}:3000/ - NAS host is not there");
+				}
 
+			}
 
-					if (result.StatusCode == System.Net.HttpStatusCode.OK)
+			try
+			{
+				await Task.WhenAll(tasks);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogInformation(ex, $"Error - NAS host is not there");
+			}
+			
+
+			foreach (var item in tasks)
+			{
+				try
+				{
+					if (item.IsCanceled) 
 					{
-						currentHostIp = ip + i;
+						continue;
+					}
+					var tempHttpMessage = item.Result;
+
+					if (tempHttpMessage.StatusCode == System.Net.HttpStatusCode.OK)
+					{
+						currentHostIp = await tempHttpMessage.Content.ReadAsStringAsync();
 						return true;
 					}
 				}
 				catch (Exception ex)
 				{
-					_logger.LogWarning(ex, $"Error reaching http://{ip + i}:3000/ - NAS host is not there");
+					_logger.LogInformation(ex, $"Error - NAS host is not there");
 				}
-
 			}
-
-
-
 
 
 			return false;
