@@ -353,14 +353,13 @@ div.rad h3{
     align-content:center;
 }
 .nas-status div {
-    width: 0.1em;
-    height: 0.1em;
-    background-color: #cb3a3a;
-    border-radius: 50%;
-    box-shadow: 0px 0px 15px 25px #e42e2ecc;
+    width: 1em;
+    height: 1em;
+    background-color: red;
+    border-radius: 50% ;
+    
 }
 .nas-status {
     position:absolute;
-    margin-left:4.5px;
-    margin-top:4px;
+    margin: -130px 0 0 -130px;
 }

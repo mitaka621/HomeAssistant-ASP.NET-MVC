@@ -22,14 +22,12 @@ async function fetchTelemetryData() {
 
 fetch("/nas/CheckConnection").then(r => {
     if (r.ok) {
-        document.querySelector(".nas-status div").style.backgroundColor = "#64de69ff";
-        document.querySelector(".nas-status div").style.boxShadow = "0px 0px 15px 14px #64de69ff";
+        document.querySelector(".nas-status div").style.backgroundColor = "#54d359";
     }
     else {
         fetch("/nas/ScanForAvailibleHosts").then(r2 => {
             if (r2.ok) {
-                document.querySelector(".nas-status div").style.backgroundColor = "#64de69ff";
-                document.querySelector(".nas-status div").style.boxShadow = "0px 0px 15px 14px #64de69ff";
+                document.querySelector(".nas-status div").style.backgroundColor = "#54d359";
             }
         })
     }
