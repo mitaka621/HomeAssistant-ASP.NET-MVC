@@ -42,6 +42,8 @@ namespace HomeAssistant.Infrastructure.Data.Models
 
         public string ClientIpAddress { get; set; } = string.Empty;
 
+        public DateTime? ExpiresOn { get; set; }
+
         public ShoppingList ShoppingList { get; set; } = null!;
 
         public IEnumerable<Notification> InvokedNotifications { get; set; } =new List<Notification>();
