@@ -54,6 +54,26 @@
         max-width:15em !important;
    
     }
+    .form-check {
+        padding:0 !important;
+        padding-bottom:0.3em !important;
+        padding-left:0.5em !important;
+    }
+    .form-check input{
+        width:10em !important;
+        font-size:1em !important;
+    }
+    .form-check svg{
+        width:1em !important;
+    }
+    div.form-check>svg{
+        margin:0.2em 1em 0 0 !important;
+    }
+    div.form-check>label>svg{
+        margin:0 !important;
+        margin-left:-1.5em !important;
+        margin-top:-0.2em !important;
+    }
 }
 @media only screen and (max-width: 1000px) {
     #flexSwitchCheck {
@@ -62,6 +82,31 @@
     .form-check {
         justify-content: center !important;
         padding: 0;
+    }
+
+    .form-check {
+        padding: 0 !important;
+        padding-bottom: 0.3em !important;
+        padding-left: 0.5em !important;
+    }
+
+        .form-check input {
+            width: 10em !important;
+            font-size: 1em !important;
+        }
+
+        .form-check svg {
+            width: 1em !important;
+        }
+
+    div.form-check > svg {
+        margin: 0.2em 1em 0 0 !important;
+    }
+
+    div.form-check > label > svg {
+        margin: 0 !important;
+        margin-left: -1.5em !important;
+        margin-top: -0.2em !important;
     }
 }
 
@@ -204,12 +249,20 @@
         fill: black;
     }
 
-    .form-check {
-        display: flex;
-        gap: 2em;
-        justify-content: flex-end;
-        align-items: center;
-    }
+.form-check {
+    display: flex;
+    gap: 2em;
+    justify-content: flex-end;
+    align-items: center;
+    width: fit-content;
+    margin: 0 1em 0 auto;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    padding: 0 0.5em 0.5em 0.5em;
+    border-end-end-radius: 10px;
+    border-end-start-radius:10px;
+}
 
         .form-check input {
             font-size: 1.5em;

@@ -474,10 +474,9 @@ function OpenModal() {
             var formattedDateTime = formatDate(startDate);
 
             document.getElementById("file-date").textContent = formattedDateTime;
+
+            document.getElementById("open-modal").click();
         })
-
-
-    document.getElementById("open-modal").click();
 }
 
 
@@ -506,6 +505,10 @@ function togle(e) {
         GetPhotos();
     }
     else {
+        window.scrollTo({
+            top: 0,
+            behavior: 'instant'
+        })
         location.reload();
     }
     

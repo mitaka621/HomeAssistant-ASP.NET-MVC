@@ -24,8 +24,21 @@ namespace HomeAssistant.Middlewares
 				await context.SignOutAsync(IdentityConstants.ApplicationScheme);
 			}
 
-			// Continue with the request pipeline
-			await _next(context);
+            if (user != null&&user.ExpiresOn!=null)
+            {
+                if (user.ExpiresOn < DateTime.Now)
+                {
+					user.IsDeleted = true;
+					user.DeletedOn = user.ExpiresOn;
+
+					await userManager.UpdateAsync(user);
+
+                    await context.SignOutAsync(IdentityConstants.ApplicationScheme);
+                }
+            }                     
+
+            // Continue with the request pipeline
+            await _next(context);
 		}
 	}
 }

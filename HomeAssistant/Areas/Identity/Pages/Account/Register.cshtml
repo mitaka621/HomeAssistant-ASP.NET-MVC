@@ -42,6 +42,15 @@
                 <label asp-for="Input.ConfirmPassword"></label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            <div class="form-check form-switch">
+                <input onclick="togle()" class="form-check-input" type="checkbox" id="tempUser">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Temporary User</label>
+            </div>
+            <div class="form-floating">
+                <input required disabled type="datetime-local" asp-for="Input.ExpiresOn" class="form-control" aria-required="false" value="@DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm")" />
+                <label asp-for="Input.ExpiresOn"></label>
+                <span asp-validation-for="Input.ExpiresOn" class="text-danger"></span>
+            </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
@@ -49,4 +58,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/TogleTempUser.js" asp-append-version="true"></script>
 }

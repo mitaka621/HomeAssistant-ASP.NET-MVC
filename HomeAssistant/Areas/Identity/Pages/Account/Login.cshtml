@@ -3,6 +3,10 @@
 
 @{
     ViewData["Title"] = "Log in";
+
+    if (User?.Identity != null && User.Identity.IsAuthenticated)
+        Response.Redirect("/");
+
 }
 
 <h1>@ViewData["Title"]</h1>

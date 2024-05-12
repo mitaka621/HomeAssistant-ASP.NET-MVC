@@ -88,14 +88,14 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<h3><span id="file-name">Hi</span></h3>
+				<h3><span id="file-name"></span></h3>
 				<div class="flex-body">
 					<ul>
-						<li>Path: <span id="file-path">path....</span></li>
-						<li>Size: <span id="file-size">sioze....</span></li>
+						<li>Path: <span id="file-path"></span></li>
+						<li>Size: <span id="file-size"></span></li>
 
 						<li>Resolution: <span id="file-width"></span> x <span id="file-height"></span></li>
-						<li>Date Modified: <span id="file-date">path....</span></li>
+						<li>Date Modified: <span id="file-date"></span></li>
 					</ul>
 				</div>
 			</div>
@@ -108,5 +108,5 @@
 
 
 @section Scripts {
-	<script src="~/js/Nas.js"></script>
+	<script src="~/js/Nas.js" asp-append-version="true"></script>
 }

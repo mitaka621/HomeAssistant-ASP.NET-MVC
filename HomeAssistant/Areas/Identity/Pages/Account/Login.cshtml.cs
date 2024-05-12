@@ -18,6 +18,9 @@ using HomeAssistant.Infrastructure.Data.Models;
 using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using HomeAssistant.Infrastructure.Data;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Amazon.Auth.AccessControlPolicy;
+using System.Security.Claims;
 
 namespace HomeAssistant.Areas.Identity.Pages.Account
 {
@@ -129,16 +132,16 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
 					return Page();
 				}
 
-				// This doesn't count login failures towards account lockout
-				// To enable password failures to trigger account lockout, set lockoutOnFailure: true
+				
 				var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-
+				
 				if (result.Succeeded)
 				{
 					_logger.LogInformation("User logged in.");
 					_homeAssistantDbContext.Users.First(x=>x.Id==user.Id).ClientIpAddress= HttpContext.Connection.RemoteIpAddress.ToString();
-					await _homeAssistantDbContext.SaveChangesAsync();
-					return LocalRedirect(returnUrl);
+                    await _homeAssistantDbContext.SaveChangesAsync();
+                                           
+                    return LocalRedirect(returnUrl);
 				}
 				if (result.RequiresTwoFactor)
 				{

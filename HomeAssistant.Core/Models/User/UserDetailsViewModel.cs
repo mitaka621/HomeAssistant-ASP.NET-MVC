@@ -22,5 +22,7 @@
 
         public string Ip { get; set; } = string.Empty;
 
+        public bool IsTempUser { get; set; } = false;
+
     }
 }

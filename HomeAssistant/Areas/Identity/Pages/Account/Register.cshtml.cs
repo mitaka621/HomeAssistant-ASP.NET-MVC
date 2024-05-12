@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using HomeAssistant.Core.ValidationAttributes;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -110,6 +111,10 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
             [Display(Name = "Password")]
             public string Password { get; set; }
 
+            [DateAfterNow]
+            [DisplayName("Expires On")]
+            public DateTime? ExpiresOn { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -141,6 +146,7 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
 				user.FirstName= Input.FirstName;
                 user.LastName= Input.LastName;
                 user.CreatedOn=DateTime.Now;
+                user.ExpiresOn=Input.ExpiresOn;
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -148,6 +154,8 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                  
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);

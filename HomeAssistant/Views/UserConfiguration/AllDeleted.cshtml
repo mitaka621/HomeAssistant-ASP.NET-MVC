@@ -32,10 +32,17 @@
 						<td class="col">@user.LastName</td>
 						<td class="col">@user.CreatedOn</td>
 						<td class="col">@user.DeletedOn</td>
-						<td class="formCol">							
-							<form asp-action="RestoreById" asp-route-Id="@user.Id" method="post">
-								<button type="submit" class="btn btn-success">Restore</button>
-							</form>
+						<td class="formCol">
+							@if (user.IsTempUser)
+							{
+								<p>Expired</p>
+							}
+							else
+							{
+								<form asp-action="RestoreById" asp-route-Id="@user.Id" method="post">
+									<button type="submit" class="btn btn-success">Restore</button>
+								</form>
+							}
 						</td>
 					</tr>
 				}

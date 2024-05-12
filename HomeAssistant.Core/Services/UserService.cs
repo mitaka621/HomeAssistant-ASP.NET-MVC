@@ -100,7 +100,8 @@ namespace HomeAssistant.Core.Services
 					Username = u.UserName,
 					Email = u.Email,
 					CreatedOn = u.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
-					DeletedOn = u.DeletedOn.Value.ToString(DataValidationConstants.DateTimeFormat)
+					DeletedOn = u.DeletedOn.Value.ToString(DataValidationConstants.DateTimeFormat),
+					IsTempUser=u.ExpiresOn!=null
 				})
 				.ToListAsync();
 

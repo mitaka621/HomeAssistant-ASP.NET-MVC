@@ -1,4 +1,83 @@
-﻿main{
+﻿@media only screen and (max-width: 1000px) and (orientation: portrait) {
+
+    div.btn-group-vertical {
+        position: initial !important;
+    }
+
+    .container {
+        flex-direction: column;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0 !important;
+    }
+
+    aside {
+        width: 100% !important;
+        height: fit-content !important;
+    }
+    .btn-group-vertical {
+        width: 100% !important;
+    }
+
+    .btn-group-vertical a {
+        width: 100% !important;
+    }
+
+    table {
+        font-size: 0.5em !important;
+    }
+
+        table button, table a {
+            font-size: 1em !important;
+        }
+
+    body {
+        overflow-x: hidden !important;
+    }
+
+    td[class="col-lg-2"] {
+        width: 1em !important;
+        padding: 0;
+    }
+
+
+}
+
+@media only screen and (max-width: 1000px) {
+    div.btn-group-vertical {
+        position: initial !important;
+    }
+
+    .container {
+        flex-direction: column;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0 !important;
+        width:fit-content !important;
+    }
+
+    aside {
+        width: 100% !important;
+        height: fit-content !important;
+    }
+
+    .btn-group-vertical {
+        width: 100% !important;
+    }
+
+        .btn-group-vertical a {
+            width: 100% !important;
+        }
+        table{
+            width: 100% !important;
+        }
+        body{
+            width:100%!important;
+        }
+    
+}
+
+main{
     width:100%;
 }
 .container {
