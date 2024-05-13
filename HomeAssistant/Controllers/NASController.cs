@@ -108,6 +108,7 @@ namespace HomeAssistant.Controllers
 
 		}
 
+		[SkipStatusCodePages]
 		public async Task<IActionResult> CheckConnection()
 		{
             if (await _service.CheckConnection())
@@ -118,6 +119,7 @@ namespace HomeAssistant.Controllers
 			return StatusCode(503);
 		}
 
+		[SkipStatusCodePages]
 		public async Task<IActionResult> ScanForAvailibleHosts()
 		{
 			if (await _service.ScanForAvailibleHost())
