@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace HomeAssistant.Middlewares
 {
-	public class IsDeletedCheckMiddleware
+	public class IsDeletedOrExpiredCheckMiddleware
 	{
 		private readonly RequestDelegate _next;
 
-		public IsDeletedCheckMiddleware(RequestDelegate next)
+		public IsDeletedOrExpiredCheckMiddleware(RequestDelegate next)
 		{
 			_next = next;
 		}

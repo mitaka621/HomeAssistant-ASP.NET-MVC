@@ -1,12 +1,12 @@
 ﻿namespace HomeAssistant.Middlewares
 {
-	public static class IsDeletedCheckMiddlewareExtension
+	public static class IsDeletedOrExpiredCheckMiddlewareExtension
 	{
 
-		public static IApplicationBuilder UseIsDeletedCheck(
+		public static IApplicationBuilder UseIsDeletedOrExpiredCheck(
 			this IApplicationBuilder builder)
 		{
-			return builder.UseMiddleware<IsDeletedCheckMiddleware>();
+			return builder.UseMiddleware<IsDeletedOrExpiredCheckMiddleware>();
 		}
 	}
 }

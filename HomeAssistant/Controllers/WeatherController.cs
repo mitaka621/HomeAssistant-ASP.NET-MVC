@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 
 namespace HomeAssistant.Controllers
 {
+	[SkipStatusCodePages]
 	[Authorize(Roles ="StandardUser")]
 	[ApiController]
 	[Route("api/[controller]/[action]")]

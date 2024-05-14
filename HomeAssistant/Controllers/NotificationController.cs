@@ -6,7 +6,8 @@ using System.Security.Claims;
 
 namespace HomeAssistant.Controllers
 {
-    [Authorize(Roles = "StandardUser")]
+	[SkipStatusCodePages]
+	[Authorize(Roles = "StandardUser")]
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class NotificationController : Controller

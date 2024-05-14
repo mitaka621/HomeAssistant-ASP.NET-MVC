@@ -93,7 +93,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseIsDeletedCheck();
+app.UseIsDeletedOrExpiredCheck();
 app.UseProfilePicture();
 
 app.MapControllerRoute(

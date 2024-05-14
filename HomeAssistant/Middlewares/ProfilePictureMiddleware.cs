@@ -22,7 +22,7 @@ namespace HomeAssistant.Middlewares
 			{
 				profilePicture = await _ImageService.GetPFP(GetUserId(context));
 
-				_cache.Set(GetUserId(context), profilePicture, TimeSpan.FromMinutes(10)); 
+				_cache.Set(GetUserId(context), profilePicture, TimeSpan.FromMinutes(1)); 
 
 			}
 

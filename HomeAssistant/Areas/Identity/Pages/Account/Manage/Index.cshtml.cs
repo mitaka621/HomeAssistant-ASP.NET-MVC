@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
 
 namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 {
@@ -119,11 +122,11 @@ namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 				using (var stream = new MemoryStream())
 				{
 					Input.ImageFile.CopyTo(stream);
-					var imageData = stream.ToArray();
+	
 
 					var userId = _userManager.GetUserId(User);
 
-					uploadPfpTask = _ImageService.SavePFP(userId, imageData);
+					uploadPfpTask = _ImageService.SavePFP(userId, CompressAndResizeImage(stream,200,200));
 				}
 
 			}
@@ -180,6 +183,26 @@ namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 			StatusMessage = "Your profile has been updated";
 
 			return LocalRedirect("/Identity/Account/Manage");
+		}
+
+		private byte[] CompressAndResizeImage(Stream imageStream, int maxWidth, int maxHeight)
+		{
+			imageStream.Seek(0, SeekOrigin.Begin);
+			using (var image = Image.Load(imageStream))
+			{
+				image.Mutate(x => x
+					.Resize(new ResizeOptions
+					{
+						Mode = ResizeMode.Crop,
+						Size = new Size(maxWidth, maxHeight)
+					}));
+
+				using (var outputStream = new MemoryStream())
+				{
+					image.Save(outputStream, new PngEncoder());
+					return outputStream.ToArray();
+				}
+			}
 		}
 	}
 }
