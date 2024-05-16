@@ -22,24 +22,25 @@ namespace HomeAssistant.Core.Services
 		private readonly Dictionary<string, string> pcMacPairs = new();
 		public WakeOnLanService(IConfiguration configuration, ILogger<IWakeOnLanService> logger)
 		{
+			_logger = logger;
 
 			if (configuration.GetSection("WakeOnLanPcs") != null)
 			{
 				foreach (var pc in configuration.GetSection("WakeOnLanPcs").GetChildren())
 				{
-					try
-					{
-						pcMacPairs[pc["Name"]!] = pc["MAC"]!;
-
+					try {
+						string[] arr = pc.Value!.Split(":");
+						pcMacPairs[arr[0]] = arr[1];
 					}
 					catch (Exception)
 					{
-						continue;
+						_logger.LogWarning("Could not parse input in wakeonLan");
 					}
+					
 				}
 			}
 
-			_logger = logger;
+			
 		}
 
 		public async Task<bool> WakeOnLan(string pcName)
