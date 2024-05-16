@@ -2,21 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using HomeAssistant.Core.Contracts;
-using HomeAssistant.Core.Services;
 using HomeAssistant.Infrastructure.Data.Models;
-using HomeAssistant.Infrastructure.Migrations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 
 namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
@@ -121,12 +116,11 @@ namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 			{
 				using (var stream = new MemoryStream())
 				{
-					Input.ImageFile.CopyTo(stream);
-	
+					Input.ImageFile.CopyTo(stream);	
 
 					var userId = _userManager.GetUserId(User);
 
-					uploadPfpTask = _ImageService.SavePFP(userId, CompressAndResizeImage(stream,200,200));
+					uploadPfpTask = _ImageService.SavePFP(userId, CompressAndResizeImage(stream,500,500));
 				}
 
 			}
@@ -199,7 +193,7 @@ namespace HomeAssistant.Areas.Identity.Pages.Account.Manage
 
 				using (var outputStream = new MemoryStream())
 				{
-					image.Save(outputStream, new PngEncoder());
+					image.Save(outputStream, new WebpEncoder());
 					return outputStream.ToArray();
 				}
 			}

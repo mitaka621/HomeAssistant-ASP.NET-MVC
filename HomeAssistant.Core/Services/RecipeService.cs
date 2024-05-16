@@ -5,6 +5,13 @@ using HomeAssistant.Infrastructure.Data.Enums;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
+
+using static System.Net.Mime.MediaTypeNames;
+using SixLabors.ImageSharp.Formats.Webp;
+using System.Diagnostics;
 
 namespace HomeAssistant.Core.Services
 {
@@ -44,9 +51,8 @@ namespace HomeAssistant.Core.Services
 				using (var stream = new MemoryStream())
 				{
 					r.RecipeImage.CopyTo(stream);
-					var imageData = stream.ToArray();
 
-					await _imageService.SaveRecipeImage(newRecipe.Id, imageData);
+					await _imageService.SaveRecipeImage(newRecipe.Id, await CompressAndResizeImageAsync(stream, 480, 340));
 				}
 
 			}
@@ -141,12 +147,12 @@ namespace HomeAssistant.Core.Services
 			int newStepNumber = lastStep == null ? 1
 				: lastStep.StepNumber + 1;
 
-            if (step.StepType==StepType.TimerStep &&step.Duration==null)
-            {
+			if (step.StepType == StepType.TimerStep && step.Duration == null)
+			{
 				step.Duration = 1;
 			}
 
-            _dbcontext.Steps.Add(new Step()
+			_dbcontext.Steps.Add(new Step()
 			{
 				RecipeId = step.RecipeId,
 				StepNumber = newStepNumber,
@@ -209,24 +215,11 @@ namespace HomeAssistant.Core.Services
 			})
 				.ToListAsync();
 
-			foreach (var item in startedRecipesModel)
-			{
-				startedRecipesModel
-					.First(x => x.Id == item.Id).PercentageCompleted = startedRecipes.ToList()
-						.First(d => d.Key == item.Id).Value * 100
-						/
-						await _dbcontext.Steps
-						.Where(s => s.RecipeId == item.Id)
-						.CountAsync();
-
-				startedRecipesModel
-					.First(x => x.Id == item.Id).Photo = await _imageService.GetRecipeImage(item.Id);
-
-			}
+			
 
 			finalModel.StartedRecipes = startedRecipesModel;
 
-			finalModel.PageCount = (int)Math.Ceiling((await recipesToReturn.CountAsync()) / (double)productsOnPage);
+			finalModel.PageCount = (int)Math.Ceiling((await recipesToReturn.CountAsync() - startedRecipesModel.Count) / (double)productsOnPage);
 
 			if (page < 1)
 			{
@@ -258,9 +251,46 @@ namespace HomeAssistant.Core.Services
 				AnySteps = x.Steps.Any(y => y.RecipeId == x.Id)
 			}).ToArrayAsync();
 
+			Stopwatch stopwatch = Stopwatch.StartNew();
+
+			var recipePhotos =await _imageService
+				.GetRecipeImageRange(finalModel.Recipes.Select(x => x.Id).Concat(startedRecipesModel.Select(x => x.Id)).Distinct().ToArray());
+
+			stopwatch.Stop();
+
+			List<Task> tasks = new();
+
+			//foreach (var id in recipePhotos.Keys)
+			//{
+			//	tasks.Add(CompressAndResizeImageAsync(new MemoryStream(recipePhotos[id]), 240, 170));
+			//}
+
+			//await Task.WhenAll(tasks);
+
+   //         foreach (var item in tasks)
+   //         {
+			//	recipePhotos[]
+
+			//}
+
+            foreach (var item in startedRecipesModel)
+			{
+				startedRecipesModel
+					.First(x => x.Id == item.Id).PercentageCompleted = startedRecipes.ToList()
+						.First(d => d.Key == item.Id).Value * 100
+						/
+						await _dbcontext.Steps
+						.Where(s => s.RecipeId == item.Id)
+						.CountAsync();
+
+				startedRecipesModel
+					.First(x => x.Id == item.Id).Photo = recipePhotos[item.Id];
+
+			}
+
 			foreach (var recipe in finalModel.Recipes)
 			{
-				finalModel.Recipes.First(x => x.Id == recipe.Id).Photo = await _imageService.GetRecipeImage(recipe.Id);
+				finalModel.Recipes.First(x => x.Id == recipe.Id).Photo = recipePhotos[recipe.Id];
 
 				var prodForRecipe = await _dbcontext.Products
 					.Where(x => recipe.Products.Select(x => x.Id).Contains(x.Id))
@@ -434,7 +464,7 @@ namespace HomeAssistant.Core.Services
 			{
 				step.DurationInMin = 1;
 			}
-			
+
 			var oldProdForStep = await _dbcontext.RecipesProductsSteps
 				.Where(x => x.RecipeId == s.RecipeId && x.StepNumber == s.StepNumber)
 				.ToListAsync();
@@ -663,6 +693,26 @@ namespace HomeAssistant.Core.Services
 				.Where(x => !alreadyNotifiedUsers.Any(y => y.userId == x.UserId && y.recipeId == x.Id) && (DateTime.Now - x.StartedOn).Minutes > x.DurationInMin.Value)
 				.Select(x => Tuple.Create(x.UserId, x.Id, x.Name))
 				.ToList();
+		}
+
+		private async Task<byte[]> CompressAndResizeImageAsync(Stream imageStream, int maxWidth, int maxHeight)
+		{
+			imageStream.Seek(0, SeekOrigin.Begin);
+			using (var image = await SixLabors.ImageSharp.Image.LoadAsync(imageStream))
+			{
+				image.Mutate(x => x
+					.Resize(new ResizeOptions
+					{
+						Mode = ResizeMode.Crop,
+						Size = new Size(maxWidth, maxHeight)
+					}));
+
+				using (var outputStream = new MemoryStream())
+				{
+					await image.SaveAsync(outputStream, new WebpEncoder());
+					return outputStream.ToArray();
+				}
+			}
 		}
 	}
 }

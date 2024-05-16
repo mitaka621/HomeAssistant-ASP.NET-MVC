@@ -14,5 +14,6 @@
 
 		Task DeleteIfExistsRecipeImg(int recipeId);
 
-    }
+		Task<Dictionary<int, byte[]>> GetRecipeImageRange(int[] recipeIds);
+	}
 }

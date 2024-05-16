@@ -3,14 +3,17 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using System.Collections;
+using System.Threading;
 
 namespace HomeAssistant.Core.Services
 {
 	public class ImageService : IimageService
     {
         private readonly IMongoClient _client;
-        private IGridFSBucket _gridFS;
+        private IGridFSBucket _gridFS=null!;
 		private readonly ILogger _logger;
+
 		public ImageService(IMongoClient client, ILogger<ImageService> logger)
         {
             _client = client;
@@ -207,6 +210,65 @@ namespace HomeAssistant.Core.Services
 			return new byte[0];
 		}
 
-	
+		public async Task<Dictionary<int, byte[]>> GetRecipeImageRange(int[] recipeIds)
+		{
+			try
+			{
+				_gridFS = new GridFSBucket(_client.GetDatabase("HomeAssistant"), new GridFSBucketOptions
+				{
+					BucketName = "RecipePictures"
+				});
+
+				var filter = Builders<GridFSFileInfo>.Filter.In("filename", recipeIds.Select(x => x.ToString()).ToList());
+				var cursor = await _gridFS.FindAsync(filter);
+
+				var picturesDict = new Dictionary<int, byte[]>();
+
+				var tasks = new List<Task>();
+				foreach (var fileInf in await cursor.ToListAsync())
+				{
+					var id = int.Parse(fileInf.Filename);
+					var downloadTask = DownloadImageAsync(fileInf.Id, id, picturesDict);
+					tasks.Add(downloadTask);
+				}
+
+				await Task.WhenAll(tasks);
+
+				foreach (var item in recipeIds)
+				{
+					if (!picturesDict.ContainsKey(item))
+					{
+						picturesDict[item] = new byte[0];
+					}
+				}
+
+				return picturesDict;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return new Dictionary<int, byte[]>();
+			}
+		}
+
+		private async Task DownloadImageAsync(ObjectId fileId, int id, Dictionary<int, byte[]> picturesDict)
+		{
+			try
+			{
+				using (var stream = new MemoryStream())
+				{
+					await _gridFS.DownloadToStreamAsync(fileId, stream);
+					picturesDict[id] = stream.ToArray();
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error downloading image with id {id}: {ex.Message}");
+				picturesDict[id] = new byte[0];
+			}
+		}
+
+
+
 	}
 }
