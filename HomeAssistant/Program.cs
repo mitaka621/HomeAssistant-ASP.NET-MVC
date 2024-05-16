@@ -28,6 +28,7 @@ builder.Services.AddScoped<IShoppingListService, ShoppingListService>();
 builder.Services.AddScoped<IRecipeService,RecipeService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IWakeOnLanService, WakeOnLanService>();
 
 builder.Services.AddDefaultIdentity<HomeAssistantUser>(options =>
 {
