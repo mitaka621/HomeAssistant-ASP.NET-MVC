@@ -73,6 +73,12 @@
 					<span class="text-light">NAS</span>
 				</a>
 			}
+			@if (User.IsInRole("WakeOnLanAccess"))
+			{
+				<a class="btn bg-secondary" href="api/wakeonlan/wakepc?name=MainPc">
+					wake
+				</a>
+			}
 		</div>
 	</div>
 
