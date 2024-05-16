@@ -260,19 +260,6 @@ namespace HomeAssistant.Core.Services
 
 			List<Task> tasks = new();
 
-			//foreach (var id in recipePhotos.Keys)
-			//{
-			//	tasks.Add(CompressAndResizeImageAsync(new MemoryStream(recipePhotos[id]), 240, 170));
-			//}
-
-			//await Task.WhenAll(tasks);
-
-   //         foreach (var item in tasks)
-   //         {
-			//	recipePhotos[]
-
-			//}
-
             foreach (var item in startedRecipesModel)
 			{
 				startedRecipesModel
@@ -560,9 +547,8 @@ namespace HomeAssistant.Core.Services
 				using (var stream = new MemoryStream())
 				{
 					r.RecipeImage.CopyTo(stream);
-					var imageData = stream.ToArray();
-
-					await _imageService.SaveRecipeImage(r.Id, imageData);
+	
+					await _imageService.SaveRecipeImage(r.Id, await CompressAndResizeImageAsync(stream, 480, 340));
 				}
 
 			}

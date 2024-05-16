@@ -267,8 +267,5 @@ namespace HomeAssistant.Core.Services
 				picturesDict[id] = new byte[0];
 			}
 		}
-
-
-
 	}
 }
