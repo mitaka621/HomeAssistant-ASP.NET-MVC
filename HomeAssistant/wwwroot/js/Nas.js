@@ -491,7 +491,9 @@ function formatDate(date) {
 }
 
 function CloseModal() {
-    setInterval(document.querySelector(".btn-close").click(),500);
+    setTimeout(function () {
+        document.querySelector(".btn-close").click();
+    }, 500);
 }
 
 let clicked = false;
