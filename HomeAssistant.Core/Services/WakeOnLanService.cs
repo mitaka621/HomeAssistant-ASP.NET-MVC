@@ -50,22 +50,26 @@ namespace HomeAssistant.Core.Services
 				_logger.LogWarning($"Could not find a pc with name {pcName} with a registered mac address");
 				return false;
 			}
-
+		
 			bool isSent = false ;
 
 			string macAddress = pcMacPairs[pcName];
 
+			_logger.LogInformation($"Sending a wake package to {macAddress}");
+
 			byte[] magicPacket = BuildMagicPacket(macAddress);
 
-            foreach (var item in GetLocalIPv4Addresses())
+            foreach (var ip in GetLocalIPv4Addresses())
             {
-				if (item==null)
+				if (ip == null)
                 {
 					continue;
                 }
-                await SendWakeOnLan(item, IPAddress.Parse("224.0.0.1"), magicPacket);
+                await SendWakeOnLan(ip, IPAddress.Parse("224.0.0.1"), magicPacket);
 				isSent=true;
 			}
+
+
 
             return isSent;
 		}
@@ -82,11 +86,9 @@ namespace HomeAssistant.Core.Services
 
 		private async Task SendWakeOnLan(IPAddress localIpAddress, IPAddress multicastIpAddress, byte[] magicPacket)
 		{
-			_logger.LogCritical(multicastIpAddress.ToString());
 			using UdpClient client = new(new IPEndPoint(localIpAddress, 0));
 
-			client.EnableBroadcast = true;
-			_logger.LogCritical(localIpAddress.ToString());
+			client.EnableBroadcast = true;			
 			await client.SendAsync(magicPacket, magicPacket.Length, new IPEndPoint(multicastIpAddress, 9));
 		}
 

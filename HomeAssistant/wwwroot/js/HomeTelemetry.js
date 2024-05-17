@@ -20,19 +20,25 @@ async function fetchTelemetryData() {
         });
 }
 
-fetch("/nas/CheckConnection").then(r => {
-    if (r.ok) {
-        document.querySelector(".nas-status div").style.backgroundColor = "#54d359";
-    }
-    else {
-        fetch("/nas/ScanForAvailibleHosts").then(r2 => {
-            if (r2.ok) {
-                document.querySelector(".nas-status div").style.backgroundColor = "#54d359";
-            }
-        })
-    }
-})
+function CheckNasHostStatus() {
+    fetch("/nas/CheckConnection").then(r => {
+        if (r.ok) {
+            document.querySelector(".nas-status div").style.backgroundColor = "#54d359";
+        }
+        else {
+            fetch("/nas/ScanForAvailibleHosts").then(r2 => {
+                if (r2.ok) {
+                    document.querySelector(".nas-status div").style.backgroundColor = "#54d359";
+                }
+            })
+        }
+    })
+}
 
+
+CheckNasHostStatus();
 fetchTelemetryData();
 
 setInterval(fetchTelemetryData, 5 * 60 * 1000);
+
+setInterval(CheckNasHostStatus, 60000);
