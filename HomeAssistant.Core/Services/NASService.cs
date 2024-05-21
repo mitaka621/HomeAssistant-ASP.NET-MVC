@@ -203,7 +203,7 @@ namespace HomeAssistant.Core.Services
 
 		public async Task<bool> ScanForAvailibleHost()
 		{
-			int start = 10;
+			int start = 2;
 
 			string ip = "192.168.0.";
 

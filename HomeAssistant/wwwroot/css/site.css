@@ -162,3 +162,69 @@ ul.navbar-nav>li.nav-item {
 div.container-fluid>a{
     margin-right:0;
 }
+
+div.pcStatus {
+    width: 0.7em;
+    height: 0.7em;
+    background-color: red;
+    border-radius: 50%;
+    padding: 0;
+    margin: 0;
+}
+
+div.pc{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:0.5em;
+    background-color:white;
+    padding:0.5em 1em;
+}
+div.pc button{
+    height:fit-content;
+}
+#wakeOnLanContainer {
+    background-color: #d9f3f2;
+    padding: 2em;
+    border-radius: 30px;
+    margin-bottom: 1em;
+}
+#wakeOnLanContainer svg{
+    width:1em;
+}
+
+.wake{
+    fill:#54d359;
+}
+.shutdown {
+    fill:#efa02a
+}
+div.action-btns button {
+    padding: 0 0.4em;
+    margin: 0;
+}
+.identification{
+    display:flex;
+    align-items:center;
+    gap:1em;
+}
+.identification p{
+    margin:0;
+    padding:0;
+    text-align:start;
+    max-width:7em;
+    text-overflow:ellipsis;
+    overflow:hidden;
+}
+div.identification .ip{
+    font-size:0.8em;
+}
+#wakeOnLanContainer h3{
+    margin-bottom:1em;
+}
+
+.clearbtn{
+    margin:0;
+    padding:0;
+    background-color:white;
+}
