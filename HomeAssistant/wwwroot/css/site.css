@@ -213,6 +213,7 @@ div.action-btns button {
     padding:0;
     text-align:start;
     max-width:7em;
+    white-space: nowrap;
     text-overflow:ellipsis;
     overflow:hidden;
 }
