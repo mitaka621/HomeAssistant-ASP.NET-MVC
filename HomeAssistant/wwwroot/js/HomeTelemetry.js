@@ -26,8 +26,11 @@ function CheckNasHostStatus() {
             fetch("/NAS/GetFilesJson?skip=1&take=1&path=").then(r3 => {
                 if (r3.ok) {
                     document.querySelector(".nas-status div").style.backgroundColor = "#54d359";
+                    document.getElementById("nasbtn").href = "/nas";
+                    
                 } else {
                     document.querySelector(".nas-status div").style.backgroundColor = "orange";
+                    
                 }
             })
         }
@@ -37,6 +40,7 @@ function CheckNasHostStatus() {
                     fetch("/NAS/GetFilesJson?skip=1&take=1&path=").then(r3 => {
                         if (r3.ok) {
                             document.querySelector(".nas-status div").style.backgroundColor = "#54d359";
+                            document.getElementById("nasbtn").href = "/nas";
                         } else {
                             document.querySelector(".nas-status div").style.backgroundColor = "orange";
                         }
@@ -267,7 +271,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     if (nas) {
         CheckNasHostStatus();
-        setInterval(CheckNasHostStatus, 60000);
+        setInterval(CheckNasHostStatus, 30000);
     }
 });
 
