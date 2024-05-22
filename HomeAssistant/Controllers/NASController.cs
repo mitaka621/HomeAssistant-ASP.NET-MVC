@@ -71,6 +71,7 @@ namespace HomeAssistant.Controllers
 			return StatusCode(503);
 		}
 
+		[SkipStatusCodePages]
 		public async Task<IActionResult> GetFilesJson(string path,int skip,int take)
 		{
 			var files = await _service.GetData(path, skip, take);
@@ -81,6 +82,7 @@ namespace HomeAssistant.Controllers
 			return StatusCode(503);
 		}
 
+		[SkipStatusCodePages]
 		public async Task<IActionResult> GetPrevAndNextPathsForPhoto(string path)
 		{
 			var data = await _service.GetPrevAndNextPhotoLocation(path);
@@ -94,8 +96,7 @@ namespace HomeAssistant.Controllers
 
         }
 
-
-
+		[SkipStatusCodePages]
 		public async Task<IActionResult> GetPhotoInfo(string path)
 		{
 			var data = await _service.GetPhotoInfo(path);
