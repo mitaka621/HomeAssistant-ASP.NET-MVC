@@ -368,3 +368,8 @@ div.rad h3{
     position:absolute;
     margin: -130px 0 0 -130px;
 }
+
+.action-btns{
+        display: flex;
+    flex-wrap: nowrap;
+}
