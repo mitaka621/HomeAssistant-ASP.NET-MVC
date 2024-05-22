@@ -29,7 +29,7 @@ namespace HomeAssistant.Core.Services
 
 			if (configuration.GetSection("ExternalServiceApiKeys")["NASHostToken"] != null)
 			{
-				Token = configuration.GetSection("ExternalServiceApiKeys")["NASToken"];
+				Token = configuration.GetSection("ExternalServiceApiKeys")["NASHostToken"];
 			}
 
 			httpClient = _httpClient;
