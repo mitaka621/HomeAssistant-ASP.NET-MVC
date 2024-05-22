@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Contracts
 {
-	public interface INASService
+	public interface INASHostService
 	{
 		Task<IEnumerable<DirViewModel>?> GetData(string path,int skip= 0, int take = 100);
 

@@ -15,5 +15,9 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<bool> PingHost(string ipAddress);
 
+		Task<bool> ShutDownNas(string nasName);
+
+		Task<bool> ShutDownHost(string hostName);
+
 	}
 }

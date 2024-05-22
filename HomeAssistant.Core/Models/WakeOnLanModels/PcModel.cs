@@ -18,5 +18,9 @@ namespace HomeAssistant.Core.Models.WakeOnLanModels
         public bool IsHostPc { get; set; }
 
         public bool IsNAS { get; set; }
+
+        public string NasToken { get; set; } = string.Empty;
+
+        public string NasHostToken { get; set; } = string.Empty;
     }
 }

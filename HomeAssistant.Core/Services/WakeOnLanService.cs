@@ -48,6 +48,7 @@ namespace HomeAssistant.Core.Services
 								PcName = arr[0],
 								MAC = arr[1],
 								PcIp = arr[2],
+								NasHostToken = arr[3],
 							});
 							continue;
 
@@ -61,6 +62,7 @@ namespace HomeAssistant.Core.Services
 								PcName = arr[0],
 								MAC = arr[1],
 								PcIp = arr[2],
+								NasToken = arr[3]
 							});
 							continue;
 						}
@@ -141,6 +143,56 @@ namespace HomeAssistant.Core.Services
 			}
 		}
 
+
+		public async Task<bool> ShutDownNas(string nasName)
+		{
+			var nas=pcModels.FirstOrDefault(x => x.PcName == nasName && x.IsNAS);
+
+            if (nas==null)
+            {
+                throw new ArgumentNullException(nameof(nas));
+            }
+
+			var client = new HttpClient();
+			var request = new HttpRequestMessage(HttpMethod.Post, $"http://{nas.PcIp}/api/v2.0/system/shutdown");
+			request.Headers.Add("Authorization", "Bearer "+nas.NasToken);
+
+			var response = await client.SendAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning($"Failed to shut down {nas.PcName} - {response.StatusCode}");
+				return false;
+            }
+
+			return true;
+
+        }
+
+		public async Task<bool> ShutDownHost(string hostName)
+		{
+			var hostPc = pcModels.FirstOrDefault(x => x.PcName == hostName && x.IsHostPc);
+
+			if (hostPc == null)
+			{
+				throw new ArgumentNullException(nameof(hostPc));
+			}
+
+			var client = new HttpClient();
+			var request = new HttpRequestMessage(HttpMethod.Post, $"http://{hostPc.PcIp}:3000/shutdown");
+			request.Headers.Add("token", hostPc.NasHostToken);
+
+			var response = await client.SendAsync(request);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				_logger.LogWarning($"Failed to shut down {hostPc.PcName} - {response.StatusCode}");
+				return false;
+			}
+
+			return true;
+		}
+
 		private byte[] BuildMagicPacket(string macAddress) // MacAddress in any standard HEX format
 		{
 			macAddress = Regex.Replace(macAddress, "[: -]", "");
@@ -181,6 +233,5 @@ namespace HomeAssistant.Core.Services
 			return ipAddresses.ToArray();
 		}
 
-		
 	}
 }

@@ -84,5 +84,43 @@ namespace HomeAssistant.Controllers
 			}
 			
 		}
+
+		public async Task<IActionResult> ShutDownNas(string name)
+		{
+			try
+			{
+				if (await _wakeOnLanService.ShutDownNas(name))
+				{
+					return Ok();
+				}
+
+				return BadRequest();
+				
+			}
+			catch (ArgumentException)
+			{
+				return BadRequest();
+			}
+
+		}
+
+		public async Task<IActionResult> ShutDownHostPc(string name)
+		{
+			try
+			{
+				if (await _wakeOnLanService.ShutDownHost(name))
+				{
+					return Ok();
+				}
+
+				return BadRequest();
+
+			}
+			catch (ArgumentException)
+			{
+				return BadRequest();
+			}
+
+		}
 	}
 }

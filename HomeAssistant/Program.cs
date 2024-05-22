@@ -61,7 +61,7 @@ builder.Services
 	.AddHttpClient<IHomeTelemetryService, HomeTelemetryService>();
 
 builder.Services
-    .AddHttpClient<INASService, NASService>();
+    .AddHttpClient<INASHostService, NASHostService>();
 
 
 

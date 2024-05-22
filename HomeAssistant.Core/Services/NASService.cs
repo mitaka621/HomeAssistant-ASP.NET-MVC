@@ -17,17 +17,17 @@ using System.Threading.Tasks;
 
 namespace HomeAssistant.Core.Services
 {
-	public class NASService : INASService
+	public class NASHostService : INASHostService
 	{
 		public static string currentHostIp = "0.0.0.0";
 
 		private readonly HttpClient httpClient;
 		private readonly ILogger _logger;
 
-		public NASService(IConfiguration configuration, HttpClient _httpClient, HomeAssistantDbContext dbcontext, ILogger<IHomeTelemetryService> logger, INotificationService notificationService)
+		public NASHostService(IConfiguration configuration, HttpClient _httpClient, HomeAssistantDbContext dbcontext, ILogger<IHomeTelemetryService> logger, INotificationService notificationService)
 		{
 
-			if (configuration.GetSection("ExternalServiceApiKeys")["NASToken"] != null)
+			if (configuration.GetSection("ExternalServiceApiKeys")["NASHostToken"] != null)
 			{
 				Token = configuration.GetSection("ExternalServiceApiKeys")["NASToken"];
 			}

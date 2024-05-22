@@ -11,8 +11,8 @@ namespace HomeAssistant.Controllers
 	[Authorize(Roles ="NASUser")]
 	public class NASController : Controller
 	{
-		private readonly INASService _service;
-        public NASController(INASService service)
+		private readonly INASHostService _service;
+        public NASController(INASHostService service)
         {
 			_service=service;
 		}
@@ -29,7 +29,7 @@ namespace HomeAssistant.Controllers
 				return StatusCode(503);
 			}
 
-			ViewBag.currentHostIP = NASService.currentHostIp;
+			ViewBag.currentHostIP = NASHostService.currentHostIp;
             return View(data);
 		}
 
