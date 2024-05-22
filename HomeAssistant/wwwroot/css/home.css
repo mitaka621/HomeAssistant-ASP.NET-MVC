@@ -31,6 +31,9 @@
         position: absolute;
         margin: -150px 0 0 -150px !important;
     }
+    .identification p{
+        font-size:1em;
+    }
 }
 main{
     margin:0 auto;
