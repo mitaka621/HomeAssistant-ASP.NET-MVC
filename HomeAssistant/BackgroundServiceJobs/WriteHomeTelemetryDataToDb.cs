@@ -32,7 +32,7 @@ namespace HomeAssistant.BackgroundServiceJobs
 						var _notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
 						var _homeTelemetryService = scope.ServiceProvider.GetRequiredService<IHomeTelemetryService>();
 
-						string data = await _homeTelemetryService.GetData();
+						string data = await _homeTelemetryService.GetLiveData();
 
 						if (string.IsNullOrWhiteSpace(data))
 						{

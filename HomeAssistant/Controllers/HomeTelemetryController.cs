@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Services;
 using HomeAssistant.Hubs;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,7 @@ namespace HomeAssistant.Controllers
 		private readonly IHubContext<NotificationsHub> _notificationHubContext;
 		private readonly INotificationService _notificationService;
 
+
 		public HomeTelemetryController(IHomeTelemetryService service, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService)
 		{
 			_service = service;
@@ -27,10 +29,21 @@ namespace HomeAssistant.Controllers
 			_notificationService = notificationService;
 		}
 
+		[Route("[controller]/[action]")]
+		[HttpGet]
+		public async Task< IActionResult> Index(DateTime? startDate, DateTime? endDate, DataRangeEnum dataRange = DataRangeEnum.None)
+		{
+			ViewBag.DateRange = dataRange;
+			ViewBag.StartDate = startDate;
+			ViewBag.EndDate = endDate;
+
+            return View(await _service.GetDataRange(dataRange, startDate, endDate));
+		}
+
 		[HttpGet]
 		public async Task<IActionResult> Data()
 		{
-			string result = await _service.GetData();
+			string result = await _service.GetLiveData();
 
 			if (string.IsNullOrWhiteSpace(result))
 			{
