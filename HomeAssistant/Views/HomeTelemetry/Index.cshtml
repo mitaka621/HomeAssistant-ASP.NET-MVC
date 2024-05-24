@@ -246,7 +246,6 @@
 						},
 						ticks: {
 							callback: function (value, index, values) {
-								// Determine which dataset is currently visible
 								var visibleDataset = this.chart.data.datasets.find(dataset => !dataset.hidden);
 								if (visibleDataset.label === 'Humidity') {
 									return value + ' %';
@@ -255,7 +254,7 @@
 								} else if (visibleDataset.label === 'CPM') {
 									return value + ' count';
 								} else if (visibleDataset.label === 'Radiation') {
-									return value + ' μSv';
+									return value.toFixed(4) + ' μSv';
 								}
 								return value;
 							}

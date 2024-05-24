@@ -1,4 +1,7 @@
 ﻿@media only screen and (max-width: 1000px) {
+    body>div.container{
+        padding:0 !important;
+    }
     p, a, h3, h4, h5 {
         font-size: 1.5em;
     }

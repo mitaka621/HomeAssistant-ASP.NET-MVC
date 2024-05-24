@@ -29,7 +29,7 @@ namespace HomeAssistant.Controllers
 			_notificationService = notificationService;
 		}
 
-		[Route("[controller]/[action]")]
+		[Route("~/HomeTelemetry/Index")]
 		[HttpGet]
 		public async Task< IActionResult> Index(DateTime? startDate, DateTime? endDate, DataRangeEnum dataRange = DataRangeEnum.Hour,string? type="Radiation",BarsPerPage count= BarsPerPage.Bars_10)
 		{
