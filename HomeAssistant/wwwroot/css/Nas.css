@@ -74,10 +74,13 @@
         margin-left:-1.5em !important;
         margin-top:-0.2em !important;
     }
+    h1{
+        font-size:1.2em;
+    }
 }
 @media only screen and (max-width: 1000px) {
     #flexSwitchCheck {
-        max-width: 2em;
+        max-width: 2em !important;
     }
     .form-check {
         justify-content: center !important;
