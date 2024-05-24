@@ -70,7 +70,7 @@ namespace UnitTests
 					Content = new StringContent(mockData)
 				});
 
-			string result = await _homeTelemetryService.GetData();
+			string result = await _homeTelemetryService.GetLiveData();
 
 			Assert.AreEqual(mockData, result);
 		}

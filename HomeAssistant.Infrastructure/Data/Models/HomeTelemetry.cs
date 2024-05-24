@@ -5,10 +5,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
 {
 	public class HomeTelemetry
 	{
-		[Comment("Telemetry record identifier")]
-        [Key]
-        public int Id { get; set; }
-
+		[Key]
 		[Comment("Date and time of the record")]
 		public DateTime DateTime { get; set; }
 

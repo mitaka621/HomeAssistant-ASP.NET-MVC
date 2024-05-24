@@ -10,8 +10,6 @@ namespace HomeAssistant.Core.Models.HomeTelemetry
 {
 	public class HomeTelemetryViewModel
 	{
-		public int Id { get; set; }
-
 		public DateTime DateTime { get; set; }
 
 		public double Humidity { get; set; }

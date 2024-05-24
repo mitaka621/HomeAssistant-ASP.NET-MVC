@@ -136,7 +136,6 @@ namespace HomeAssistant.Core.Services
                     Temperature = x.Temperature,
                     Humidity = x.Humidity,
                     Radiation = x.Radiation,
-                    Id = x.Id
                 })
                 .ToListAsync();
 
