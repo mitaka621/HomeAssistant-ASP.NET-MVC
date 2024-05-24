@@ -1,4 +1,5 @@
-﻿using HomeAssistant.Core.Contracts;
+﻿using Amazon.Runtime.Internal.Transform;
+using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Models.HomeTelemetry;
 using HomeAssistant.Infrastructure.Data;
@@ -110,12 +111,24 @@ namespace HomeAssistant.Core.Services
         public async Task<Dictionary<DateTime, HomeTelemetryViewModel>> GetDataRange(
             DataRangeEnum dataRange,
             DateTime? startDate,
-            DateTime? endDate)
+            DateTime? endDate,
+            BarsPerPage numBars)
         {
+            int numBarsInt;
+            if (numBars==BarsPerPage.Default)
+            {
+				numBarsInt = 100;
+			}
+            else
+            {
+				numBarsInt = (int)numBars * 10;
+			}
+
             var data = await _dbcontext
                 .homeTelemetries
                 .AsNoTracking()
-                .Where(x => x.DateTime >= (startDate ?? new DateTime()) && x.DateTime <= (endDate ?? DateTime.Now))
+                .Where(x => x.DateTime > (startDate ?? DateTime.MinValue) && x.DateTime < (endDate ?? DateTime.Now))
+                .OrderBy(x=>x.DateTime)
                 .Select(x => new HomeTelemetryViewModel()
                 {
                     CPM = x.CPM,
@@ -148,10 +161,10 @@ namespace HomeAssistant.Core.Services
                 default:
                     if (startDate == null)
                     {
-                        return data.TakeLast(100).Select(x => new KeyValuePair<DateTime, HomeTelemetryViewModel>(x.DateTime, x))
+                        return data.TakeLast(numBarsInt).Select(x => new KeyValuePair<DateTime, HomeTelemetryViewModel>(x.DateTime, x))
                         .ToDictionary(x => x.Key, x => x.Value);
                     }
-                    return data.Take(100).Select(x => new KeyValuePair<DateTime, HomeTelemetryViewModel>(x.DateTime, x))
+                    return data.Take(numBarsInt).Select(x => new KeyValuePair<DateTime, HomeTelemetryViewModel>(x.DateTime, x))
                         .ToDictionary(x => x.Key, x => x.Value);
             }
 
@@ -159,8 +172,10 @@ namespace HomeAssistant.Core.Services
 
             double avgHumidity = 0, avgRadiation = 0, avgCPM = 0, avgTempreture = 0;
             int count = 0;
+            double avgDateTime =  0;
 
-            Dictionary<DateTime, HomeTelemetryViewModel> outputData = new();
+           
+			Dictionary <DateTime, HomeTelemetryViewModel> outputData = new();
 
             foreach (var record in data)
             {
@@ -170,15 +185,18 @@ namespace HomeAssistant.Core.Services
                     avgRadiation += record.Radiation;
                     avgCPM += record.CPM;
                     avgTempreture += record.Temperature;
+                    avgDateTime +=new TimeSpan( record.DateTime.Ticks).TotalSeconds;
 
-                    count++;
+					count++;
 
                     continue;
                 }
 
                 if (count != 0)
                 {
-                    outputData.Add(targetDateTime, new HomeTelemetryViewModel()
+                    double seconds = avgDateTime / count;
+
+					outputData.Add(new DateTime().AddSeconds(seconds), new HomeTelemetryViewModel()
                     {
                         CPM = avgCPM / count,
                         Humidity = avgHumidity / count,
@@ -192,18 +210,19 @@ namespace HomeAssistant.Core.Services
                 avgRadiation = 0;
                 avgCPM = 0;
                 avgTempreture = 0;
+                avgDateTime = 0;
 
-                count = 0;
+				count = 0;
 
                 targetDateTime = record.DateTime + interval;
             }
 
             if (startDate==null)
             {
-                return outputData.TakeLast(100).ToDictionary(pair => pair.Key, pair => pair.Value);
+                return outputData.TakeLast(numBarsInt).ToDictionary(pair => pair.Key, pair => pair.Value);
             }
 
-            return outputData.Take(100).ToDictionary(pair => pair.Key, pair => pair.Value);
+            return outputData.Take(numBarsInt).ToDictionary(pair => pair.Key, pair => pair.Value);
 
         }
     }

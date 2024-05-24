@@ -3,6 +3,10 @@ html {
 }
 
 @media only screen and (max-width: 1000px) {
+    #Input_RememberMe {
+        width: 1.3em !important;
+        height: 1.3em !important;
+    }
     html {
         font-size: 16px;
     }
@@ -21,10 +25,22 @@ html {
         width:fit-content;
     }
 
-    ul.flex-grow-1{
+    /*ul.flex-grow-1{
         display:none !important;
+    }*/
+    a[class="btn btn-danger configbtn"] {
+        display: none !important;
     }
-
+    a[class="btn btn-primary configbtn"]{
+        display:block;
+        font-size:0.8em;
+    }
+    input#tempUser{
+        width:2em !important;
+    }
+    .form-switch{
+        font-size:1.4em;
+    }
     ul.navbar-nav li:nth-child(2) {
         display: none !important;
     }

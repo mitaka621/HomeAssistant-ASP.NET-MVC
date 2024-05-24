@@ -31,13 +31,25 @@ namespace HomeAssistant.Controllers
 
 		[Route("[controller]/[action]")]
 		[HttpGet]
-		public async Task< IActionResult> Index(DateTime? startDate, DateTime? endDate, DataRangeEnum dataRange = DataRangeEnum.None)
+		public async Task< IActionResult> Index(DateTime? startDate, DateTime? endDate, DataRangeEnum dataRange = DataRangeEnum.Hour,string? type="Radiation",BarsPerPage count= BarsPerPage.Bars_10)
 		{
-			ViewBag.DateRange = dataRange;
-			ViewBag.StartDate = startDate;
-			ViewBag.EndDate = endDate;
+			var models = await _service.GetDataRange(dataRange, startDate, endDate, count);
 
-            return View(await _service.GetDataRange(dataRange, startDate, endDate));
+			ViewBag.DateRange = dataRange;
+			ViewBag.Type = type;
+			ViewBag.BarsCount = count;
+			if (models.Count==0)
+            {
+                ViewBag.StartDate = startDate;
+                ViewBag.EndDate = endDate;
+
+                return View(models);
+            }
+         
+            ViewBag.StartDate = models.FirstOrDefault().Key;
+            ViewBag.EndDate = models.LastOrDefault().Key;
+
+            return View(models);
 		}
 
 		[HttpGet]

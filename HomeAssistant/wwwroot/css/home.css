@@ -27,13 +27,48 @@
         width:initial !important;
     }
 
-    .nas-status {
-        position: absolute;
-        margin: -150px 0 0 -150px !important;
-    }
+  
     .identification p{
         font-size:1em;
     }
+    .main-menu a{
+        width:8em !important;
+        height:8em !important;
+    }
+    div.main-menu img{
+        max-width:5em;
+    }
+    .fridge-btn img {
+        max-width: 3.5em !important;
+    }
+
+    .nas-status {
+        position: absolute;
+        margin: -100px 0 0 -100px !important;
+    }
+
+    .greeting {
+        padding: 1em !important;
+    }
+    div.main-container>div{
+        width:100%;
+        padding:0 1.5em !important;
+    }
+    .weather{
+        width:100%;
+        
+    }
+    .notifications-container, .telemetry {
+        width: 100% !important;
+    }
+    h2{
+        font-size:1.4em;
+        font-weight:600;
+    }
+    p.hat-desc, p.shirt-desc{
+        font-size:1em;
+    }
+
 }
 main{
     margin:0 auto;
@@ -294,12 +329,7 @@ figcaption{
     font-weight: 600;
     text-shadow: 4px 2px 5px rgba(0,0,0,0.6);
 }
-div.status {
-    width: fit-content;
-    position: absolute;
-    margin-top: -1em;
-    margin-left:-1em;
-}
+
 div.status svg.error {
     width: 2em;
     fill: red;
@@ -345,10 +375,6 @@ div.rad h3{
     margin:0;
 }
 
-.telemetry .status{
-    margin-top:-1em;
-    margin-left:-1em;
-}
 .telemetry span {
     font-weight: 600;
     text-shadow: 2px 2px 2px rgba(0,0,0,0.6);
@@ -375,4 +401,23 @@ div.rad h3{
 .action-btns{
         display: flex;
     flex-wrap: nowrap;
+}
+.telemetry-top{
+    display:flex;
+    width:110%;
+    margin-left:-0.9em;
+    margin-top:-0.8em;
+}
+.chart-btn {
+    display: block;
+    width: fit-content;
+    margin: 0 0 0 auto;
+    padding: 0;
+}
+.chart-btn svg:hover{
+    fill:grey;
+}
+.chart-btn svg {
+    fill: #fcff00;
+    width: 2em;
 }

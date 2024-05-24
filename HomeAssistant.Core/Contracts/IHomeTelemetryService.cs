@@ -7,7 +7,7 @@ namespace HomeAssistant.Core.Contracts
 	{
 		Task<string> GetLiveData();
 
-		Task<Dictionary<DateTime, HomeTelemetryViewModel>> GetDataRange(DataRangeEnum dataRange,DateTime? startDate, DateTime? endDate);
+		Task<Dictionary<DateTime, HomeTelemetryViewModel>> GetDataRange(DataRangeEnum dataRange,DateTime? startDate, DateTime? endDate, BarsPerPage numBars);
 
 		Task SaveData(string data);
 

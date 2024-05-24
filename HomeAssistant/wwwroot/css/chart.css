@@ -1,0 +1,54 @@
+﻿h1{
+    text-align:center;
+}
+.flex-container
+{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:1em;
+}
+.flex-container svg{
+    width:2em;
+}
+.dropdown{
+    margin: 1em auto;
+    width:fit-content;
+}
+.dropdown p{
+    margin:0;
+    padding:0;
+}
+.dropdown-toggle::after{
+    display:none;
+}
+
+.reset{
+    margin:0 auto;
+    width:3em;
+    height:3em;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:0;
+}
+.reset svg{
+    width:2em;
+    fill:white;
+    padding:0;
+    margin:0;
+}
+.chart-options .dropdown{
+    margin:0;
+}
+.chart-options {
+    display: flex;
+    justify-content: center;
+    gap:1em;
+    margin:2em 0;
+}
+.canvas-container {
+    width: 100%;
+    height: 70vh;
+}

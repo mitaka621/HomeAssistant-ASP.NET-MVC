@@ -17,7 +17,6 @@ namespace HomeAssistant.Controllers
 			_service=service;
 		}
 
-		[SkipStatusCodePages]
 		public async Task<IActionResult> Index(string path="")
 		{
 			ViewBag.Path = path;

@@ -1,197 +1,269 @@
-﻿@using HomeAssistant.Core.Enums
+﻿@using HomeAssistant.Core.Constants
+@using HomeAssistant.Core.Enums
 @using HomeAssistant.Core.Models.HomeTelemetry
 @model Dictionary<DateTime, HomeTelemetryViewModel>
-<h1>Telemetry Data</h1>
 
-<form method="get" asp-action="Index">
-    <input hidden name="dataRange" value="@ViewBag.DateRange" />
-    <input disabled id="startDate" type="datetime-local" name="startDate" value="@((ViewBag.StartDate??DateTime.Now).ToString("yyyy-MM-dd'T'HH:mm"))" />
-    <input type="checkbox" onclick="checkBox1(this)"/>
+@{
+	Dictionary<string, string> previousPages = new();
 
-    <input disabled id="endDate" type="datetime-local" name="endDate" value="@DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm")" />
-    <input type="checkbox" onclick="checkBox2(this)" />
-    <button type="submit" class="btn btn-primary">Filter</button>
-</form>
+	previousPages.Add("Home Telemetry Charts", "/HomeTelemetry/index");
+	ViewBag.previousPages = previousPages;
+}
 
-<div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <p>Interval: @(((DataRangeEnum)ViewBag.DateRange).ToString())</p>
-    </button>
-    <ul class="dropdown-menu">
-        @foreach (var option in Enum.GetValues(typeof(DataRangeEnum)))
-        {
-            <li>
-                <a class="dropdown-item"
-                asp-action="Index"
-                   asp-route-dataRange="@option"
-                   asp-route-startDate="@ViewBag.StartDate"
-                   asp-route-endDate="@ViewBag.EndDate">
-                    @option
-                </a>
-            </li>
-        }
-    </ul>
+<link rel="stylesheet" href="~/css/chart.css" asp-append-version="true" />
+
+<a class="btn btn-primary reset dataType" asp-action="Index" asp-route-dataRange="@ViewBag.DateRange" asp-route-count="@ViewBag.BarsCount" asp-route-type="@ViewBag.Type">
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z" /></svg>
+</a>
+<div class="flex-container">
+	@if (ViewBag.StartDate != null)
+	{
+		<a class="dataType" asp-action="Index" asp-route-endDate="@ViewBag.StartDate" asp-route-dataRange="@ViewBag.DateRange" asp-route-count="@ViewBag.BarsCount" asp-route-type="@ViewBag.Type">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M177.5 414c-8.8 3.8-19 2-26-4.6l-144-136C2.7 268.9 0 262.6 0 256s2.7-12.9 7.5-17.4l144-136c7-6.6 17.2-8.4 26-4.6s14.5 12.5 14.5 22l0 72 288 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32l-288 0 0 72c0 9.6-5.7 18.2-14.5 22z" /></svg>
+		</a>
+	}
+	<h2>
+		@(ViewBag.StartDate != null ? ViewBag.StartDate.ToString(DataValidationConstants.DateTimeFormat) : Html.Raw("&infin;"))
+		<span class="fw-bold"> To </span>
+		@(ViewBag.EndDate != null ? ViewBag.EndDate.ToString(DataValidationConstants.DateTimeFormat) : Html.Raw("&infin;"))
+	</h2>
+	@if (ViewBag.EndDate != null)
+	{
+		<a class="dataType" asp-action="Index" asp-route-startDate="@(ViewBag.EndDate)" asp-route-dataRange="@ViewBag.DateRange" asp-route-count="@ViewBag.BarsCount" asp-route-type="@ViewBag.Type">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M334.5 414c8.8 3.8 19 2 26-4.6l144-136c4.8-4.5 7.5-10.8 7.5-17.4s-2.7-12.9-7.5-17.4l-144-136c-7-6.6-17.2-8.4-26-4.6s-14.5 12.5-14.5 22l0 72L32 192c-17.7 0-32 14.3-32 32l0 64c0 17.7 14.3 32 32 32l288 0 0 72c0 9.6 5.7 18.2 14.5 22z" /></svg>
+		</a>
+	}
+</div>
+<div class="chart-options">
+	<div class="dropdown">
+		<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+			<p>Interval: @(((DataRangeEnum)ViewBag.DateRange).ToString())</p>
+		</button>
+		<ul class="dropdown-menu">
+			@foreach (var option in Enum.GetValues(typeof(DataRangeEnum)))
+			{
+				<li>
+					<a class="dropdown-item dataType"
+					   asp-action="Index"
+					   asp-route-dataRange="@option"
+					   asp-route-chartType="@ViewBag.ChartType"
+					   asp-route-count="@ViewBag.BarsCount"
+					   asp-route-type="@ViewBag.Type">
+						@option
+					</a>
+				</li>
+			}
+		</ul>
+	</div>
+	<div class="dropdown">
+		<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+			@if (ViewBag.BarsCount == BarsPerPage.Default)
+			{
+				<p>Max bars per page: Default</p>
+			}
+			else
+			{
+				<p>Max bars per page: @(((BarsPerPage)ViewBag.BarsCount).ToString().Split("_")[1])</p>
+			}
+		</button>
+		<ul class="dropdown-menu">
+			@foreach (string option in Enum.GetNames(typeof(BarsPerPage)))
+			{
+				string number = option;
+				if (option!="Default")
+				{
+					number = number.Split("_")[1];
+				}
+				<li>
+					<a class="dropdown-item dataType"
+					   asp-action="Index"
+					   asp-route-dataRange="@ViewBag.DateRange"
+					   asp-route-chartType="@ViewBag.ChartType"
+					   asp-route-count="@option"
+					   asp-route-type="@ViewBag.Type">
+						@number
+					</a>
+				</li>
+			}
+		</ul>
+	</div>
+</div>
+<div class="canvas-container">
+	<canvas id="myChart"></canvas>
 </div>
 
-<canvas id="myChart" width="1600" height="800"></canvas>
 
 @section Scripts {
-    <script src="~/js/chartjs/chart.js"></script>
+	<script src="~/js/chartjs/chart.js"></script>
 
-    <script>
-        function checkBox1(e) {
-            if (e.checked) {
-                document.getElementById("startDate").removeAttribute("disabled");
-            }
-            else{
-                document.getElementById("startDate").setAttribute("disabled", "true");
-            }
-        }
+	<script>
+		function checkBox1(e) {
+			if (e.checked) {
+				document.getElementById("startDate").removeAttribute("disabled");
+			}
+			else {
+				document.getElementById("startDate").setAttribute("disabled", "true");
+			}
+		}
 
-        function checkBox2(e) {
-            if (e.checked) {
-                document.getElementById("endDate").removeAttribute("disabled");
-            }
-            else {
-                document.getElementById("endDate").setAttribute("disabled", "true");
-            }
-        }
+		function checkBox2(e) {
+			if (e.checked) {
+				document.getElementById("endDate").removeAttribute("disabled");
+			}
+			else {
+				document.getElementById("endDate").setAttribute("disabled", "true");
+			}
+		}
 
-        var labels = [];
-        var humidityData = [];
-        var temperatureData = [];
-        var cpmData = [];
-        var radiationData = [];
-        var unmodifiedDate = [];
+		var labels = [];
+		var humidityData = [];
+		var temperatureData = [];
+		var cpmData = [];
+		var radiationData = [];
+		var unmodifiedDate = [];
 
-        @{
-            string dateFormat = string.Empty;
+		@{
+			string dateFormat = string.Empty;
 
-            switch ((DataRangeEnum)ViewBag.DateRange)
-            {
-                case DataRangeEnum.Hour:
-                    dateFormat = "HH:mm";
-                    break;
-                case DataRangeEnum.Day:
-                    dateFormat = "dd-MM";
-                    break;
-                case DataRangeEnum.Month:
-                    dateFormat = "MM-yyyy";
-                    break;
-                default:
-                    dateFormat = "HH:mm";
-                    break;
-            }
-        }
-        @foreach (var entry in Model)
-        {            
-            @:labels.push("@entry.Key.ToString(dateFormat)");
-            @:unmodifiedDate.push("@entry.Key.ToString("dd-MM-yyyy HH:mm:ss")");
-            @:humidityData.push(@entry.Value.Humidity);
-            @:temperatureData.push(@entry.Value.Temperature);
-            @:cpmData.push(@entry.Value.CPM);
-            @:radiationData.push(@entry.Value.Radiation);
-        }
+			switch ((DataRangeEnum)ViewBag.DateRange)
+			{
+				case DataRangeEnum.Hour:
+					dateFormat = "HH:mm";
+					break;
+				case DataRangeEnum.Day:
+					dateFormat = "dd-MM";
+					break;
+				case DataRangeEnum.Month:
+					dateFormat = "MM-yyyy";
+					break;
+				default:
+					dateFormat = "HH:mm";
+					break;
+			}
+		}
+		@foreach (var entry in Model)
+		{
+			@:labels.push("@entry.Key.ToString(dateFormat)");
+			@:unmodifiedDate.push("@entry.Key.ToString("dd-MM-yyyy HH:mm:ss")");
+			@:humidityData.push(@entry.Value.Humidity);
+			@:temperatureData.push(@entry.Value.Temperature);
+			@:cpmData.push(@entry.Value.CPM);
+			@:radiationData.push(@entry.Value.Radiation);
+		}
 
-            var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Humidity',
-                        data: humidityData,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        hidden: true
-                    },
-                    {
-                        label: 'Temperature',
-                        data: temperatureData,
-                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        borderWidth: 1,
-                        hidden: true
-                    },
-                    {
-                        label: 'CPM',
-                        data: cpmData,
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        borderWidth: 1,
-                        hidden: true
-                    },
-                    {
-                        label: 'Radiation',
-                        data: radiationData,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                        hidden: false 
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        onClick: function (e, legendItem, legend) {
+									var ctx = document.getElementById('myChart').getContext('2d');
+		var myChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: labels,
+				datasets: [
+					{
+						label: 'Humidity',
+						data: humidityData,
+						backgroundColor: 'rgba(75, 192, 192, 0.2)',
+						borderColor: 'rgba(75, 192, 192, 1)',
+						borderWidth: 1,
+						hidden: @(ViewBag.Type != "Humidity" ? "true" : "false")
+									},
+					{
+						label: 'Temperature',
+						data: temperatureData,
+						backgroundColor: 'rgba(255, 159, 64, 0.2)',
+						borderColor: 'rgba(255, 159, 64, 1)',
+						borderWidth: 1,
+						hidden: @(ViewBag.Type != "Temperature" ? "true" : "false")
+									},
+					{
+						label: 'CPM',
+						data: cpmData,
+						backgroundColor: 'rgba(153, 102, 255, 0.2)',
+						borderColor: 'rgba(153, 102, 255, 1)',
+						borderWidth: 1,
+						hidden: @(ViewBag.Type != "CPM" ? "true" : "false")
+									},
+					{
+						label: 'Radiation',
+						data: radiationData,
+						backgroundColor: 'rgba(255, 99, 132, 0.2)',
+						borderColor: 'rgba(255, 99, 132, 1)',
+						borderWidth: 1,
+						hidden: @(ViewBag.Type != "Radiation" ? "true" : "false")
+									}
+				]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio:false,
+				devicePixelRatio: 4,
+				plugins: {
+					legend: {
+						onClick: function (e, legendItem, legend) {
 
-                            this.chart.data.datasets.forEach(function (dataset, index) {
-                                dataset.hidden = true;
-                            });
+							this.chart.data.datasets.forEach(function (dataset, index) {
+								dataset.hidden = true;
+							});
 
-                            var datasetIndex = legendItem.datasetIndex;
-                            var clickedDataset = this.chart.data.datasets[datasetIndex];
-                            clickedDataset.hidden = !clickedDataset.hidden;
+							var datasetIndex = legendItem.datasetIndex;
+							var clickedDataset = this.chart.data.datasets[datasetIndex];
+							clickedDataset.hidden = !clickedDataset.hidden;
 
-                            this.chart.update();
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            title: function (context) {    
-                                return unmodifiedDate[unmodifiedDate.findIndex(element => element.includes(context[0].label))];
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        type: 'category',
-                        title: {
-                            display: true,
-                            text: 'Date and Time (@(dateFormat))'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Values'
-                        },
-                        ticks: {
-                            callback: function (value, index, values) {
-                                // Determine which dataset is currently visible    
-                                var visibleDataset = this.chart.data.datasets.find(dataset => !dataset.hidden);
-                                if (visibleDataset.label === 'Humidity') {
-                                    return value + ' %';
-                                } else if (visibleDataset.label === 'Temperature') {
-                                    return value + ' °C';
-                                } else if (visibleDataset.label === 'CPM') {
-                                    return value + ' count';
-                                } else if (visibleDataset.label === 'Radiation') {
-                                    return value + ' μSv';
-                                }
-                                return value;
-                            }
-                        }
-                    }
+							var label = clickedDataset.label;
 
-                }
-            }
-        });
-    </script>
+							document.querySelectorAll(".dataType").forEach(x => {
+								var currentHREF = x.href;
+
+								if (currentHREF.includes("&type")) {
+									currentHREF = currentHREF.split("&type")[0];
+								}
+
+								x.href = currentHREF + `&type=` + label;
+							})
+
+							this.chart.update();
+						}
+					},
+					tooltip: {
+						callbacks: {
+							title: function (context) {
+								return unmodifiedDate[unmodifiedDate.findIndex(element => element.includes(context[0].label))];
+							}
+						}
+					}
+				},
+				scales: {
+					x: {
+						type: 'category',
+						title: {
+							display: true,
+							text: 'Date and Time (@(dateFormat))'
+						}
+					},
+					y: {
+						beginAtZero: true,
+						title: {
+							display: false,
+							text: 'Values'
+						},
+						ticks: {
+							callback: function (value, index, values) {
+								// Determine which dataset is currently visible
+								var visibleDataset = this.chart.data.datasets.find(dataset => !dataset.hidden);
+								if (visibleDataset.label === 'Humidity') {
+									return value + ' %';
+								} else if (visibleDataset.label === 'Temperature') {
+									return value + ' °C';
+								} else if (visibleDataset.label === 'CPM') {
+									return value + ' count';
+								} else if (visibleDataset.label === 'Radiation') {
+									return value + ' μSv';
+								}
+								return value;
+							}
+						}
+					}
+
+				}
+			}
+		});
+	</script>
 }
