@@ -30,13 +30,17 @@
         width:initial !important;
     }
 
-  
-    .identification p{
-        font-size:1em;
+
+
+    .identification p {
+        font-size: 1em;
     }
-    .main-menu a{
-        width:8em !important;
-        height:8em !important;
+    .main-menu span{
+        font-size:1em !important;
+    }
+    .main-menu a {
+        width: 8em !important;
+        height: 8em !important;
     }
     div.main-menu img{
         max-width:5em;
@@ -47,7 +51,7 @@
 
     .nas-status {
         position: absolute;
-        margin: -100px 0 0 -100px !important;
+        margin: -80px 0 0 -80px !important;
     }
 
     .greeting {
@@ -55,7 +59,7 @@
     }
     div.main-container>div{
         width:100%;
-        padding:0 1.5em !important;
+        padding:0 0.5em !important;
     }
     .weather{
         width:100%;
