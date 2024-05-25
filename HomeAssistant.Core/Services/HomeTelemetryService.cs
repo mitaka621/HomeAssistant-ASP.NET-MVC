@@ -286,7 +286,7 @@ namespace HomeAssistant.Core.Services
 				}
 			}
 
-			if (count != 0 && !outputData.ContainsKey(targetDateTime))
+			if (dataRange== DataRangeEnum.Month || (count != 0 && !outputData.ContainsKey(targetDateTime)&& targetDateTime<DateTime.Now))
 			{
 				outputData[targetDateTime] = new HomeTelemetryViewModel()
 				{
