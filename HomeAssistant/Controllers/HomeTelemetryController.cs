@@ -45,8 +45,10 @@ namespace HomeAssistant.Controllers
 
                 return View(models);
             }
-         
+
+
             ViewBag.StartDate = models.FirstOrDefault().Key;
+
             ViewBag.EndDate = models.LastOrDefault().Key;
 
             return View(models);
