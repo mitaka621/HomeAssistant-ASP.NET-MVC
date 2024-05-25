@@ -128,7 +128,7 @@
 			switch ((DataRangeEnum)ViewBag.DateRange)
 			{
 				case DataRangeEnum.Hour:
-					dateFormat = "HH:mm";
+					dateFormat = "dd-MM (HH:mm)";
 					break;
 				case DataRangeEnum.Day:
 					dateFormat = "dd-MM";
@@ -225,7 +225,7 @@
 					tooltip: {
 						callbacks: {
 							title: function (context) {
-								return unmodifiedDate[unmodifiedDate.findIndex(element => element.includes(context[0].label))];
+								return unmodifiedDate[unmodifiedDate.findIndex(element => element.includes(context[0].label.split(" ")[0]) && element.includes(context[0].label.split("(")[1].slice(0, -1)))];
 							}
 						}
 					}

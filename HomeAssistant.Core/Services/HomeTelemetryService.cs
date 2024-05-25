@@ -125,8 +125,6 @@ namespace HomeAssistant.Core.Services
 				numBarsInt = (int)numBars * 10;
 			}
 
-
-
 			TimeSpan interval = new();
 
 			switch (dataRange)
@@ -169,19 +167,19 @@ namespace HomeAssistant.Core.Services
 
 			if (startDate == null && endDate == null)
 			{
-				DateTime lastRecordDateTime=await _dbcontext
+				DateTime lastRecordDateTime = await _dbcontext
 					.homeTelemetries.
 					OrderByDescending(x => x.DateTime).
 					Select(x => x.DateTime).
 					FirstOrDefaultAsync();
 
-				if (lastRecordDateTime==DateTime.MinValue)
+				if (lastRecordDateTime == DateTime.MinValue)
 				{
 					return new Dictionary<DateTime, HomeTelemetryViewModel>();
 				}
 
-				newStartDateTime = lastRecordDateTime.AddMinutes(interval.TotalMinutes * (numBarsInt + 2) * -1);
-				newEndDateTime = lastRecordDateTime;
+				newStartDateTime = DateTime.Now.AddMinutes(-30).AddMinutes(interval.TotalMinutes * (numBarsInt + 2) * -1);
+				newEndDateTime = DateTime.Now.AddMinutes(-30);
 			}
 			else if (endDate != null)
 			{
@@ -190,8 +188,8 @@ namespace HomeAssistant.Core.Services
 			}
 			else
 			{
-				newStartDateTime = startDate.Value;
-				newEndDateTime = new DateTime(startDate.Value.Ticks).AddMinutes(interval.TotalMinutes * (numBarsInt + 2));
+				newStartDateTime = startDate.Value.AddTicks(interval.Ticks*-1);
+				newEndDateTime = new DateTime(startDate.Value.AddTicks(interval.Ticks * -1).Ticks).AddMinutes(interval.TotalMinutes * (numBarsInt + 2));
 			}
 
 			var data = await _dbcontext
@@ -209,14 +207,13 @@ namespace HomeAssistant.Core.Services
 			 })
 			 .ToListAsync();
 
-			
+
 
 			DateTime targetDateTime = data[0].DateTime;
 
 			if (data[0].DateTime.Minute > 30)
 			{
 				targetDateTime = new DateTime(targetDateTime.Year, targetDateTime.Month, targetDateTime.Day, targetDateTime.AddMinutes(60 - data[0].DateTime.Minute).Hour, 0, 0);
-
 			}
 			else
 			{
@@ -270,7 +267,19 @@ namespace HomeAssistant.Core.Services
 				targetDateTime += interval;
 			}
 
-            if (startDate == null)
+			if (count != 0 && !outputData.ContainsKey(targetDateTime))
+			{
+				outputData[targetDateTime] = new HomeTelemetryViewModel()
+				{
+					CPM = avgCPM / count,
+					Humidity = avgHumidity / count,
+					Radiation = avgRadiation / count,
+					Temperature = avgTempreture / count,
+				};
+
+			}
+
+			if (startDate == null)
 			{
 				return outputData.TakeLast(numBarsInt).ToDictionary(pair => pair.Key, pair => pair.Value);
 			}
