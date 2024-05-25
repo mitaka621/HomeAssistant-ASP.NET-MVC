@@ -151,7 +151,7 @@
 			@:radiationData.push(@entry.Value.Radiation);
 		}
 
-									var ctx = document.getElementById('myChart').getContext('2d');
+		var ctx = document.getElementById('myChart').getContext('2d');
 		var myChart = new Chart(ctx, {
 			type: 'bar',
 			data: {
@@ -225,8 +225,15 @@
 					tooltip: {
 						callbacks: {
 							title: function (context) {
-								return unmodifiedDate[unmodifiedDate.findIndex(element => element.includes(context[0].label.split(" ")[0]) && element.includes(context[0].label.split("(")[1].slice(0, -1)))];
-							}
+								@if ((DataRangeEnum)ViewBag.DateRange == DataRangeEnum.Hour)
+								{									
+									@:return unmodifiedDate[unmodifiedDate.findIndex(element => element.includes(context[0].label.split(" ")[0]) && element.includes(context[0].label.split("(")[1].slice(0, -1)))];
+								}
+								else
+								{
+									@:return unmodifiedDate[unmodifiedDate.findIndex(element => element.includes(context[0].label))];
+								}
+							}					
 						}
 					}
 				},

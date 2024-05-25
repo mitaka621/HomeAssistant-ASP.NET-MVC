@@ -188,8 +188,8 @@ namespace HomeAssistant.Core.Services
 			}
 			else
 			{
-				newStartDateTime = startDate.Value.AddTicks(interval.Ticks*-1);
-				newEndDateTime = new DateTime(startDate.Value.AddTicks(interval.Ticks * -1).Ticks).AddMinutes(interval.TotalMinutes * (numBarsInt + 2));
+				newStartDateTime = startDate.Value;
+				newEndDateTime = startDate.Value.AddMinutes(interval.TotalMinutes * (numBarsInt + 2));
 			}
 
 			var data = await _dbcontext
@@ -220,7 +220,15 @@ namespace HomeAssistant.Core.Services
 				targetDateTime = new DateTime(targetDateTime.Year, targetDateTime.Month, targetDateTime.Day, targetDateTime.AddMinutes(data[0].DateTime.Minute * -1).Hour, 0, 0);
 			}
 
-			targetDateTime += interval;
+			if (dataRange == DataRangeEnum.Month)
+			{
+				targetDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0)
+					.AddDays(DateTime.Now.Day+(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)- DateTime.Now.Day -1));
+			}
+			else
+			{
+				targetDateTime += interval;
+			}
 
 			double avgHumidity = 0, avgRadiation = 0, avgCPM = 0, avgTempreture = 0;
 			int count = 0;
@@ -264,7 +272,15 @@ namespace HomeAssistant.Core.Services
 
 				count = 0;
 
-				targetDateTime += interval;
+				if (dataRange == DataRangeEnum.Month)
+				{
+					targetDateTime = targetDateTime
+						.AddDays(DateTime.DaysInMonth(targetDateTime.AddDays(1).Year, targetDateTime.AddDays(1).Month));
+				}
+				else
+				{
+					targetDateTime += interval;
+				}
 			}
 
 			if (count != 0 && !outputData.ContainsKey(targetDateTime))
