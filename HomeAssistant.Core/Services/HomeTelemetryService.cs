@@ -207,9 +207,12 @@ namespace HomeAssistant.Core.Services
 			 })
 			 .ToListAsync();
 
+            if (data.Count==0)
+            {
+				return new Dictionary<DateTime, HomeTelemetryViewModel>();
+			}
 
-
-			DateTime targetDateTime = data[0].DateTime;
+            DateTime targetDateTime = data[0].DateTime;
 
 			if (data[0].DateTime.Minute > 30)
 			{
