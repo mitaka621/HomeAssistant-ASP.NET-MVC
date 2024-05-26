@@ -26,8 +26,9 @@ namespace HomeAssistant.Infrastructure.Data
         public DbSet<ChatRoom> ChatRooms { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<HomeTelemetry> homeTelemetries { get; set; }
+		public DbSet<BlacklistedIp> BlacklistedIPs { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+		protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ShoppingListProduct>()
                 .HasKey(x => new { x.ShoppingListId, x.ProductId });
