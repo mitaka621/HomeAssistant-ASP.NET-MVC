@@ -12,6 +12,7 @@
 			document.getElementById("timezone").textContent = j.timezone;
 			document.getElementById("postal").textContent = j.postal;
 			document.getElementById("org").textContent = j.org;
+			document.getElementById("ipSpan").textContent = e.id;
 
 			document.getElementById("map").remove();
 
@@ -30,7 +31,7 @@
 				color: 'red',
 				fillColor: '#f03',
 				fillOpacity: 0.5,
-				radius: 2000
+				radius: 5000
 			}).addTo(map);
 
 			document.getElementById("open-modal").click();
