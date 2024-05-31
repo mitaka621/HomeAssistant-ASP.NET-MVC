@@ -32,5 +32,9 @@ namespace HomeAssistant.Core.Contracts
 		Task<bool> AddUserLocation(string Id,double latitude, double longitude);
 
 		Task<IEnumerable<string>> GetAllApprovedNotDeletedUsersIds();
+
+		Task<FailedLoginPaginationViewModel> GetAllFailedLogins(int page=1,int countOnPage=20);
+
+		Task ResetFailedLoginCount(string ip);
 	}
 }

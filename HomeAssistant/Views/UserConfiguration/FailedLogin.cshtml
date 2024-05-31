@@ -1,0 +1,69 @@
+﻿@using HomeAssistant.Core.Models
+@using HomeAssistant.Core.Models.User
+@model FailedLoginPaginationViewModel
+
+<h1>Failed login user IPs</h1>
+
+
+<partial name="/Views/Shared/_ToastPopupPartial.cshtml" />
+
+@if (Model.Records.Any())
+{
+	<table class="table w-100 p-3 table-striped table-hover">
+		<thead>
+			<tr>
+				<th scope="col">IP</th>
+				<th scope="col">Last Try DateTime</th>
+				<th scope="col">NumberAttempts</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				foreach (var user in Model.Records)
+				{
+					<tr>
+						<td class="col">@user.Ip</td>
+						<td class="col">@user.LastAttemptOn</td>
+						<td class="col">@user.AttemptsCount</td>
+						<td>
+						<form method="post">
+								<input hidden name="ip" value="@user.Ip" />
+								<button class="btn btn-danger" asp-controller="UserConfiguration" asp-action="ResetFailedLoginCount">Reset Count</button>
+						</form>
+						</td>
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
+}
+else
+{
+	<h2>There are no records!</h2>
+}
+
+@if (Model.TotalPages > 1)
+{
+	<ul class="pagination">
+		<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+			<a class="page-link" asp-controller="UserConfiguration" asp-action="FailedLogin" asp-route-page="@(Model.CurrentPage-1)">Previous</a>
+		</li>
+		@for (int i = 1; i <= Model.TotalPages; i++)
+		{
+			<li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+				<a class="page-link" asp-controller="UserConfiguration" asp-action="FailedLogin" asp-route-page="@i">@(i)</a>
+			</li>
+		}
+		<li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
+			<a class="page-link" asp-controller="UserConfiguration" asp-action="FailedLogin" asp-route-page="@(Model.CurrentPage+1)">Next</a>
+		</li>
+	</ul>
+}
+
+@section SideMenu {
+	<partial name="/Views/UserConfiguration/Shared/_SideMenuPartial.cshtml" />
+}
+
+@section Scripts {
+	<script src="~/js/toastPopup.js"></script>
+}

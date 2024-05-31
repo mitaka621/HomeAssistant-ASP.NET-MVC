@@ -211,7 +211,6 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
-		[AutoValidateAntiforgeryToken]
 		public async Task<IActionResult> DeleteRole(UserDetailsFormViewModel user,string role)
 		{
             if (!await userService.RemoveRoleFromUser(user.Id, role))
@@ -230,7 +229,31 @@ namespace HomeAssistant.Controllers
 				ToastMessage = "The role has been removed successfully!"
 			});
 		}
-		private string GetUserId()
+
+		[HttpGet]
+		public async Task<IActionResult> FailedLogin(int page=1)
+		{
+			return View(await userService.GetAllFailedLogins(page));
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> ResetFailedLoginCount(string ip)
+		{
+			try
+			{
+				await userService.ResetFailedLoginCount(ip);
+
+				return Redirect(Request.Headers["Referer"].ToString());
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+			
+
+		}
+
+        private string GetUserId()
 		{
 			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 		}

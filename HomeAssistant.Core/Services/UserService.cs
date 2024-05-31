@@ -2,6 +2,7 @@
 using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Models;
 using HomeAssistant.Core.Models.User;
+using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,18 +10,21 @@ using System.Data;
 
 namespace HomeAssistant.Core.Services
 {
-	public class UserService : IUserService
+    public class UserService : IUserService
 	{
 		private readonly UserManager<HomeAssistantUser> userManager;
 		private readonly RoleManager<IdentityRole> roleManager;
+		private readonly HomeAssistantDbContext _dbContext;
 		private readonly IimageService imageService;
 
-		public UserService(UserManager<HomeAssistantUser> _userManager, RoleManager<IdentityRole> _roleManager, IimageService imageService)
+		public UserService(UserManager<HomeAssistantUser> _userManager, RoleManager<IdentityRole> _roleManager, IimageService imageService, HomeAssistantDbContext dbContext)
 		{
 			userManager = _userManager;
 			roleManager = _roleManager;
 			this.imageService = imageService;
-		}
+            _dbContext= dbContext;
+
+        }
 
 		public async Task<IEnumerable<UserDetailsViewModel>> GetAllNonDelitedUsersAsync()
 		{
@@ -297,6 +301,62 @@ namespace HomeAssistant.Core.Services
 				.GetUsersInRoleAsync("StandardUser"))
 				.Where(x => !x.IsDeleted)
 				.Select(x => x.Id);
+		}
+
+        public async Task<FailedLoginPaginationViewModel> GetAllFailedLogins(int page = 1, int countOnPage = 20)
+        {
+			int totalRecordsCount=await _dbContext.BlacklistedIPs.CountAsync();
+
+			int maxPages= (int)Math.Ceiling(totalRecordsCount/(double)countOnPage);
+
+            if (page<1)
+            {
+				page = 1;
+            }
+            else if(page >= maxPages)
+            {
+                page=maxPages;
+            }
+
+            int recordsToSkip = (page - 1) * countOnPage;
+
+            var data=await _dbContext.BlacklistedIPs
+			.OrderByDescending(x => x.LastTry)
+			.Where(x=>x.Count!=0)
+			.Select(x => new FailedLoginViewModel()
+			{
+				AttemptsCount = x.Count,
+				Ip = x.Ip,
+				LastAttemptOn = x.LastTry
+			})
+			.Skip(recordsToSkip)
+			.Take(countOnPage)			
+			.ToListAsync();
+
+
+
+			return new FailedLoginPaginationViewModel()
+			{
+				CurrentPage = page,
+				Records=data,
+				RecordsOnPage= countOnPage,
+				TotalPages= maxPages
+			};
+        }
+
+		public async Task ResetFailedLoginCount(string ip)
+		{
+			var record=await _dbContext.BlacklistedIPs.FirstOrDefaultAsync(x => x.Ip == ip);
+
+            if (record==null)
+            {
+				throw new ArgumentNullException(nameof(record));
+            }
+
+			record.Count= 0;
+
+			await _dbContext.SaveChangesAsync();
+
 		}
 	}
 }

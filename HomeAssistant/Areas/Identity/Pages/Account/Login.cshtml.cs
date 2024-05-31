@@ -184,19 +184,18 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
                     {
                         record = new BlacklistedIp()
                         {
-                            Ip = HttpContext.Connection.RemoteIpAddress.ToString(),
-                            LastTry = DateTime.Now,
-                            Count = 0
+                            Ip = HttpContext.Connection.RemoteIpAddress.ToString()
                         };
 
                         _homeAssistantDbContext.BlacklistedIPs.Add(record);
                     }
 
                     record.Count++;
+                    record.LastTry = DateTime.Now;
 
                     await _homeAssistantDbContext.SaveChangesAsync();
 
-                    if (record != null && record.Count >= 10)
+                    if (record.Count >= 10)
                     {
                         return StatusCode(403);
                     }
