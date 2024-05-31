@@ -2,8 +2,10 @@
 @using HomeAssistant.Core.Models.User
 @model FailedLoginPaginationViewModel
 
-<h1>Failed login user IPs</h1>
+<link rel="stylesheet" href="~/js/leaflet/leaflet.css" />
+<link rel="stylesheet" href="~/css/userconfig.css" />
 
+<h1>Failed login user IPs</h1>
 
 <partial name="/Views/Shared/_ToastPopupPartial.cshtml" />
 
@@ -21,8 +23,10 @@
 			@{
 				foreach (var user in Model.Records)
 				{
-					<tr>
-						<td class="col">@user.Ip</td>
+					<tr id="@user.Ip" class="clickable" onclick="GetIpDetails(this)">
+						<td class="col">
+							@user.Ip				
+						</td>
 						<td class="col">@user.LastAttemptOn</td>
 						<td class="col">@user.AttemptsCount</td>
 						<td>
@@ -60,10 +64,44 @@ else
 	</ul>
 }
 
+<button id="open-modal" hidden type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Details for <span id="ipSpan">192.168.0.1</span></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div id="map"></div>
+				<div class="ip-details">
+					<h2>Country</h2>
+					<p id="country"></p>
+					<h2>City</h2>
+					<p id="city"></p>
+					<h2>Postal</h2>
+					<p id="postal"></p>
+					<h2>Lat</h2>
+					<p id="lat"></p>
+					<h2>Lon</h2>
+					<p id="lon"></p>
+					<h2>Timezone</h2>
+					<p id="timezone"></p>
+					<h2>ORG</h2>
+					<p id="org"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 @section SideMenu {
 	<partial name="/Views/UserConfiguration/Shared/_SideMenuPartial.cshtml" />
 }
 
 @section Scripts {
-	<script src="~/js/toastPopup.js"></script>
+	<script src="~/js/leaflet/leaflet.js"></script>
+	<script src="~/js/FetchIpDetails.js" asp-append-version="true"></script>
 }

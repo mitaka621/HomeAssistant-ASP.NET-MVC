@@ -36,5 +36,7 @@ namespace HomeAssistant.Core.Contracts
 		Task<FailedLoginPaginationViewModel> GetAllFailedLogins(int page=1,int countOnPage=20);
 
 		Task ResetFailedLoginCount(string ip);
+
+		Task<string> GetIpDetailsString(string ip);
 	}
 }

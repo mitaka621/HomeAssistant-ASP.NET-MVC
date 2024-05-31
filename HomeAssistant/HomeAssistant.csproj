@@ -43,6 +43,7 @@
   <ItemGroup>
     <Folder Include="Areas\Identity\Data\" />
     <Folder Include="wwwroot\audio\" />
+    <Folder Include="wwwroot\js\leaflet\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +52,10 @@
 
   <ItemGroup>
     <Content Update="Views\Fridge\AddProduct.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\UserConfiguration\FailedLogin.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

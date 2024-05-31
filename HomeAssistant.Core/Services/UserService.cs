@@ -6,6 +6,8 @@ using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace HomeAssistant.Core.Services
@@ -16,15 +18,18 @@ namespace HomeAssistant.Core.Services
 		private readonly RoleManager<IdentityRole> roleManager;
 		private readonly HomeAssistantDbContext _dbContext;
 		private readonly IimageService imageService;
+		private readonly IConfiguration _configuration;
+		private readonly ILogger<IUserService> _logger;
 
-		public UserService(UserManager<HomeAssistantUser> _userManager, RoleManager<IdentityRole> _roleManager, IimageService imageService, HomeAssistantDbContext dbContext)
+		public UserService(UserManager<HomeAssistantUser> _userManager, RoleManager<IdentityRole> _roleManager, IimageService imageService, HomeAssistantDbContext dbContext, IConfiguration configuration, ILogger<IUserService> logger)
 		{
 			userManager = _userManager;
 			roleManager = _roleManager;
 			this.imageService = imageService;
             _dbContext= dbContext;
-
-        }
+			_configuration=configuration;
+			_logger=logger;
+		}
 
 		public async Task<IEnumerable<UserDetailsViewModel>> GetAllNonDelitedUsersAsync()
 		{
@@ -357,6 +362,24 @@ namespace HomeAssistant.Core.Services
 
 			await _dbContext.SaveChangesAsync();
 
+		}
+
+		public async Task<string> GetIpDetailsString(string ip)
+		{
+			var client = new HttpClient();
+
+			try
+			{
+				string json=await client.GetStringAsync($"https://ipinfo.io/{ip}?token={_configuration.GetSection("ExternalServiceApiKeys")["ipinfo"]}");
+
+				return json;
+			}
+			catch (Exception e)
+			{
+				_logger.LogWarning("Failed to retrieve ip details: " + e.Message);
+				throw new HttpRequestException(e.Message, e);
+			}
+			
 		}
 	}
 }

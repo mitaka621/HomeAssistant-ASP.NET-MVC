@@ -3,6 +3,8 @@
 
 <h1>All Users</h1>
 
+<link rel="stylesheet" href="~/js/leaflet/leaflet.css" />
+<link rel="stylesheet" href="~/css/userconfig.css" />
 
 <partial name="/Views/Shared/_ToastPopupPartial.cshtml" />
 
@@ -26,7 +28,7 @@
 				int counter = 1;
 				foreach (var user in Model)
 				{
-					<tr>
+					<tr id="@user.Ip" class="clickable" onclick="GetIpDetails(this)">
 						<th scope="row" class="col-sm-1">@(counter++)</th>
 						<td class="col">@user.Username</td>
 						<td class="col">@user.FirstName</td>
@@ -41,7 +43,6 @@
 						<td class="formCol">
 							<a asp-action="Edit" asp-route-Id="@user.Id" class="btn btn-warning">Edit</a>
 							<form asp-action="DeleteById" asp-route-Id="@user.Id" method="post">
-
 								<button type="submit" class="btn btn-danger">Delete</button>
 							</form>
 						</td>
@@ -56,10 +57,45 @@ else
 	<h2>There are no users!</h2>
 }
 
+<button id="open-modal" hidden type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Details for <span id="ipSpan">192.168.0.1</span></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div id="map"></div>
+				<div class="ip-details">
+					<h2>Country</h2>
+					<p id="country"></p>
+					<h2>City</h2>
+					<p id="city"></p>
+					<h2>Postal</h2>
+					<p id="postal"></p>
+					<h2>Lat</h2>
+					<p id="lat"></p>
+					<h2>Lon</h2>
+					<p id="lon"></p>
+					<h2>Timezone</h2>
+					<p id="timezone"></p>
+					<h2>ORG</h2>
+					<p id="org"></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 @section SideMenu {
 	<partial name="/Views/UserConfiguration/Shared/_SideMenuPartial.cshtml" />
 }
 
 @section Scripts {
 	<script src="~/js/toastPopup.js"></script>
+	<script src="~/js/leaflet/leaflet.js"></script>
+	<script src="~/js/FetchIpDetails.js" asp-append-version="true"></script>
 }

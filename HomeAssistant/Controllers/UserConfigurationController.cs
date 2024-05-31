@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace HomeAssistant.Controllers
 {
@@ -251,6 +252,22 @@ namespace HomeAssistant.Controllers
 			}
 			
 
+		}
+
+		[HttpGet]
+		[Route("~/api/[controller]/[action]")]
+		public async Task<IActionResult> GetIpDetailsJson(string ip)
+		{
+			try 
+			{ 
+				string json = await userService.GetIpDetailsString(ip);
+
+				return new JsonResult(JsonDocument.Parse(json));	
+			}
+			catch (HttpRequestException) 
+			{
+				return BadRequest();
+			}
 		}
 
         private string GetUserId()
