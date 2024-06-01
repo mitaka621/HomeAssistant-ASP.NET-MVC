@@ -247,9 +247,9 @@ strong {
     padding: 20px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    overflow: auto;
-    white-space: pre-wrap; 
-    font-size:1.2em;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    font-size: 1.2em;
 }
 
 .interactions-container{

@@ -53,14 +53,20 @@ namespace HomeAssistant.Filters
 			try
 			{
 				var controllerType = filterContext.Controller.GetType();
-				var actionMethod = controllerType
-					.GetMethod((filterContext.ActionDescriptor as ControllerActionDescriptor)!.ActionName)!;
-
+				
 				var controllerAttributes = controllerType.GetCustomAttributes(typeof(NoUserLoggingAttribute), true);
+
+                if (controllerAttributes.Any())
+                {
+					return true;
+				}
+
+                var actionMethod = controllerType
+					.GetMethod((filterContext.ActionDescriptor as ControllerActionDescriptor)!.ActionName)!;
 
 				var actionAttributes = actionMethod.GetCustomAttributes(typeof(NoUserLoggingAttribute), true);
 
-				if (actionAttributes.Any() || controllerAttributes.Any())
+				if (actionAttributes.Any())
 				{
 					return true;
 				}

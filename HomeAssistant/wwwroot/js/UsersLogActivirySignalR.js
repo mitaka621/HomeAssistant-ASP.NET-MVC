@@ -94,14 +94,16 @@ function insertNewLogEntry(model) {
     accordionBody.className = 'accordion-body';
     accordionCollapse.appendChild(accordionBody);
 
-    const bodyJsonHeader1 = document.createElement('h3');
-    bodyJsonHeader1.textContent = 'URL Query';
-    accordionBody.appendChild(bodyJsonHeader1);
+    if (model.queryString) {
+        const bodyJsonHeader1 = document.createElement('h3');
+        bodyJsonHeader1.textContent = 'URL Query';
+        accordionBody.appendChild(bodyJsonHeader1);
 
-    const bodyJsonHeader2 = document.createElement('p');
-    bodyJsonHeader2.textContent = model.queryString;
-    accordionBody.appendChild(bodyJsonHeader2);
-
+        const bodyJsonHeader2 = document.createElement('p');
+        bodyJsonHeader2.innerHTML = "<strong>" + model.queryString + "</strong>";
+        accordionBody.appendChild(bodyJsonHeader2);
+    }
+ 
     const bodyJsonHeader = document.createElement('h3');
     bodyJsonHeader.textContent = 'Body Json';
     accordionBody.appendChild(bodyJsonHeader);
