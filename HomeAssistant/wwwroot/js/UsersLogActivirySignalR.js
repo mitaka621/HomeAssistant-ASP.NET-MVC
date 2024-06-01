@@ -105,7 +105,7 @@ function insertNewLogEntry(model) {
 
     const interactionsContainer = document.querySelector('.interactions-container');
     if (interactionsContainer) {
-
+        console.log(window.location.href);
         if (window.location.href.includes('?page=1') || !window.location.href.includes('page')) {
             interactionsContainer.insertBefore(overallLogContainer, interactionsContainer.firstChild);
         }      

@@ -49,6 +49,7 @@ namespace HomeAssistant.Controllers
         }
 
 		[HttpGet]
+		[NoUserLogging]
 		public async Task<IActionResult> GetImage(string path,bool isFull=false)
 		{
 			HttpResponseMessage? data =await _service.GetPhoto(path, isFull);

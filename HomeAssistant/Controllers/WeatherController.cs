@@ -52,6 +52,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpPost]
+		[NoUserLogging]
 		[IgnoreAntiforgeryToken]
 		public async Task< IActionResult> UserLocation([FromBody]UserLocationDto data)
 		{
