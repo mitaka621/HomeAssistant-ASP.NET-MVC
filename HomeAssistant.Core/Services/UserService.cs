@@ -12,7 +12,7 @@ using System.Data;
 
 namespace HomeAssistant.Core.Services
 {
-    public class UserService : IUserService
+	public class UserService : IUserService
 	{
 		private readonly UserManager<HomeAssistantUser> userManager;
 		private readonly RoleManager<IdentityRole> roleManager;
@@ -314,6 +314,12 @@ namespace HomeAssistant.Core.Services
 
 			int maxPages= (int)Math.Ceiling(totalRecordsCount/(double)countOnPage);
 
+            if (maxPages==0)
+            {
+				maxPages = 1;
+
+			}
+
             if (page<1)
             {
 				page = 1;
@@ -380,6 +386,48 @@ namespace HomeAssistant.Core.Services
 				throw new HttpRequestException(e.Message, e);
 			}
 			
+		}
+
+		public async Task<UsersInteractionsPaginationViewModel> GetAllUsersInteractions(int page, int countOnPage = 50)
+		{
+			int totalRecordsCount = await _dbContext.UserActivityLogs.CountAsync();
+
+			int maxPages = (int)Math.Ceiling(totalRecordsCount / (double)countOnPage);
+
+			if (page < 1)
+			{
+				page = 1;
+			}
+			else if (page >= maxPages)
+			{
+				page = maxPages;
+			}
+
+			int recordsToSkip = (page - 1) * countOnPage;
+
+			var data = await _dbContext.UserActivityLogs
+			.OrderByDescending(x => x.DateTime)
+			.Select(x => new UserInteractionViewModel()
+			{
+				ActionArgumentsJson = x.ActionArgumentsJson,
+				DateTime= x.DateTime,
+				QueryString = x.QueryString,
+				RequestType= x.RequestType,
+				RequestUrl= x.RequestUrl,
+				UserId= x.UserId,
+				UserName=x.User.UserName
+			})
+			.Skip(recordsToSkip)
+			.Take(countOnPage)
+			.ToListAsync();
+
+			return new UsersInteractionsPaginationViewModel()
+			{
+				CurrentPage = page,
+				Interactions = data,
+				RecordsOnPage = countOnPage,
+				TotalPages = maxPages
+			};
 		}
 	}
 }

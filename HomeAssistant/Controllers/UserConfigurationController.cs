@@ -270,7 +270,14 @@ namespace HomeAssistant.Controllers
 			}
 		}
 
-        private string GetUserId()
+		[HttpGet]
+		public async Task<IActionResult> AllInteractionsLog(int page=1)
+		{
+			return View(await userService.GetAllUsersInteractions(page));
+		}
+
+
+		private string GetUserId()
 		{
 			return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 		}

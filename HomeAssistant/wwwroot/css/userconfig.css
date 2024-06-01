@@ -52,6 +52,14 @@
     .modal-body p{
         text-align:center;
     }
+
+    .overall-log-container{
+        flex-direction:column !important;
+    }
+    .interaction p{
+        font-size:0.9em;
+    }
+
 }
 
 @media only screen and (max-width: 1000px) {
@@ -180,4 +188,121 @@ form.edituser{
 
 .clickable:hover{
     cursor:pointer;
+}
+
+.interaction{
+    display:flex;
+    width:100%;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.request-type{
+    font-weight:700;
+    font-size:1.2em;
+}
+
+.interaction p {
+    margin: 0
+}
+
+.url {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    width:100%;
+}
+
+.author {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4em;
+    margin-right: 1em;
+}
+
+.username{
+    color:#ff00ea;
+    font-weight:600;
+    font-size:1.2em;
+}
+
+strong {
+    color: #60dc2b;
+}
+
+.request-url {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 1.2em;
+    width: 36vw;
+    line-height: normal;
+}
+
+.code-block {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    overflow: auto;
+    white-space: pre-wrap; 
+    font-size:1.2em;
+}
+
+.interactions-container{
+    display:flex;
+    flex-direction:column;
+    gap:1em;
+    margin-top:3em;
+}
+.accordion-item {
+    border: 1px solid black !important;
+    border-radius: 20px !important;
+    width: 100%;
+}
+
+.accordion-button {
+    border-radius: 20px !important;
+    background-color: #f5f2f2 !important;
+    box-shadow: 0px 8px 15px -3px rgba(0,0,0,0.5);
+}
+.time{
+    margin:0;
+    font-size:1.2em;
+    white-space:nowrap;
+    font-weight:600;
+}
+.overall-log-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:0.5em;
+}
+
+.new {
+    color: red;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.zoom-in {
+    animation: zoomIn 0.1s ease-out;
+}
+
+.pagination{
+    width:fit-content;
+    margin:1em auto;
 }

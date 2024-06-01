@@ -1,7 +1,10 @@
-﻿using HomeAssistant.Infrastructure.Data;
+﻿using HomeAssistant.Core.Models.User;
+using HomeAssistant.Hubs;
+using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.SignalR;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Security.Claims;
@@ -13,18 +16,33 @@ namespace HomeAssistant.Filters
 	{
 		private readonly ILogger _logger;
 		private readonly HomeAssistantDbContext _dbContext;
+		private readonly IHubContext<UsersActiviryHub> _usersActivityHub;
 
-        public LogUserInteractionAttribute(ILogger<LogUserInteractionAttribute> logger, HomeAssistantDbContext dbContext)
+		public LogUserInteractionAttribute(ILogger<LogUserInteractionAttribute> logger, HomeAssistantDbContext dbContext, IHubContext<UsersActiviryHub> usersActivityHub)
         {
 			_logger=logger;
 			_dbContext=dbContext;
+			_usersActivityHub=usersActivityHub;
 		}
 
 		public override async Task OnActionExecutionAsync(ActionExecutingContext filterContext, ActionExecutionDelegate next)
 		{
 			if (!IsLoggingDisabled(filterContext))
 			{
-				await LogInteraction(filterContext);
+				var model=await LogInteraction(filterContext);
+
+				await _usersActivityHub.Clients
+					.All
+					.SendAsync("PushNewLogEntry", new UserInteractionViewModel() 
+					{
+						ActionArgumentsJson=model.ActionArgumentsJson,
+						DateTime=model.DateTime,
+						QueryString=model.QueryString,
+						RequestType=model.RequestType,
+						RequestUrl=model.RequestUrl,
+						UserId=model.UserId,
+						UserName=model.User.UserName,
+					});
 			}
 
 			await next();
@@ -58,11 +76,11 @@ namespace HomeAssistant.Filters
             
 		}
 
-		private async Task LogInteraction(ActionExecutingContext filterContext)
+		private async Task<UserActivityLog> LogInteraction(ActionExecutingContext filterContext)
 		{
 			var request = filterContext.HttpContext.Request;
 
-			_dbContext.UserActivityLogs.Add(new UserActivityLog()
+			var model = new UserActivityLog()
 			{
 				ActionArgumentsJson = JsonSerializer.Serialize(filterContext.ActionArguments),
 				DateTime = DateTime.Now,
@@ -70,9 +88,13 @@ namespace HomeAssistant.Filters
 				RequestType = request.Method,
 				RequestUrl = request.Path.ToString(),
 				UserId = GetUserId(filterContext)
-			});
+			};
+
+			_dbContext.UserActivityLogs.Add(model);
 
 			await _dbContext.SaveChangesAsync();
+
+			return model;
 		}
 
 		private string GetUserId(ActionExecutingContext filterContext)

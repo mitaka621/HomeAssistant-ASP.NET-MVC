@@ -33,10 +33,12 @@ namespace HomeAssistant.Core.Contracts
 
 		Task<IEnumerable<string>> GetAllApprovedNotDeletedUsersIds();
 
-		Task<FailedLoginPaginationViewModel> GetAllFailedLogins(int page=1,int countOnPage=20);
+		Task<FailedLoginPaginationViewModel> GetAllFailedLogins(int page=1,int countOnPage=30);
 
 		Task ResetFailedLoginCount(string ip);
 
 		Task<string> GetIpDetailsString(string ip);
+
+		Task<UsersInteractionsPaginationViewModel> GetAllUsersInteractions(int page, int countOnPage=50);
 	}
 }

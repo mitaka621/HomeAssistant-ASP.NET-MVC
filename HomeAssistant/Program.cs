@@ -114,4 +114,6 @@ app.MapHub<MessageHub>("/messageHub");
 
 app.MapHub<FridgeHub>("/fridgeHub");
 
+app.MapHub<UsersActiviryHub>("/usersActiviryHub");
+
 app.Run();

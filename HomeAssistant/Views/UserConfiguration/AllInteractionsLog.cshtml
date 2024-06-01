@@ -1,0 +1,96 @@
+﻿@using HomeAssistant.Core.Constants
+@using HomeAssistant.Core.Models
+@using HomeAssistant.Core.Models.User
+@using System.Text.Json
+@model UsersInteractionsPaginationViewModel
+
+<link rel="stylesheet" href="~/css/userconfig.css" />
+
+<h1>Users Interactions Logs</h1>
+
+<partial name="/Views/Shared/_ToastPopupPartial.cshtml" />
+
+<div class="interactions-container">
+	@for (int i = 0; i < Model.Interactions.Count; i++)
+	{
+		var interaction = Model.Interactions[i];
+
+		string formattedJsonString = JsonSerializer
+		.Serialize(JsonDocument.Parse(interaction.ActionArgumentsJson), new JsonSerializerOptions()
+				{
+					WriteIndented = true
+				}).Trim();
+		<div class="overall-log-container">
+			<p class="time">@interaction.DateTime.ToString(DataValidationConstants.DateTimeFormat):</p>
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="headingTwo">
+					<button class="accordion-button collapsed " type="button" data-bs-toggle="collapse" data-bs-target="#a@(i)" aria-expanded="false" aria-controls="collapseTwo">
+						<div class="interaction">
+							<div class="url">
+								<p class="request-type">@interaction.RequestType</p>
+								<p class="request-url" title="@interaction.QueryString">@interaction.RequestUrl<strong>@interaction.QueryString</strong></p>
+							</div>
+							<div class="author">
+								<p class="username">@@@interaction.UserName</p>
+							</div>
+
+						</div>
+					</button>
+				</h2>
+				<div id="a@(i)" class="accordion-collapse collapse">
+					<div class="accordion-body">
+						<h3>Body Json</h3>
+						<pre class="code-block">@formattedJsonString</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+</div>
+
+@if (Model.TotalPages > 1)
+{
+	int counter = 0;
+
+	<ul class="pagination">
+		<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+			<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@(Model.CurrentPage-1)">Previous</a>
+		</li>
+
+		@if (Model.CurrentPage>1)
+		{
+			<li class="page-item">
+				<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@(Model.CurrentPage-1)">@(Model.CurrentPage - 1)</a>
+			</li>
+		}
+
+		@for (int i = Model.CurrentPage; i <= Model.TotalPages; i++)
+		{
+			<li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+				<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@i">@(i)</a>
+			</li>
+
+			counter++;
+
+			if (counter>=3)
+			{
+				break;
+			}
+		}
+		<li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
+			<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@(Model.CurrentPage+1)">Next</a>
+		</li>
+	</ul>
+}
+
+
+
+@section SideMenu {
+	<partial name="/Views/UserConfiguration/Shared/_SideMenuPartial.cshtml" />
+}
+
+@section Scripts {
+	<script src="~/js/signalr/dist/browser/signalr.js" asp-append-version="true"></script>
+	<script src="~/js/UsersLogActivirySignalR.js" asp-append-version="true"></script>
+}
