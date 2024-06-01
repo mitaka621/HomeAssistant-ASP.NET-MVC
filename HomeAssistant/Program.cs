@@ -1,6 +1,7 @@
 using HomeAssistant.BackgroundServiceJobs;
 using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Services;
+using HomeAssistant.Filters;
 using HomeAssistant.Hubs;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
@@ -50,7 +51,10 @@ builder.Services.AddScoped<IimageService, ImageService>();
 
 
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(o =>
+{
+    o.Filters.Add<LogUserInteractionAttribute>();
+});
 
 builder.Services.AddMvc(options=>options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 

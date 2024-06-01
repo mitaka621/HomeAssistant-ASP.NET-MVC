@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -7,6 +8,7 @@ using System.Security.Claims;
 namespace HomeAssistant.Controllers
 {
 	[SkipStatusCodePages]
+	[NoUserLogging]
 	[Authorize(Roles = "StandardUser")]
     [ApiController]
     [Route("api/[controller]/[action]")]

@@ -1,6 +1,7 @@
 ﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Services;
+using HomeAssistant.Filters;
 using HomeAssistant.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using ZstdSharp.Unsafe;
 namespace HomeAssistant.Controllers
 {
 	[SkipStatusCodePages]
+	[NoUserLogging]
 	[Authorize(Roles = "StandardUser")]
 	[ApiController]
 	[Route("api/[controller]/[action]")]

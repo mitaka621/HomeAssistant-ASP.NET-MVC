@@ -1,8 +1,7 @@
 ﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Models;
-using HomeAssistant.Core.Services;
+using HomeAssistant.Filters;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text.Json;
@@ -10,6 +9,7 @@ using System.Text.Json;
 namespace HomeAssistant.Controllers
 {
 	[Authorize(Roles = "Admin")]
+	[NoUserLogging]
 	public class UserConfigurationController : Controller
 	{
 		IUserService userService;

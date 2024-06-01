@@ -2,6 +2,7 @@
 using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Models.Product;
 using HomeAssistant.Core.Services;
+using HomeAssistant.Filters;
 using HomeAssistant.Hubs;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;

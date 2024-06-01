@@ -1,5 +1,6 @@
 ﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Services;
+using HomeAssistant.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -71,6 +72,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[SkipStatusCodePages]
+		[NoUserLogging]
 		public async Task<IActionResult> GetFilesJson(string path,int skip,int take)
 		{
 			var files = await _service.GetData(path, skip, take);
@@ -82,6 +84,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[SkipStatusCodePages]
+		[NoUserLogging]
 		public async Task<IActionResult> GetPrevAndNextPathsForPhoto(string path)
 		{
 			var data = await _service.GetPrevAndNextPhotoLocation(path);
@@ -96,6 +99,7 @@ namespace HomeAssistant.Controllers
         }
 
 		[SkipStatusCodePages]
+		[NoUserLogging]
 		public async Task<IActionResult> GetPhotoInfo(string path)
 		{
 			var data = await _service.GetPhotoInfo(path);
@@ -110,6 +114,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[SkipStatusCodePages]
+		[NoUserLogging]
 		public async Task<IActionResult> CheckConnection()
 		{
             if (await _service.CheckConnection())
@@ -121,6 +126,7 @@ namespace HomeAssistant.Controllers
 		}
 
 		[SkipStatusCodePages]
+		[NoUserLogging]
 		public async Task<IActionResult> ScanForAvailibleHosts()
 		{
 			if (await _service.ScanForAvailibleHost())

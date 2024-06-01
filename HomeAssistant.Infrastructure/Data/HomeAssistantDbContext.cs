@@ -27,6 +27,7 @@ namespace HomeAssistant.Infrastructure.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<HomeTelemetry> homeTelemetries { get; set; }
 		public DbSet<BlacklistedIp> BlacklistedIPs { get; set; }
+		public DbSet<UserActivityLog> UserActivityLogs { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -51,14 +52,17 @@ namespace HomeAssistant.Infrastructure.Data
             builder.Entity<Message>()
                 .HasKey(x => new { x.MessageId, x.UserId, x.ChatRoomId });
 
-            builder.Entity<HomeAssistantUser>()
+			builder.Entity<UserActivityLog>()
+			   .HasKey(x => new { x.UserId, x.DateTime });
+
+			builder.Entity<HomeAssistantUser>()
                 .Property(b => b.Latitude)
                 .HasDefaultValue(42.698334);
 
             builder.Entity<HomeAssistantUser>()
                .Property(b => b.Longitude)
                .HasDefaultValue(23.319941);
-
+         
             builder.Entity<HomeAssistantUser>()
            .HasOne(f => f.ShoppingList)
            .WithOne(s => s.User)

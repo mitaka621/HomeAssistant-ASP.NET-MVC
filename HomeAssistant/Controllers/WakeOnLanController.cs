@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver.Core.Operations;
@@ -36,6 +37,7 @@ namespace HomeAssistant.Controllers
 
 		}
 
+		[NoUserLogging]
 		public async Task<IActionResult> PingPc(string name)
 		{
 			try
@@ -64,6 +66,7 @@ namespace HomeAssistant.Controllers
 
 		}
 
+		[NoUserLogging]
 		public IActionResult GetAvailiblePCs()
 		{
 			try

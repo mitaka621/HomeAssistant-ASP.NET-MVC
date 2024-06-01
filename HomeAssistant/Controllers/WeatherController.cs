@@ -1,6 +1,7 @@
 ﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Models;
 using HomeAssistant.Core.Services;
+using HomeAssistant.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -12,6 +13,7 @@ using System.Text.Json.Serialization;
 
 namespace HomeAssistant.Controllers
 {
+	[NoUserLogging]
 	[SkipStatusCodePages]
 	[Authorize(Roles ="StandardUser")]
 	[ApiController]
