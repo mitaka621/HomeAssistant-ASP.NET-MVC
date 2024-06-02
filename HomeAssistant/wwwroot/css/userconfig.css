@@ -221,10 +221,10 @@ form.edituser{
     margin-right: 1em;
 }
 
-.username{
-    color:#ff00ea;
-    font-weight:600;
-    font-size:1.2em;
+.username {
+    color: #ff00ea;
+    font-weight: 600;
+    font-size: 1.2em;
 }
 
 strong {
@@ -305,4 +305,54 @@ strong {
 .pagination{
     width:fit-content;
     margin:1em auto;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin-top:1em;
+    border-radius: 5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.results-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 5px;
+}
+
+.result-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.result-item *{
+    pointer-events:none;
+}
+
+.result-item p {
+    margin: 5px 0;
+}
+
+.result-item strong {
+    color: #333;
 }

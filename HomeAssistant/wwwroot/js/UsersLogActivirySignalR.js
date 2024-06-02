@@ -1,9 +1,9 @@
-"use strict";
-
 var connection = new signalR.HubConnectionBuilder().withUrl("/usersActiviryHub").build();
 
 connection.on("PushNewLogEntry", function (model) {
     insertNewLogEntry(model);
+
+    assignUsernameColors();
 });
 
 connection.start().catch(function (err) {
@@ -81,7 +81,7 @@ function insertNewLogEntry(model) {
     interactionDiv.appendChild(authorDiv);
 
     const usernameParagraph = document.createElement('p');
-    usernameParagraph.className = 'username';
+    usernameParagraph.className = `username ${model.userName}`;
     usernameParagraph.textContent = `@${model.userName}`;
     authorDiv.appendChild(usernameParagraph);
 
@@ -103,7 +103,7 @@ function insertNewLogEntry(model) {
         bodyJsonHeader2.innerHTML = "<strong>" + model.queryString + "</strong>";
         accordionBody.appendChild(bodyJsonHeader2);
     }
- 
+
     const bodyJsonHeader = document.createElement('h3');
     bodyJsonHeader.textContent = 'Body Json';
     accordionBody.appendChild(bodyJsonHeader);
@@ -115,12 +115,38 @@ function insertNewLogEntry(model) {
 
     const interactionsContainer = document.querySelector('.interactions-container');
     if (interactionsContainer) {
-        console.log(window.location.href);
         if (window.location.href.includes('?page=1') || !window.location.href.includes('page')) {
             interactionsContainer.insertBefore(overallLogContainer, interactionsContainer.firstChild);
-        }      
+        }
 
     } else {
         console.error('Interactions container not found');
     }
 }
+
+function getRandomColor() {
+    const letters = '012345678AE';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 11)];
+    }
+    return color;
+}
+const userIdColors = {};
+
+function assignUsernameColors() {
+    const pElements = document.querySelectorAll('p.username');
+
+    pElements.forEach(p => {
+        const classes = Array.from(p.classList);
+        classes.forEach(className => {
+            if (!userIdColors[className]) {
+                userIdColors[className] = getRandomColor();
+            }
+            p.style.color = userIdColors[className];
+        });
+    });
+
+}
+
+assignUsernameColors();

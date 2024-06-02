@@ -40,5 +40,11 @@ namespace HomeAssistant.Core.Contracts
 		Task<string> GetIpDetailsString(string ip);
 
 		Task<UsersInteractionsPaginationViewModel> GetAllUsersInteractions(int page, int countOnPage=50);
+
+		Task<GroupByControllerUserInteractionPaginationModel> GetAllUsersInteractionsGroupByController(int page, int countOnPage = 50);
+
+		Task<UsersInteractionsPaginationViewModel> GetInteractionsForUser(string userId,int page, int countOnPage = 50);
+
+		Task<IEnumerable<UserDetailsViewModel>> SearchForUser(string keyphrase);
 	}
 }

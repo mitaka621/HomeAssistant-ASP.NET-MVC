@@ -1,8 +1,10 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Enums;
 using HomeAssistant.Core.Models;
 using HomeAssistant.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -271,11 +273,75 @@ namespace HomeAssistant.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> AllInteractionsLog(int page=1)
+		public async Task<IActionResult> AllInteractionsLog(int page=1,int count=20)
 		{
-			return View(await userService.GetAllUsersInteractions(page));
+			ViewBag.Count = count;
+			return View(await userService.GetAllUsersInteractions(page, count));
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> AllInteractionsForUserLog(string userId,int page = 1, int count = 20)
+		{
+			try
+			{
+				ViewBag.Count = count;
+				ViewBag.UserId = userId;
+				return View(await userService.GetInteractionsForUser(userId, page, count));
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+		
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> UserInteractionsGroupByController(int page = 1, int count = 20)
+		{
+			try
+			{
+				ViewBag.Count = count;
+				return View(await userService.GetAllUsersInteractionsGroupByController(page, count));
+			}
+			catch (ArgumentNullException)
+			{
+				return BadRequest();
+			}
+
+		}
+
+		[HttpGet]
+		public IActionResult LogSelectionHandler(UserInteractionLogTypes type,int count, string? userid)
+		{
+            if (count<1||count>300)
+            {
+				return BadRequest();
+            }
+
+            if (userid != null && string.IsNullOrEmpty(userid))
+            {
+                return BadRequest();
+            }
+
+            switch (type)
+			{
+				case UserInteractionLogTypes.All:
+					return RedirectToAction(nameof(AllInteractionsLog), new { count });
+				case UserInteractionLogTypes.ByUser:
+					return RedirectToAction(nameof(AllInteractionsForUserLog), new { userId= userid, count });
+				case UserInteractionLogTypes.ByController:
+					return RedirectToAction(nameof(UserInteractionsGroupByController), new { count });
+				default:
+					return BadRequest();
+			}
+			return View();
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> SearchForUserJson(string keyphrase)
+		{
+			return Json(await userService.SearchForUser(keyphrase));
+		}
 
 		private string GetUserId()
 		{

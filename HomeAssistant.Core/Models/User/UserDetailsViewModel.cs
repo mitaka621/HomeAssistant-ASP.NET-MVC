@@ -22,7 +22,9 @@
 
         public string Ip { get; set; } = string.Empty;
 
-        public bool IsTempUser { get; set; } = false;
+        public bool IsTempUser { get; set; }
+
+        public bool IsDeleted { get; set; }
 
     }
 }

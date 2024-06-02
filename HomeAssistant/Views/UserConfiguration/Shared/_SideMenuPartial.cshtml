@@ -6,6 +6,111 @@
 	<a type="button" class="btn btn-primary" asp-controller="UserConfiguration" asp-action="AllDeleted">Deleted Users</a>
 	<a type="button" class="btn btn-primary" asp-controller="UserConfiguration" asp-action="FailedLogin">Failed to login user IPs</a>
 	<a type="button" class="btn btn-primary" asp-controller="UserConfiguration" asp-action="AllInteractionsLog">Users Interactions Log</a>
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+		User Interactions Logs
+	</button>
 </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Choose Data Visualization Type</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form method="get" asp-controller="UserConfiguration" asp-action="LogSelectionHandler" class="selectionForm">
+				
+				<div class="modal-body">
+					<div>
+						<label>Choose Type</label>
+						<select name="type" class="form-select" onchange="onChange(this)">
+							<option value="0">All (Live Updates)</option>
+							<option value="1">By User</option>
+							<option value="2">By Controller</option>
+						</select>
+						<div id="search-container" hidden class="search-container">
+							<label id="userSelect" class="form-label">Username</label>
+							<input oninput="SearchUserName(this)" autocomplete="off" id="userSelectInput" hidden disabled required type="text" class="form-control" id="exampleInputPassword1">
+							<div id="resultsContainer" class="results-container">
+							</div>
+							<input id="selected-username" name="userid" disabled hidden/>
+						</div>
+						<label class="form-label">Records on Page</label>
+						<input name="count" required class="form-control" type="number" min="1" max="300" step="1" value="50" autocomplete="off">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary">Continue</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	function onChange(e) {
+		if (e.value == 1) {
+			document.getElementById("search-container").removeAttribute("hidden");
+			document.getElementById("userSelectInput").removeAttribute("hidden");
+			document.getElementById("userSelectInput").removeAttribute("disabled");
+			document.querySelector(".modal-footer button").setAttribute("disabled", "true");
+
+		}
+		else {
+			document.getElementById("search-container").setAttribute("hidden", "true");
+			document.getElementById("userSelectInput").setAttribute("hidden", "true");
+			document.getElementById("userSelectInput").setAttribute("disabled", "true");
+			document.querySelector(".modal-footer button").removeAttribute("disabled");
+
+			document.getElementById("selected-username").setAttribute("disabled", "true");
+		}
+	}
+
+	function SearchUserName(e) {
+		const resultsContainer = document.getElementById('resultsContainer');
+		resultsContainer.innerHTML = "";
+
+		if (!e.value) {
+			return;
+		}
+
+		fetch("/UserConfiguration/SearchForUserJson?keyphrase=" + e.value)
+			.then(r => r.json())
+			.then(j => j.forEach(user => {
+				const resultItem = document.createElement('div');
+				resultItem.id = "s" + user.id;
+				resultItem.classList.add('result-item');
+				resultItem.innerHTML = `
+					<p><strong>Username:</strong> <span>${user.username}</span></p>
+					<p><strong>Is Deleted:</strong>${user.isDeleted}</p>
+					<p><strong>Is Temp:</strong>${user.isTempUser}</p>
+								`;
+				resultsContainer.appendChild(resultItem);
+				resultItem.addEventListener("click", selectUser);
+			}))
+
+	}
+
+	function selectUser(e){
+		let target = e.target;
+
+		const id = e.target.id;
+		document.getElementById("userSelectInput").value = e.target.querySelector("span").textContent;
+
+		let input=document.getElementById("selected-username");
+
+		input.removeAttribute("disabled");
+
+		input.value = id.slice(1);
+
+		document.querySelector(".modal-footer button").removeAttribute("disabled");
+
+		document.getElementById("resultsContainer").innerHTML = "";
+	}
+
+</script>
 
 

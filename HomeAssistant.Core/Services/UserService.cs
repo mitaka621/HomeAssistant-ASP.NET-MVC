@@ -26,9 +26,9 @@ namespace HomeAssistant.Core.Services
 			userManager = _userManager;
 			roleManager = _roleManager;
 			this.imageService = imageService;
-            _dbContext= dbContext;
-			_configuration=configuration;
-			_logger=logger;
+			_dbContext = dbContext;
+			_configuration = configuration;
+			_logger = logger;
 		}
 
 		public async Task<IEnumerable<UserDetailsViewModel>> GetAllNonDelitedUsersAsync()
@@ -84,7 +84,7 @@ namespace HomeAssistant.Core.Services
 						Email = u.Email,
 						CreatedOn = u.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
 						Roles = roles,
-						Ip=u.ClientIpAddress,
+						Ip = u.ClientIpAddress,
 					});
 
 				}
@@ -110,7 +110,7 @@ namespace HomeAssistant.Core.Services
 					Email = u.Email,
 					CreatedOn = u.CreatedOn.ToString(DataValidationConstants.DateTimeFormat),
 					DeletedOn = u.DeletedOn.Value.ToString(DataValidationConstants.DateTimeFormat),
-					IsTempUser=u.ExpiresOn!=null
+					IsTempUser = u.ExpiresOn != null
 				})
 				.ToListAsync();
 
@@ -308,32 +308,32 @@ namespace HomeAssistant.Core.Services
 				.Select(x => x.Id);
 		}
 
-        public async Task<FailedLoginPaginationViewModel> GetAllFailedLogins(int page = 1, int countOnPage = 20)
-        {
-			int totalRecordsCount=await _dbContext.BlacklistedIPs.CountAsync();
+		public async Task<FailedLoginPaginationViewModel> GetAllFailedLogins(int page = 1, int countOnPage = 20)
+		{
+			int totalRecordsCount = await _dbContext.BlacklistedIPs.CountAsync();
 
-			int maxPages= (int)Math.Ceiling(totalRecordsCount/(double)countOnPage);
+			int maxPages = (int)Math.Ceiling(totalRecordsCount / (double)countOnPage);
 
-            if (maxPages==0)
-            {
+			if (maxPages == 0)
+			{
 				maxPages = 1;
 
 			}
 
-            if (page<1)
-            {
+			if (page < 1)
+			{
 				page = 1;
-            }
-            else if(page >= maxPages)
-            {
-                page=maxPages;
-            }
+			}
+			else if (page >= maxPages)
+			{
+				page = maxPages;
+			}
 
-            int recordsToSkip = (page - 1) * countOnPage;
+			int recordsToSkip = (page - 1) * countOnPage;
 
-            var data=await _dbContext.BlacklistedIPs
+			var data = await _dbContext.BlacklistedIPs
 			.OrderByDescending(x => x.LastTry)
-			.Where(x=>x.Count!=0)
+			.Where(x => x.Count != 0)
 			.Select(x => new FailedLoginViewModel()
 			{
 				AttemptsCount = x.Count,
@@ -341,7 +341,7 @@ namespace HomeAssistant.Core.Services
 				LastAttemptOn = x.LastTry
 			})
 			.Skip(recordsToSkip)
-			.Take(countOnPage)			
+			.Take(countOnPage)
 			.ToListAsync();
 
 
@@ -349,22 +349,22 @@ namespace HomeAssistant.Core.Services
 			return new FailedLoginPaginationViewModel()
 			{
 				CurrentPage = page,
-				Records=data,
-				RecordsOnPage= countOnPage,
-				TotalPages= maxPages
+				Records = data,
+				RecordsOnPage = countOnPage,
+				TotalPages = maxPages
 			};
-        }
+		}
 
 		public async Task ResetFailedLoginCount(string ip)
 		{
-			var record=await _dbContext.BlacklistedIPs.FirstOrDefaultAsync(x => x.Ip == ip);
+			var record = await _dbContext.BlacklistedIPs.FirstOrDefaultAsync(x => x.Ip == ip);
 
-            if (record==null)
-            {
+			if (record == null)
+			{
 				throw new ArgumentNullException(nameof(record));
-            }
+			}
 
-			record.Count= 0;
+			record.Count = 0;
 
 			await _dbContext.SaveChangesAsync();
 
@@ -376,7 +376,7 @@ namespace HomeAssistant.Core.Services
 
 			try
 			{
-				string json=await client.GetStringAsync($"https://ipinfo.io/{ip}?token={_configuration.GetSection("ExternalServiceApiKeys")["ipinfo"]}");
+				string json = await client.GetStringAsync($"https://ipinfo.io/{ip}?token={_configuration.GetSection("ExternalServiceApiKeys")["ipinfo"]}");
 
 				return json;
 			}
@@ -385,7 +385,7 @@ namespace HomeAssistant.Core.Services
 				_logger.LogWarning("Failed to retrieve ip details: " + e.Message);
 				throw new HttpRequestException(e.Message, e);
 			}
-			
+
 		}
 
 		public async Task<UsersInteractionsPaginationViewModel> GetAllUsersInteractions(int page, int countOnPage = 50)
@@ -393,6 +393,130 @@ namespace HomeAssistant.Core.Services
 			int totalRecordsCount = await _dbContext.UserActivityLogs.CountAsync();
 
 			int maxPages = (int)Math.Ceiling(totalRecordsCount / (double)countOnPage);
+
+			if (maxPages == 0)
+			{
+				maxPages = 1;
+			}
+
+			if (page < 1)
+			{
+				page = 1;
+			}
+			else if (page >= maxPages)
+			{
+				page = maxPages;
+			}
+
+			
+
+			int recordsToSkip = (page - 1) * countOnPage;
+
+			var data = await _dbContext.UserActivityLogs
+			.OrderByDescending(x => x.DateTime)
+			.Select(x => new UserInteractionViewModel()
+			{
+				ActionArgumentsJson = x.ActionArgumentsJson,
+				DateTime = x.DateTime,
+				QueryString = x.QueryString,
+				RequestType = x.RequestType,
+				RequestUrl = x.RequestUrl,
+				UserId = x.UserId,
+				UserName = x.User.UserName
+			})
+			.Skip(recordsToSkip)
+			.Take(countOnPage)
+			.ToListAsync();
+
+			return new UsersInteractionsPaginationViewModel()
+			{
+				CurrentPage = page,
+				Interactions = data,
+				RecordsOnPage = countOnPage,
+				TotalPages = maxPages
+			};
+		}
+
+		public async Task<IEnumerable<UserDetailsViewModel>> SearchForUser(string keyphrase)
+		{
+			return await _dbContext.Users
+				.AsNoTracking()
+				.OrderBy(x => x.UserName)
+				.Where(x => x.UserName.Contains(keyphrase))
+				.Take(3)
+				.Select(x => new UserDetailsViewModel()
+				{
+					Username = x.UserName,
+					Id = x.Id,
+					IsDeleted = x.IsDeleted,
+					IsTempUser = x.ExpiresOn != null
+				})
+				.ToListAsync();
+		}
+
+		public async Task<UsersInteractionsPaginationViewModel> GetInteractionsForUser(string userId,int page, int countOnPage = 50 )
+		{
+			if(!await _dbContext.Users.AsNoTracking().AnyAsync(x => x.Id == userId))
+			{
+				throw new ArgumentNullException(nameof(userId));
+			}
+
+			int totalRecordsCount = await _dbContext.UserActivityLogs.Where(x=>x.UserId==userId).CountAsync();
+
+			int maxPages = (int)Math.Ceiling(totalRecordsCount / (double)countOnPage);
+
+			if (maxPages == 0)
+			{
+				maxPages = 1;
+			}
+
+			if (page < 1)
+			{
+				page = 1;
+			}
+			else if (page >= maxPages)
+			{
+				page = maxPages;
+			}
+
+			int recordsToSkip = (page - 1) * countOnPage;
+
+			var data = await _dbContext.UserActivityLogs
+			.Where(x=>x.UserId== userId)
+			.OrderByDescending(x => x.DateTime)
+			.Select(x => new UserInteractionViewModel()
+			{
+				ActionArgumentsJson = x.ActionArgumentsJson,
+				DateTime = x.DateTime,
+				QueryString = x.QueryString,
+				RequestType = x.RequestType,
+				RequestUrl = x.RequestUrl,
+				UserId = x.UserId,
+				UserName = x.User.UserName
+			})
+			.Skip(recordsToSkip)
+			.Take(countOnPage)
+			.ToListAsync();
+
+			return new UsersInteractionsPaginationViewModel()
+			{
+				CurrentPage = page,
+				Interactions = data,
+				RecordsOnPage = countOnPage,
+				TotalPages = maxPages
+			};
+		}
+
+		public async Task<GroupByControllerUserInteractionPaginationModel> GetAllUsersInteractionsGroupByController(int page, int countOnPage = 50)
+		{
+			int totalRecordsCount = await _dbContext.UserActivityLogs.CountAsync();
+
+			int maxPages = (int)Math.Ceiling(totalRecordsCount / (double)countOnPage);
+
+			if (maxPages == 0)
+			{
+				maxPages = 1;
+			}
 
 			if (page < 1)
 			{
@@ -410,24 +534,46 @@ namespace HomeAssistant.Core.Services
 			.Select(x => new UserInteractionViewModel()
 			{
 				ActionArgumentsJson = x.ActionArgumentsJson,
-				DateTime= x.DateTime,
+				DateTime = x.DateTime,
 				QueryString = x.QueryString,
-				RequestType= x.RequestType,
-				RequestUrl= x.RequestUrl,
-				UserId= x.UserId,
-				UserName=x.User.UserName
+				RequestType = x.RequestType,
+				RequestUrl = x.RequestUrl,
+				UserId = x.UserId,
+				UserName = x.User.UserName
 			})
 			.Skip(recordsToSkip)
 			.Take(countOnPage)
 			.ToListAsync();
 
-			return new UsersInteractionsPaginationViewModel()
+			var model= new GroupByControllerUserInteractionPaginationModel()
 			{
 				CurrentPage = page,
-				Interactions = data,
 				RecordsOnPage = countOnPage,
 				TotalPages = maxPages
 			};
+
+            foreach (var record in data)
+            {
+				var controllerName=string.Empty;
+
+				if (record.RequestUrl.Split("/", StringSplitOptions.RemoveEmptyEntries).Length == 0)
+				{
+					controllerName = "Home";
+				}
+				else
+				{
+					controllerName = record.RequestUrl.Split("/", StringSplitOptions.RemoveEmptyEntries)[0];
+				}
+
+				if (!model.Records.ContainsKey(controllerName))
+                {
+					model.Records[controllerName] = new();
+				}
+
+				model.Records[controllerName].Add(record);
+			}
+
+			return model;
 		}
 	}
 }

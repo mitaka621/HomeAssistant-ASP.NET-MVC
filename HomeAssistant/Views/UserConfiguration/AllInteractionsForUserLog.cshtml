@@ -6,7 +6,15 @@
 
 <link rel="stylesheet" href="~/css/userconfig.css" />
 
-<h1>Users Interactions Logs</h1>
+@if (Model.Interactions.Count > 0)
+{
+	<h1>All @@@Model.Interactions[0].UserName Interactions</h1>
+}
+else
+{
+	<h1>All @ViewBag.UserId Interactions</h1>
+}
+
 
 <partial name="/Views/Shared/_ToastPopupPartial.cshtml" />
 
@@ -57,40 +65,35 @@
 
 	<ul class="pagination">
 		<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-			<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="1" asp-route-count="@ViewBag.Count">First</a>
+			<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsForUserLog" asp-route-page="1" asp-route-count="@ViewBag.Count" asp-route-userId="@ViewBag.UserId">First</a>
 		</li>
 
-		@if (Model.CurrentPage>1)
+		@if (Model.CurrentPage > 1)
 		{
 			<li class="page-item">
-				<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@(Model.CurrentPage-1)" asp-route-count="@ViewBag.Count">@(Model.CurrentPage - 1)</a>
+				<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsForUserLog" asp-route-page="@(Model.CurrentPage-1)" asp-route-count="@ViewBag.Count" asp-route-userId="@ViewBag.UserId">@(Model.CurrentPage - 1)</a>
 			</li>
 		}
 
 		@for (int i = Model.CurrentPage; i <= Model.TotalPages; i++)
 		{
 			<li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-				<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@i" asp-route-count="@ViewBag.Count">@(i)</a>
+				<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsForUserLog" asp-route-page="@i" asp-route-count="@ViewBag.Count" asp-route-userId="@ViewBag.UserId">@(i)</a>
 			</li>
 
 			counter++;
 
-			if (counter>=3)
+			if (counter >= 3)
 			{
 				break;
 			}
 		}
 		<li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
-			<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@(Model.TotalPages)" asp-route-count="@ViewBag.Count">Last</a>
+			<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsForUserLog" asp-route-page="@(Model.TotalPages)" asp-route-count="@ViewBag.Count" asp-route-userId="@ViewBag.UserId">Last</a>
 		</li>
 	</ul>
 }
 
 @section SideMenu {
 	<partial name="/Views/UserConfiguration/Shared/_SideMenuPartial.cshtml" />
-}
-
-@section Scripts {
-	<script src="~/js/signalr/dist/browser/signalr.js" asp-append-version="true"></script>
-	<script src="~/js/UsersLogActivirySignalR.js" asp-append-version="true"></script>
 }
