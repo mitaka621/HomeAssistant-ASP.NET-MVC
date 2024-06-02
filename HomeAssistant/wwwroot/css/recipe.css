@@ -334,6 +334,7 @@ form>div.btn-div{
     width: fit-content;
     justify-content: center;
     align-items: center;
+    margin:0 auto;
 }
 .recipe-show-product {
     background-color: #d9f3f2;
