@@ -92,6 +92,7 @@ function ViewProductDetails(e) {
 
 	const quantityInput = document.createElement('input');
 	quantityInput.type = 'number';
+	quantityInput.value = 1;
 	quantityInput.min = '1';
 	quantityInput.step = '1';
 	quantityInput.name = `SelectedProducts[${count++}].Quantity`;
@@ -110,12 +111,11 @@ function ViewProductDetails(e) {
 	productDiv.appendChild(quantityInput);
 	productDiv.appendChild(removeButton);
 
-	productsContainer.appendChild(productDiv);
+	productsContainer.insertBefore(productDiv, productsContainer.firstChild);
 
 	document.querySelector("#search").addEventListener("focusout", clear);
 	document.querySelector("#search").addEventListener("focus", (e) => onInput(e.target));
 	clear();
-	e.parentElement.innerHTML = "";
 	document.querySelector("#search").value = "";
 }
 
@@ -180,6 +180,7 @@ function CreateNewProduct() {
 
 			const quantityInput = document.createElement('input');
 			quantityInput.type = 'number';
+			quantityInput.value = 1;
 			quantityInput.min = '1';
 			quantityInput.step = '1';
 			quantityInput.name = `SelectedProducts[${count++}].Quantity`;
@@ -198,11 +199,11 @@ function CreateNewProduct() {
 			productDiv.appendChild(quantityInput);
 			productDiv.appendChild(removeButton);
 
-			productsContainer.appendChild(productDiv);
+			productsContainer.insertBefore(productDiv, productsContainer.firstChild);
 
 			document.querySelector("#search").addEventListener("focusout", clear);
 			clear();
-			document.querySelector("tbody.search-results").parentElement.innerHTML = "";
+			document.querySelector("tbody.search-results").innerHTML = "";
 			document.querySelector("#search").value = "";
 
 			document.querySelector("button.btn-close").click();
@@ -215,6 +216,8 @@ function CreateNewProduct() {
 document.addEventListener('keydown', function (event) {
 	if (event.code === 'Enter' || event.keyCode === 13) {
 		event.preventDefault();
+
+		document.getElementById("search").value = "";
 
 		const button = document.querySelector('.result-item');
 		simulateMouseDown(button);

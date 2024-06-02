@@ -31,18 +31,18 @@
 			<textarea class="form-control" asp-for="Description" rows="3"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 		</div>
-
-		<div class="col-md-12 products">
-			<div class="input-form">
-				<h2>Required products for the recipe:</h2>
-				<div class="form-outline" data-mdb-input-init>
-					<input onkeyup="onInput(this)" type="search" id="search" class="form-control" placeholder="Add/Search products by name" aria-label="Search" autocomplete="off"/>
-				</div>
-				<table class="table table-striped table-hover table-info">
-					<tbody class="search-results">
-					</tbody>
-				</table>
+		<div class="input-form">
+			<h2>Required products for the recipe:</h2>
+			<div class="form-outline" data-mdb-input-init>
+				<input onkeyup="onInput(this)" type="search" id="search" class="form-control" placeholder="Add/Search products by name" aria-label="Search" autocomplete="off" />
 			</div>
+			<table class="table table-striped table-hover table-info">
+				<tbody class="search-results">
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-12 products">
+			
 		</div>
 	</div>
 	<div class="btn-div">
