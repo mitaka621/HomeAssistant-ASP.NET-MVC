@@ -12,69 +12,86 @@
 	ViewBag.previousPages = previousPages;
 }
 
-<div class="float-container">
-	<div class="step-progress">
-		<h3>Progress</h3>
-		<h1>@Model.StepNumber / @Model.TotalStepsCount</h1>
-	</div>
 
+<div class="main-recipe-view-container">
+	<div class="main-recipe-container">
+		<div class="step-progress">
+			<h3>Progress</h3>
+			<h1>@Model.StepNumber / @Model.TotalStepsCount</h1>
+		</div>
+		<div class="step-content">
+			@if (Model.Type == StepType.TimerStep && Model.InitiatedOn != null)
+			{
+				<audio id="myAudio">
+					<source src="~/audio/timer_sound.mp3" type="audio/mpeg">
+				</audio>
+
+				if ((DateTime.Now - Model.InitiatedOn).Value.Minutes < Model.Duration.Value)
+				{
+
+					TimeSpan remainingTime = (new TimeSpan(0, Model.Duration.Value, 0) - (DateTime.Now - Model.InitiatedOn)).Value;
+
+					int totalmin = (int)remainingTime.TotalMinutes;
+					int remainingMinutes = remainingTime.Seconds;
+
+					string formattedTime = $"{totalmin:00}:{remainingMinutes:00}";
+
+					<h1 class="timer">@formattedTime</h1>
+				}
+				else
+				{
+					<h1 class="timer">00:00</h1>
+				}
+			}
+
+			<h1>@Model.Name</h1>
+
+			<p>@Model.Description</p>
+
+
+
+		</div>
+	</div>
 	@if (Model.Products.Any())
 	{
-		<h3>Products</h3>
+		<div class="side-container">
+			<h3>Products for Current Step</h3>
+			<div class="prod-for-step">
+				@foreach (var item in Model.Products)
+				{
+					<div class="recipe-show-product">@item</div>
+				}
+			</div>
+		</div>
+
 	}
-	<ul class="prod-for-step">
-		@foreach (var item in Model.Products)
-		{
-			<li>@item</li>
-		}
-	</ul>
 </div>
+@if (Model.TotalStepsCount != Model.StepNumber)
+{
+	<form class="go-next" method="post" asp-controller="Recipe" asp-action="MoveNextStep">
+		<input hidden name="recipeId" value="@Model.RecipeId" />
+		<button class="btn done" type="submit" id="btnsubmit">
+			<p>Click Here or Press SPACE to continue</p>
+		</button>
+	</form>
+}
+else
+{
+	<a class="btn done" asp-controller="Recipe" asp-action="FinishRecipe" asp-route-recipeId="@Model.RecipeId" onclick="disableButton(this)">
+		<p>Click Here or Press SPACE to FINISH the recipe</p>
+	</a>
+}
 
-<div class="step-content">
-	@if (Model.Type == StepType.TimerStep && Model.InitiatedOn != null)
-	{
-		<audio id="myAudio">
-			<source src="~/audio/timer_sound.mp3" type="audio/mpeg">
-		</audio>
+<script>
+	document.addEventListener('keydown', function (event) {
+		if (event.code === 'Space' || event.keyCode === 32) {
+			event.preventDefault();
 
-		if ((DateTime.Now - Model.InitiatedOn).Value.Minutes < Model.Duration.Value)
-		{
-
-				TimeSpan remainingTime = (new TimeSpan(0, Model.Duration.Value, 0) - (DateTime.Now - Model.InitiatedOn)).Value;
-
-				int totalmin = (int)remainingTime.TotalMinutes;
-				int remainingMinutes = remainingTime.Seconds;
-
-				string formattedTime = $"{totalmin:00}:{remainingMinutes:00}";
-
-				<h1 class="timer">@formattedTime</h1>
+			const button = document.querySelector('.done');
+			button.click();
 		}
-		else
-		{
-			<h1 class="timer">00:00</h1>
-		}
-	}
-
-	<h1>@Model.Name</h1>
-
-	<p>@Model.Description</p>
-
-	@if (Model.TotalStepsCount != Model.StepNumber)
-	{
-		<form method="post" asp-controller="Recipe" asp-action="MoveNextStep">
-			<input hidden name="recipeId" value="@Model.RecipeId" />
-			<button class="btn done" type="submit" id="btnsubmit">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" /></svg>
-			</button>
-		</form>
-	}
-	else
-	{
-		<a class="btn btn-primary" asp-controller="Recipe" asp-action="FinishRecipe" asp-route-recipeId="@Model.RecipeId" onclick="disableButton(this)">Finish</a>
-	}
-
-</div>
-
+	});
+</script>
 
 @section Scripts {
 	<script>

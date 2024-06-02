@@ -5,7 +5,6 @@
 	<a type="button" class="btn btn-primary" asp-controller="UserConfiguration" asp-action="All">All Active Users</a>
 	<a type="button" class="btn btn-primary" asp-controller="UserConfiguration" asp-action="AllDeleted">Deleted Users</a>
 	<a type="button" class="btn btn-primary" asp-controller="UserConfiguration" asp-action="FailedLogin">Failed to login user IPs</a>
-	<a type="button" class="btn btn-primary" asp-controller="UserConfiguration" asp-action="AllInteractionsLog">Users Interactions Log</a>
 	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 		User Interactions Logs
 	</button>
@@ -70,6 +69,7 @@
 	}
 
 	function SearchUserName(e) {
+		document.querySelector(".modal-footer button").setAttribute("disabled", "true");
 		const resultsContainer = document.getElementById('resultsContainer');
 		resultsContainer.innerHTML = "";
 
@@ -110,6 +110,15 @@
 
 		document.getElementById("resultsContainer").innerHTML = "";
 	}
+
+	document.addEventListener('keydown', function (event) {
+		if (event.code === 'Enter' || event.keyCode === 13) {
+			event.preventDefault();
+
+			const button = document.querySelector('.result-item');
+			button.click();
+		}
+	});
 
 </script>
 

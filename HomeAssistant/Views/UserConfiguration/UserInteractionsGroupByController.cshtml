@@ -72,20 +72,20 @@
 
 	<ul class="pagination">
 		<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-			<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="1" asp-route-count="@ViewBag.Count">First</a>
+			<a class="page-link" asp-controller="UserConfiguration" asp-action="UserInteractionsGroupByController" asp-route-page="1" asp-route-count="@ViewBag.Count">First</a>
 		</li>
 
 		@if (Model.CurrentPage>1)
 		{
 			<li class="page-item">
-				<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@(Model.CurrentPage-1)" asp-route-count="@ViewBag.Count">@(Model.CurrentPage - 1)</a>
+				<a class="page-link" asp-controller="UserConfiguration" asp-action="UserInteractionsGroupByController" asp-route-page="@(Model.CurrentPage-1)" asp-route-count="@ViewBag.Count">@(Model.CurrentPage - 1)</a>
 			</li>
 		}
 
 		@for (int i = Model.CurrentPage; i <= Model.TotalPages; i++)
 		{
 			<li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-				<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@i" asp-route-count="@ViewBag.Count">@(i)</a>
+				<a class="page-link" asp-controller="UserConfiguration" asp-action="UserInteractionsGroupByController" asp-route-page="@i" asp-route-count="@ViewBag.Count">@(i)</a>
 			</li>
 
 			counter++;
@@ -96,7 +96,7 @@
 			}
 		}
 		<li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
-			<a class="page-link" asp-controller="UserConfiguration" asp-action="AllInteractionsLog" asp-route-page="@(Model.TotalPages)" asp-route-count="@ViewBag.Count">Last</a>
+			<a class="page-link" asp-controller="UserConfiguration" asp-action="UserInteractionsGroupByController" asp-route-page="@(Model.TotalPages)" asp-route-count="@ViewBag.Count">Last</a>
 		</li>
 	</ul>
 }
