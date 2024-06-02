@@ -31,5 +31,5 @@ function onInput(e) {
 }
 
 function ViewProductDetails(e) {
-	window.location.href = '/fridge/EditProduct/'+e.id;
+	window.location.href = '/Fridge/EditProduct/'+e.id;
 }

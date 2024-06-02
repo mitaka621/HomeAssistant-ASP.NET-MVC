@@ -220,6 +220,23 @@ namespace HomeAssistant.Controllers
 			});
 		}
 
+		[Route("~/api/[controller]/[action]")]
+		[HttpPost]
+		[IgnoreAntiforgeryToken]
+		public async Task<IActionResult> AddProductApi([FromBody] ProductFormViewModel product)
+		{
+			try
+			{
+				var newProdId=await _productService.AddProduct(GetUserId(), product);
+
+				return Json(new {prodId= newProdId });
+			}
+			catch (Exception)
+			{
+				return BadRequest();
+			}
+			
+		}
 
         private string GetUserId()
 		{

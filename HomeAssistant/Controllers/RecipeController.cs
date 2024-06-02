@@ -17,13 +17,16 @@ namespace HomeAssistant.Controllers
         private readonly IRecipeService _recipeService;
         private readonly IHubContext<NotificationsHub> _notificationHubContext;
         private readonly INotificationService _notificationService;
+        private readonly IProductService _productService;
 
-        public RecipeController(IRecipeService recipeService, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService)
+        public RecipeController(IRecipeService recipeService, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService, IProductService productService)
         {
             _recipeService = recipeService;
             _notificationHubContext = notificationHubContext;
             _notificationService = notificationService;
-        }
+			_productService= productService;
+
+		}
 
         public async Task<IActionResult> Index(int page = 1)
         {
@@ -31,9 +34,11 @@ namespace HomeAssistant.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            return View();
+            ViewBag.Categories = await _productService.GetAllCategories();
+
+			return View();
         }
 
         [HttpPost]
