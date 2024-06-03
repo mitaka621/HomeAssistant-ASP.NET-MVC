@@ -14,6 +14,8 @@
 
 <link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
+
+
 <form class="recipe-form" method="post" asp-controller="Recipe" asp-action="Edit" enctype="multipart/form-data">
 	<input asp-for="Id" hidden>
 	<div class="col">
@@ -31,20 +33,17 @@
 			<textarea class="form-control" asp-for="Description" rows="3"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 		</div>
-
-		<div class="col-md-12 products">
-				
-			<label class="form-label">Required products for the recipe:</label>
-
-			<div class="input-form">
-				<div class="form-outline" data-mdb-input-init>
-					<input onkeyup="onInput(this)" type="search" id="search" class="form-control" placeholder="Add/Search products by name" aria-label="Search" />
-				</div>
-				<table class="table table-striped table-hover table-info">
-					<tbody class="search-results">
-					</tbody>
-				</table>
+		<div class="input-form">
+			<div class="form-outline" data-mdb-input-init>
+				<input onkeyup="onInput(this)" type="search" autocomplete="off" id="search" class="form-control" placeholder="Add/Search products by name" aria-label="Search" />
 			</div>
+			<table class="table table-striped table-hover table-info">
+				<tbody class="search-results">
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-12 products">			
+			<label class="form-label">Required products for the recipe:</label>
 		</div>
 		@{
 			int count = 0;
@@ -67,6 +66,6 @@
 
 
 @section Scripts {
-	<script src="~/js/productSearchForRecipe.js"></script>
+	<script src="~/js/productSearchForRecipe.js" asp-append-version="true"></script>
 	<partial name="_ValidationScriptsPartial" />
 }
