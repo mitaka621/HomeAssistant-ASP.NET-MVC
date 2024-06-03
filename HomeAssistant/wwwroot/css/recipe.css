@@ -275,15 +275,15 @@ div.step-content > p{
     align-items:center;
 }
 .done {
-    background-color: #d5ebebc7;
     width: 100%;
+    border: 5px solid #d5ebebc7;
     height: 100%;
     border-radius: 20px;
-    min-height:20em;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin-top:1em;
+    min-height: 20em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
 }
 .done:hover{
     background-color:#f9b74f
