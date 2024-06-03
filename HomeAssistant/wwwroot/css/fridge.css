@@ -1,7 +1,20 @@
 ﻿@media only screen and (max-width: 1000px) {
-    .container{
-        margin:0 auto;
-        width:100vw !important;
+    .product-name{
+        font-size: 1.3em !important;
+    }
+    p.text-muted {
+        font-size: 1em !important;
+    }
+    .blockquote-footer::before{
+        display:none;
+       
+    }
+    .blockquote-footer {
+        text-decoration: underline;
+    }
+    .container {
+        margin: 0 auto;
+        width: 100vw !important;
     }
     .right-panel {
         display: none !important;
@@ -15,12 +28,33 @@
     p, figcaption,a{
         font-size:1.5em;
     }
-    .product{
-        width:90% !important;
+    .search-results{
+        width:100vw !important;
+        display:block;
+        font-size:0.7em !important;
+    }
+    .product {
+        width: 90% !important;
+        flex-direction: column;
+        padding: 0.5em 0 !important;
+        gap: 0 !important;
+        border-width: 2px !important;
     }
 
-    .btn-filters{
-        margin-bottom:3em !important;
+    .pagination{
+        font-size:0.7em !important;
+    }
+
+    div.product > div.left {
+        text-align: center;
+        padding: 0 !important;
+    }
+
+    .btn-filters {
+        margin-bottom: 3em !important;
+        flex-direction:column !important;
+        justify-content:center;
+        align-items:center;
     }
 
     .form-check {
@@ -61,9 +95,9 @@
     }
     form.edit-form {
         text-align: center !important;
-        font-size: 2em;
-        width: 90%;
-        margin: 0 auto;
+        font-size: 1.5em;
+        width: 90% !important;
+        margin: 1em auto !important;
         margin-top: 1em;
     }
     input, select {
@@ -94,8 +128,13 @@
        margin-top:0.5em;
     }
     .input-form{
-        width:70vw !important;
+        width:95vw !important;
     }
+}
+
+.edit-btn{
+    display:block;
+    margin: 0 auto;
 }
 button.dropdown-toggle {
     display: flex;
@@ -342,4 +381,17 @@ a.btn p{
 }
 .form-switch{
     margin:1em 0 0em 0;
+}
+form.edit-form{
+    width:30vw;
+    margin:0 auto;
+    
+}
+
+form.edit-form input{
+   text-align:start;
+}
+
+h1{
+    text-align:center;
 }

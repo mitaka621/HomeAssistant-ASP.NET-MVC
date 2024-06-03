@@ -7,12 +7,12 @@ function onInput(e) {
 
 			if (r.length === 0 && e.value!=="") {
 				document.querySelector(".search-results")
-					.innerHTML = `<a class="btn btn-primary" href="/Fridge/addProduct?prodName=${e.value}">Add Product</a>`;
+					.innerHTML = `<a class="btn btn-primary result-item" href="/Fridge/addProduct?prodName=${e.value}">Add Product</a>`;
 			}
 
             r.forEach(product => {
 				document.querySelector(".search-results").innerHTML +=
-				`<tr id="${product.id}" onClick="ViewProductDetails(this)">
+					`<tr id="${product.id}" class="result-item" onClick="ViewProductDetails(this)">
 					<td>
 						<p>${product.name}</p>
 					</td>
@@ -32,4 +32,24 @@ function onInput(e) {
 
 function ViewProductDetails(e) {
 	window.location.href = '/Fridge/EditProduct/'+e.id;
+}
+
+document.addEventListener('keydown', function (event) {
+	if (event.code === 'Enter' || event.keyCode === 13) {
+		event.preventDefault();
+
+		const button = document.querySelector('.result-item');
+		simulateMouseDown(button);
+		button.click();
+	}
+});
+
+function simulateMouseDown(element) {
+	const event = new MouseEvent('mousedown', {
+		view: window,
+		bubbles: true,
+		cancelable: true,
+		buttons: 1
+	});
+	element.dispatchEvent(event);
 }
