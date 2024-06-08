@@ -3,8 +3,9 @@
         flex-direction:column;
         gap:5em;
     }
-    .side-container{
-       order:-1;
+    .side-container {
+        order: -1;
+        margin: 0 auto !important;
     }
     h1{
         font-size:2em !important;
@@ -515,4 +516,10 @@ button.result-item{
 .step-title{
     text-align:center;
    margin:0.4em 0 1em 0;
+}
+
+.redirect-to-recipes{
+    display:block;
+    margin:2em auto;
+    width:fit-content;
 }
