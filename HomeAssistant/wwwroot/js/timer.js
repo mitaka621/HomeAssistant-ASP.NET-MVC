@@ -4,10 +4,11 @@ var x = document.getElementById("myAudio");
 x.loop = true;
 var promise = x.play();
 
-if (promise !== undefined) {
+if (promise !== undefined && !getCookie("isAlertSent")) {
     document.getElementById("myAudio").pause();
     promise.catch(function (error) {
         alert('Please enable audio autoplay to hear the timer go off.');
+        setCookie("isAlertSent", "true");
     });
 } else {
     document.getElementById("myAudio").pause();
@@ -53,5 +54,29 @@ function Timer(min, sec) {
     setTimeout(function () {
         Timer(min, sec);
     }, 1000);
+}
+
+function setCookie(name, value) {
+    const date = new Date();
+    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000)); // Set expiration date to 1 year from now
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+function getCookie(name) {
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(';');
+    name = name + "=";
+
+    for (let i = 0; i < cookieArray.length; i++) {
+        let cookie = cookieArray[i];
+        while (cookie.charAt(0) === ' ') {
+            cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(name) === 0) {
+            return cookie.substring(name.length, cookie.length);
+        }
+    }
+    return "";
 }
 
