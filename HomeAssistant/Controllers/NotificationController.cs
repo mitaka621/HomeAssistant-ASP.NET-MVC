@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Models.Notification;
 using HomeAssistant.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,21 @@ namespace HomeAssistant.Controllers
             await _notificationService.DismissAllNotificationsForUser(GetUserId());
 			return Ok();
 		}
+
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> Subscribe([FromBody] PushNotificationRegistrationModel model)
+        {
+            try
+            {
+               await _notificationService.SubscribeUserForPush(model, GetUserId());
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
 
 		private string GetUserId()
         {

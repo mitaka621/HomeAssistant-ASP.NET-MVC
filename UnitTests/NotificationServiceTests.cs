@@ -137,8 +137,8 @@ namespace UnitTests
 		{			 
 			var notifications = await _notificationService.GetNotificationsForUser("user1");
 			 
-			Assert.AreEqual("user1", (await _dbContext.NotificationsUsers.FirstAsync(x => x.NotificationId == notifications.First().Id)).UserId);
-			Assert.AreEqual("Title", (await _dbContext.NotificationsUsers.FirstAsync(x => x.NotificationId == notifications.First().Id)).Notification.Title);
+			Assert.AreEqual("user1", (await _dbContext.NotificationsUsers.FirstAsync(x => x.NotificationId == notifications.NotificationsContent.First().Id)).UserId);
+			Assert.AreEqual("Title", (await _dbContext.NotificationsUsers.FirstAsync(x => x.NotificationId == notifications.NotificationsContent.First().Id)).Notification.Title);
 		}
 
 		[Test]
@@ -183,13 +183,13 @@ namespace UnitTests
 
 			Assert.AreEqual(title, (await _dbContext.Notifications.FirstAsync(x => x.Id == notificationId)).Title);
 
-			Assert.AreEqual(1, (await _notificationService.GetNotificationsForUser("user1")).Count());
+			Assert.AreEqual(1, (await _notificationService.GetNotificationsForUser("user1")).NotificationsContent.Count());
 
-			Assert.AreNotEqual(notificationId, (await _notificationService.GetNotificationsForUser("user1")).First().Id);
+			Assert.AreNotEqual(notificationId, (await _notificationService.GetNotificationsForUser("user1")).NotificationsContent.First().Id);
 
 			Assert.AreEqual(1, await _dbContext.NotificationsUsers.Where(x => x.UserId == "user2").CountAsync());
 
-			Assert.AreEqual(notificationId, (await _notificationService.GetNotificationsForUser("user2")).First().Id);
+			Assert.AreEqual(notificationId, (await _notificationService.GetNotificationsForUser("user2")).NotificationsContent.First().Id);
 
 		}
 

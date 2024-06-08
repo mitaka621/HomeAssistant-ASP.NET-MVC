@@ -19,5 +19,9 @@ namespace HomeAssistant.Core.Contracts
 		Task DismissAllNotificationsForUser(string userId);
 
 		Task<IEnumerable<NotificationViewModel>> GetTop20ProductRelatedNotification();
+
+		Task SubscribeUserForPush(PushNotificationRegistrationModel model,string userId);
+
+		Task<bool> PushNotificationForUser(string userId,string title, string body, string url);
 	}
 }
