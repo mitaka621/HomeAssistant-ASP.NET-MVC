@@ -40,9 +40,19 @@ namespace HomeAssistant.Infrastructure.Data.Models
 		[DefaultValue(23.319941)]
 		public double Longitude { get; set; }
 
+        [MaxLength(20)]
         public string ClientIpAddress { get; set; } = string.Empty;
 
-        public DateTime? ExpiresOn { get; set; }
+		[MaxLength(2000)]
+		public string? PushNotificationEndpoint { get; set; }
+
+		[MaxLength(500)]
+		public string? PushNotificationAuth{ get; set; }
+
+		[MaxLength(500)]
+		public string? P256dh { get; set; }
+
+		public DateTime? ExpiresOn { get; set; }
 
         public ShoppingList ShoppingList { get; set; } = null!;
 
