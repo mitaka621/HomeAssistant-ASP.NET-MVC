@@ -286,7 +286,7 @@ namespace HomeAssistant.Core.Services
 			await _dbcontext.SaveChangesAsync();
 		}
 
-		public async Task<bool> PushNotificationForUser(string userId, string title, string body, string url)
+		public async Task<bool> PushNotificationForUser(string userId, string title, string body, string url, string? iconUrl)
 		{
 			var user=await _dbcontext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
 
@@ -312,7 +312,8 @@ namespace HomeAssistant.Core.Services
 			{
 				title = title,
 				body = body,
-				url = url
+				url = url,
+				icon=iconUrl?? "https://homehub365681.xyz/favicon.ico",
 			};
 
 			var payloadJson = JsonSerializer.Serialize(payload);
