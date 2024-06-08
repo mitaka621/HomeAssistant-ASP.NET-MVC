@@ -1,4 +1,5 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Models.Notification;
 using HomeAssistant.Core.Models.Recipe;
 using HomeAssistant.Core.Services;
 using HomeAssistant.Hubs;
@@ -247,7 +248,19 @@ namespace HomeAssistant.Controllers
 
                 await _notificationHubContext.Clients
                     .All
-                    .SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+                    .SendAsync("PushNotfication", new NotificationViewModel()
+                    {
+                        CreatedOn=DateTime.Now,
+                        Description= recipeToDelete.Description,
+                        Id=notificationId,
+                        Invoker=new NotificationUserViewModel()
+                        {
+                            Id= GetUserId(),
+                            FirstName= User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
+                            Photo = (byte[])(HttpContext.Items["ProfilePicture"]??new byte[0])
+			            },
+                        Title = "Recipe Deleted - " + recipeToDelete.Name
+					});
 
                 await _recipeService.DeleteRecipe(recipeId);
 

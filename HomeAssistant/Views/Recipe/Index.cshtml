@@ -176,9 +176,9 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-								<a class="btn btn-danger" asp-controller="Recipe" asp-action="Delete" asp-route-recipeId="@item.Id" title="Delete recipe">
+								<button class="btn btn-danger" id="r@(item.Id)" onclick="DeleteRecipe(this)" title="Delete recipe">
 									Delete
-								</a>
+								</button>
 							</div>
 						</div>
 					</div>
@@ -207,3 +207,10 @@
 		</li>
 	</ul>
 }		
+<script>
+	function DeleteRecipe(e) {
+		e.setAttribute("disabled", "true");
+		fetch("/Recipe/Delete/?recipeId="+e.id.split("r")[1])
+			.then(x => window.location.href = "/Recipe")
+	}
+</script>
