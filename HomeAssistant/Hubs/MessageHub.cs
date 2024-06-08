@@ -48,7 +48,8 @@ namespace HomeAssistant.Hubs
 				await _notificationService.PushNotificationForUser(recipientId,
 					"Recieved New Message from " + Context.User!.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
 					message,
-					"https://homehub365681.xyz/Message/Chat?recipiantId=" + GetUserId()
+					"https://homehub365681.xyz/Message/Chat?recipiantId=" + GetUserId(),
+					null
 					);
 
 				var notificationId = await _notificationService.CreateNotificationForSpecificUser(
