@@ -38,7 +38,7 @@ namespace HomeAssistant.Core.Models
 
         public IEnumerable<RoleViewModel>? AllRoles { get; set; }
 
-        public IEnumerable<NotificationViewModel> Notifications { get; set; }=new List<NotificationViewModel>();
+        public NotificationsWithPfpModel Notifications { get; set; }=new();
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }

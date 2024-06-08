@@ -10,7 +10,7 @@ namespace HomeAssistant.Core.Contracts
 
         Task<int> CreateNotificationForSpecificUser(string title, string description, string invokerURL, string userId, string? invokerId);
 
-		Task<IEnumerable<NotificationViewModel>> GetNotificationsForUser(string userId,int take = 30, int skip = 0);
+		Task<NotificationsWithPfpModel> GetNotificationsForUser(string userId,int take = 30, int skip = 0);
 
 		Task<NotificationViewModel> GetNotification(int notidicationId);
 

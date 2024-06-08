@@ -93,12 +93,12 @@
 				</a>
 			</div>
 			<div class="notifications">
-				@if (!Model.Notifications.Any())
+				@if (!Model.Notifications.NotificationsContent.Any())
 				{
 					<p>No notifications!</p>
 				}
 
-				@foreach (var notification in Model.Notifications)
+				@foreach (var notification in Model.Notifications.NotificationsContent)
 				{
 					<div class="accordion-item">
 						<h2 class="accordion-header" id="headingTwo">
@@ -141,11 +141,11 @@
 									}
 								</div>
 
-								@if (notification.Invoker.Photo != null && notification.Invoker.Photo.Length != 0)
+								@if (notification.Invoker.Id != null && Model.Notifications.ProfilePictures.ContainsKey(notification.Invoker.Id) && Model.Notifications.ProfilePictures[notification.Invoker.Id].Length != 0)
 								{
 									<div class="notification-img-container">
 										<div class="smallpfp">
-											<img src="data:image/jpeg;base64,@Convert.ToBase64String(notification.Invoker.Photo)" alt="Profile Picture" />
+											<img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Notifications.ProfilePictures[notification.Invoker.Id])" alt="Profile Picture" />
 										</div>
 										@notification.Invoker.FirstName
 									</div>

@@ -73,7 +73,7 @@ namespace HomeAssistant.Core.Services
 
 		}
 
-		public async Task<IEnumerable<NotificationViewModel>> GetNotificationsForUser(string userId, int take = 30,int skip=0)
+		public async Task<NotificationsWithPfpModel> GetNotificationsForUser(string userId, int take = 30,int skip=0)
 		{
 			var notifications = await _dbcontext.NotificationsUsers
 				.AsNoTracking()
@@ -100,12 +100,15 @@ namespace HomeAssistant.Core.Services
 				.GetPfpRange(notifications.Where(x => x.Invoker.Id != null).Select(x => x.Invoker.Id).Distinct().ToArray());
 
 			notifications
-				.ForEach(x => {
-					x.Invoker.Photo = userPhotos.FirstOrDefault(y => y.Key == x.Invoker.Id).Value ?? new byte[0];
+				.ForEach(x => {					
 					x.Source = x.Source.Split("/")[1];
 					});
 
-			return notifications;
+			return new NotificationsWithPfpModel()
+			{
+				NotificationsContent = notifications,
+				ProfilePictures=userPhotos,
+			};
 		}
 
 		public async Task<NotificationViewModel> GetNotification(int notidicationId)
