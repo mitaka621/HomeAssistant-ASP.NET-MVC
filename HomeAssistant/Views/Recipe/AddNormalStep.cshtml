@@ -20,14 +20,14 @@
 @if (Model.PreviousStep != null)
 {
 	<div class="prev-step">
-		<h2>Previous Step</h2>
+		<h2>View Previous Step</h2>
 		<h3>@Model.PreviousStep.Name</h3>
 		<p>@Model.PreviousStep.Description</p>
 	</div>
 }
-<form class="add-step-form" method="post" asp-controller="Recipe" asp-action="AddNormalStep">
+<h1 class="step-title">Step Number @(Model.PreviousStep == null ? 1 : Model.PreviousStep.StepNumber + 1)</h1>
 
-	<h1>Step Number @(Model.PreviousStep == null ? 1 : Model.PreviousStep.StepNumber + 1)</h1>
+<form class="configure-step" method="post" asp-controller="Recipe" asp-action="AddNormalStep">	
 	@if (Model.Products != null)
 	{
 		<div class="prod-to-include">
@@ -56,8 +56,6 @@
 			<textarea class="form-control" asp-for="Description" rows="3"></textarea>
 			<span asp-validation-for="Description" class="text-danger"></span>
 		</div>
-	</div>
-	<div class="btn-div">
 		<button type="submit" class="btn btn-primary">Next</button>
 	</div>
 	

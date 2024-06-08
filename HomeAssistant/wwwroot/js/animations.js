@@ -15,3 +15,15 @@ function TogleFridgeAnimation() {
         btn.style.transform = 'rotate(0deg)';
     }
 }
+
+function scrollToContainer(e) {
+    e.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+if (document.getElementById("recipe-steps")) {
+    scrollToContainer(document.getElementById("recipe-steps"));
+}
+
+if (document.getElementById("messageToSend")) {
+    scrollToContainer(document.getElementById("messageToSend"));
+}

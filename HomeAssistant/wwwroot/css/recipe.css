@@ -31,28 +31,100 @@
     .recipe-form{
         width:100% !important;
     }
+    .container2{
+        flex-direction:column;
+        width:98vw !important;
+        align-items:center;
+        margin:0 auto !important;
+        gap:0 !important;
+    }
+    .container{
+        padding:0 !important;
+    }
+    .img-container-edit {
+        width: 90vw !important;
+        height: fit-content !important;
+    }
+    .ingridiants{
+        list-style:none;
+        justify-content:center;
+        align-items:center;
+        flex-wrap:nowrap !important;
+        height:fit-content !important;
+        font-size:0.8em !important;
+    }
+    div.steps{
+        gap: 0 !important;
+        width:initial !important;
+        font-size:0.9em !important;
+        margin:0 1em !important;
+    }
+    .step-actions .btn{
+        width:2em !important;
+        height:2em !important;
+    }
+    .step-actions svg {
+        width: 0.8em !important;
+        margin: -0.5em 0 0 -0.2em !important;
+    }
+    .configure-step{
+        flex-direction:column;
+        margin:0 auto !important;
+        width:80vw !important;
+        gap:0 !important;
+    }
+    .prod-to-include{
+        width:initial !important;
+    }
+    .configure-step .form-check-input {
+        width: 1em !important;
+    }
+    label{
+        font-weight:600;
+    }
+    .col-md-12{
+        margin-top:2em;
+    }
+    textarea{
+        height:20em;
+    }
+    .add-step-form{
+        width:90% !important;
+    }
 }
-div.steps{
-    display:flex;
-    gap:1em;
-    flex-wrap:wrap;
-    flex-direction:column;
-    justify-content:start;
-    align-items:center;
+div.steps {
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-start;
+    width: fit-content;
+    margin: 0 auto;
+    border: 2px solid black;
+    padding: 1em;
+    border-radius: 20px;
+    box-shadow: 0px 0px 29px -3px #54d359;
 }
-div.step p{
-    margin:0;
-    padding:0;
+div.step p {
+    margin: 0;
+    padding: 0;
+    max-width: 10em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 div.step {
     display: flex;
-    align-items:center;
-    justify-content:space-around;
+    align-items: center;
+    justify-content: space-between;
     gap: 1em;
-  
+    width: 100%;
+
 }
 div.steps>svg{
     width:2em;
+    margin: 0 auto;
 }
 div.step>svg{
     width:1.5em;
@@ -60,6 +132,7 @@ div.step>svg{
 div.new-step{
     display:flex;
     gap:1em;
+    margin: 0 auto;
 }
 div.new-step>svg{
     width:2em;
@@ -104,8 +177,20 @@ div.recipe img {
     border-radius: 4px;
     box-shadow: 0px 0px 1px 2px rgba(0,0,0,0.5);
 }
-div.img-container-modal>img{
-    width:100%;
+.img-container-edit {
+    overflow: hidden;
+    height: 30em;
+    width: 50em;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5em 0.5em;
+    border-radius: 4px;
+    box-shadow: 0px 0px 1px 2px rgba(0,0,0,0.5);
+}
+div.img-container-modal > img, .img-container-edit img{
+    width: 100%;
 }
 p.desc {
     overflow: hidden;
@@ -160,23 +245,28 @@ button.show {
 
 .container2{
     width:50em;
-    text-align:center;
-    margin:0 auto;
+    margin:5em auto;
     justify-content:center;
+    display:flex;
+    gap:3em;
+
+}
+.container2 h2, .container2 p{
+    text-align:center;
 }
 
 div.container2 div.img-container-modal {
     height: 30em;
 }
 div.container ul {
-    list-style: none;
     padding: 0;
 }
 div.container li{
     padding:0;
 }
-div.action-btns a{
+div.action-btns>*{
     height:2.5em;
+    width:2.5em;
 }
 div.action-btns svg {
     width: 1em;
@@ -192,6 +282,8 @@ div.step-controls svg {
 div.step-controls {
     display: flex;
     flex-direction: column;
+    justify-content:center;
+    align-items:start;
 }
 
 svg.edit-svg{
@@ -308,6 +400,12 @@ button.done > svg {
     border-radius: 20px;
     text-align: center;
     margin: 0 auto;
+    max-height: 4em;
+    transition: max-height 2s ease-in-out;
+    overflow: hidden;
+}
+.prev-step:hover{
+    max-height:999em;
 }
 
 form.add-step-form {
@@ -346,7 +444,7 @@ form>div.btn-div{
     width:fit-content;
     font-size:1.2em;
     flex-basis:40%;
-
+    text-align:center;
 }
 .side-container {
     width: fit-content;
@@ -372,4 +470,49 @@ form>div.btn-div{
 button.result-item{
     display:block;
     margin:0 auto;
+}
+
+.ingridiants{
+    display:flex;
+    flex-wrap:wrap;
+    flex-direction:column;
+    height:25em;
+}
+
+.ingridiants li{
+    font-size:1.3em;
+}
+
+.step-actions{
+    display:flex;
+    gap:0.5em;
+}
+
+.step-identificators{
+    display:flex;
+    align-items:center;
+    gap:0.5em;
+}
+.step-identificators svg{
+    width: 1.5em;
+    margin: 0 auto;
+}
+
+.configure-step{
+    margin: 0 auto;
+    display:flex;
+    gap:4em;
+    margin:0 auto;
+    max-width:70em;
+}
+.configure-step button{
+    display:flex;
+    margin:1em auto;
+}
+.prod-to-include{
+    width:20em;
+}
+.step-title{
+    text-align:center;
+   margin:0.4em 0 1em 0;
 }

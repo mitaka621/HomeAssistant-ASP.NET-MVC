@@ -100,9 +100,10 @@
 									<a class="btn btn-warning" title="Edit steps" asp-controller="Recipe" asp-action="AddSteps" asp-route-recipeId="@item.Id">
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M192 0c-41.8 0-77.4 26.7-90.5 64H64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H282.5C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM72 272a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm104-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16s7.2-16 16-16zM72 368a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zm88 0c0-8.8 7.2-16 16-16H304c8.8 0 16 7.2 16 16s-7.2 16-16 16H176c-8.8 0-16-7.2-16-16z" /></svg>
 									</a>
-									<a class="btn btn-danger" asp-controller="Recipe" asp-action="Delete" asp-route-recipeId="@item.Id" title="Delete recipe">
+									<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#d@(item.Id)">
 										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" /></svg>
-									</a>
+									</button>
+									
 								</div>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
@@ -127,7 +128,7 @@
 										{
 											<p><u>Available</u></p>
 										}
-										<ul class="available-prod">
+										<ul class="available-prod" style="list-style:none">
 											@foreach (var prod in item.Products.Where(x=>x.IsAvailable))
 											{
 												<li>@(prod.Name)(@prod.Quantity)</li>
@@ -139,7 +140,7 @@
 									{
 										<div>
 											<p><u>Not Available</u></p>
-											<ul class="not-Available-prod">
+											<ul class="not-Available-prod" style="list-style:none">
 												@foreach (var prod in item.Products.Where(x=>!x.IsAvailable))
 												{
 													<li>@(prod.Name)(@prod.AvailableQuantity / @prod.Quantity)</li>
@@ -163,7 +164,25 @@
 						</div>
 					</div>
 				</div>
-
+				<div class="modal fade" id="d@(item.Id)" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="staticBackdropLabel">Deleting @item.Name</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<h3>Are you sure you want to delete this recipe?</h3>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+								<a class="btn btn-danger" asp-controller="Recipe" asp-action="Delete" asp-route-recipeId="@item.Id" title="Delete recipe">
+									Delete
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 

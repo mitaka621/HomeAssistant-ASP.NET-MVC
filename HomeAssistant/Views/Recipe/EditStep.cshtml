@@ -14,10 +14,11 @@
 
 }
 
+<link rel="stylesheet" href="~/css/recipe.css" asp-append-version="true" />
 
-<h1>Step Number @(Model.PreviousStep == null ? 1 : Model.PreviousStep.StepNumber++)</h1>
+<h1 class="step-title">Step Number @(Model.PreviousStep == null ? 1 : Model.PreviousStep.StepNumber++)</h1>
 
-<form method="post" asp-controller="Recipe" asp-action="EditStep">
+<form class="configure-step" method="post" asp-controller="Recipe" asp-action="EditStep">
 	@if (Model.Products != null&&Model.StepType==StepType.NormalStep)
 	{
 		<div class="prod-to-include">
@@ -56,8 +57,9 @@
 				<span asp-validation-for="Duration" class="text-danger" min="1" step="1" value="1" autocomplete="off"></span>
 			</div>
 		}		
+		<button type="submit" class="btn btn-primary">Save</button>
 	</div>
-	<button type="submit" class="btn btn-primary">Save</button>
+	
 </form>
 
 @section Scripts {
