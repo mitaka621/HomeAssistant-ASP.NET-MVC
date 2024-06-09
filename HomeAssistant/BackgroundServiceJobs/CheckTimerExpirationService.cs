@@ -1,6 +1,10 @@
 ﻿using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Models.Notification;
 using HomeAssistant.Hubs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
+using Org.BouncyCastle.Cms;
+using System.Security.Claims;
 
 namespace HomeAssistant.BackgroundServiceJobs
 {
@@ -10,7 +14,7 @@ namespace HomeAssistant.BackgroundServiceJobs
 		private readonly IServiceProvider _serviceProvider;
 		private readonly ILogger<CheckTimerExpirationService> _logger;
 
-		private readonly TimeSpan _checkInterval = TimeSpan.FromMinutes(1);
+		private readonly TimeSpan _checkInterval = TimeSpan.FromSeconds(10);
 
 		public CheckTimerExpirationService(IHubContext<NotificationsHub> hubContext, IServiceProvider serviceProvider, ILogger<CheckTimerExpirationService> logger)
 		{
@@ -28,7 +32,7 @@ namespace HomeAssistant.BackgroundServiceJobs
 
 					using (var scope = _serviceProvider.CreateScope())
 					{
-						var _notificationService=scope.ServiceProvider.GetRequiredService<INotificationService>();
+						var _notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
 						var timerManager = scope.ServiceProvider.GetRequiredService<IRecipeService>();
 						var usersWithExpiredTimers = await timerManager.GetUsersWithExpiredTimers();
 
@@ -41,9 +45,29 @@ namespace HomeAssistant.BackgroundServiceJobs
 							tuple.Item1,
 							null);
 
-							await _notificationHubContext.Clients
+							await _notificationService.PushNotificationForUser(tuple.Item1,
+								$"Timer for {tuple.Item3} expired",
+								"You are ready to porceed to the next step!",
+								$"https://homehub365681.xyz/Recipe/RecipeStep?recipeId={tuple.Item2}",
+								"https://homehub365681.xyz/svg/cooking-pot.svg"
+							);
+
+							_ = _notificationHubContext.Clients
 							.User(tuple.Item1)
-							.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+							.SendAsync("PushNotfication", new NotificationViewModel()
+							{
+								Id = notificationId,
+								CreatedOn = DateTime.Now,
+								Description = "You are ready to porceed to the next step!",
+								Invoker = new NotificationUserViewModel()
+								{
+									Id = tuple.Item1,
+									FirstName = "System",
+									Photo = new byte[0]
+								},
+								Source = $"/Recipe",
+								Title = $"Timer for {tuple.Item3} expired",
+							});
 						}
 					}
 				}

@@ -337,7 +337,17 @@ namespace HomeAssistant.Core.Services
 			if (nextStep == null)
 			{
 				_dbcontext.UsersSteps.Remove(step);
-				await _dbcontext.SaveChangesAsync();
+
+				var sentTimerNotifications = await _dbcontext.NotificationsUsers.Where(x => !x.IsDismissed && x.Notification.InvokerURL.Contains("RecipeStep?recipeId="+ recipeId)).ToListAsync();
+
+                if (sentTimerNotifications.Count!=0)
+                {
+                    foreach (var item in sentTimerNotifications)
+                    {
+						item.IsDismissed = true;
+					}
+				}
+                await _dbcontext.SaveChangesAsync();
 
 				return;
 			}
@@ -387,6 +397,16 @@ namespace HomeAssistant.Core.Services
 			if (step == null)
 			{
 				throw new ArgumentNullException(nameof(step));
+			}
+
+			var sentTimerNotifications = await _dbcontext.NotificationsUsers.Where(x => !x.IsDismissed && x.Notification.InvokerURL.Contains("RecipeStep?recipeId=" + recipeId)).ToListAsync();
+
+			if (sentTimerNotifications.Count != 0)
+			{
+				foreach (var item in sentTimerNotifications)
+				{
+					item.IsDismissed = true;
+				}
 			}
 
 			_dbcontext.UsersSteps.Remove(step);

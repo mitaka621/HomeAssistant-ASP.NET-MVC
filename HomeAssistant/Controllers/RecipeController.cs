@@ -363,7 +363,7 @@ namespace HomeAssistant.Controllers
             }
             catch (ArgumentNullException)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Index));
             }
             catch (InvalidOperationException)
             {
