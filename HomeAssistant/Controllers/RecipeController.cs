@@ -400,7 +400,7 @@ namespace HomeAssistant.Controllers
 
 			await _notificationService.PushNotificationForAllUsersExcept(GetUserId(),
 					 $"{User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty} finished a recipe!",
-					$"Prepared recipe - {recipe.Name}. Consumed Products:\r\n" + string.Join("\r\n", products.Select(x => $"{recipe.Products.First(y => y.Id == x.Id).Name}({x.Quantity})")),
+					$"Prepared recipe - {recipe.Name}.\r\nConsumed Products:\r\n" + string.Join("\r\n", products.Select(x => $"{recipe.Products.First(y => y.Id == x.Id).Name}({x.Quantity})")),
 					"https://homehub365681.xyz/Recipes",
 					"https://homehub365681.xyz/svg/cooking-pot.svg"
 					);
