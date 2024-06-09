@@ -313,7 +313,8 @@ namespace HomeAssistant.Core.Services
 				title = title,
 				body = body,
 				url = url,
-				icon=iconUrl?? "https://homehub365681.xyz/favicon.ico",
+				badge= "https://homehub365681.xyz/favicon.ico",
+				icon =iconUrl?? "https://homehub365681.xyz/favicon.ico",
 			};
 
 			var payloadJson = JsonSerializer.Serialize(payload);

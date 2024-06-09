@@ -49,7 +49,7 @@ namespace HomeAssistant.Hubs
 					"Recieved New Message from " + Context.User!.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
 					message,
 					"https://homehub365681.xyz/Message/Chat?recipiantId=" + GetUserId(),
-					null
+					"https://homehub365681.xyz/svg/message.png"
 					);
 
 				var notificationId = await _notificationService.CreateNotificationForSpecificUser(
