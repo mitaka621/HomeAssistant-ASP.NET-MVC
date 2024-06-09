@@ -313,7 +313,7 @@ namespace HomeAssistant.Core.Services
 				title = title,
 				body = body,
 				url = url,
-				badge= "https://homehub365681.xyz/svg/badge.jpg",
+				badge= "https://homehub365681.xyz/svg/badge.png",
 				icon =iconUrl?? "https://homehub365681.xyz/favicon.ico",
 			};
 
