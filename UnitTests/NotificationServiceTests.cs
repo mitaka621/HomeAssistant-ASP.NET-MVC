@@ -1,10 +1,12 @@
-﻿using HomeAssistant.Core.Contracts;
+﻿using Microsoft.Extensions.Logging;
+using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Models;
 using HomeAssistant.Core.Services;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Microsoft.Extensions.Configuration;
 
 namespace UnitTests
 {
@@ -15,6 +17,8 @@ namespace UnitTests
 		private Mock<IUserService> _mockUserService;
 		private Mock<IimageService> _mockImageService;
 		private INotificationService _notificationService;
+		private Mock<ILogger<INotificationService>> _mockLogger;
+		private Mock<IConfiguration> _mockConfiguration;
 
 		[SetUp]
 		public void Setup()
@@ -24,6 +28,8 @@ namespace UnitTests
 				.Options;
 			_dbContext = new HomeAssistantDbContext(options);
 			_mockUserService = new Mock<IUserService>();
+			_mockLogger = new Mock<ILogger<INotificationService>>();
+			_mockConfiguration= new Mock<IConfiguration>();
 			_mockImageService = new Mock<IimageService>();
 
 			_mockImageService.Setup(x => x.GetPfpRange(It.IsAny<string>())).ReturnsAsync(new Dictionary<string, byte[]>()
@@ -51,7 +57,7 @@ namespace UnitTests
 			});
 
 			SeedData();
-			_notificationService = new NotificationService(_dbContext, _mockUserService.Object, _mockImageService.Object);
+			_notificationService = new NotificationService(_dbContext, _mockUserService.Object, _mockImageService.Object, _mockConfiguration.Object,_mockLogger.Object);
 		}
 		[TearDown]
 		public void TearDown()

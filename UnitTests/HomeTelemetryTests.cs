@@ -20,6 +20,7 @@ namespace UnitTests
 		private Mock<IConfiguration> _mockConfiguration;
 		private Mock<ILogger<IHomeTelemetryService>> _logger;
 		private INotificationService _notificationService;
+		private Mock<ILogger<INotificationService>> _mockLogger;
 
 		[SetUp]
 		public void Setup()
@@ -40,7 +41,7 @@ namespace UnitTests
 
 			_logger=new Mock<ILogger<IHomeTelemetryService>>();
 
-			_notificationService =new NotificationService(_dbContext, new Mock<IUserService>().Object, new Mock<IimageService>().Object);
+			_notificationService =new NotificationService(_dbContext, new Mock<IUserService>().Object, new Mock<IimageService>().Object, _mockConfiguration.Object, _mockLogger.Object);
 
 			
 

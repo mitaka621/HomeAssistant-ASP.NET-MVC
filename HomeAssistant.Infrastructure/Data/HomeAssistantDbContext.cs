@@ -28,8 +28,9 @@ namespace HomeAssistant.Infrastructure.Data
         public DbSet<HomeTelemetry> homeTelemetries { get; set; }
 		public DbSet<BlacklistedIp> BlacklistedIPs { get; set; }
 		public DbSet<UserActivityLog> UserActivityLogs { get; set; }
+        public DbSet<UserSubscribtionData> UserSubscriptions { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<ShoppingListProduct>()
                 .HasKey(x => new { x.ShoppingListId, x.ProductId });
@@ -54,6 +55,9 @@ namespace HomeAssistant.Infrastructure.Data
 
 			builder.Entity<UserActivityLog>()
 			   .HasKey(x => new { x.UserId, x.DateTime });
+
+            builder.Entity<UserSubscribtionData>()
+                .HasKey(x => new { x.UserId, x.DeviceType });
 
 			builder.Entity<HomeAssistantUser>()
                 .Property(b => b.Latitude)

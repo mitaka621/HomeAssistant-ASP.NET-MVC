@@ -42,16 +42,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
 
         [MaxLength(20)]
         public string ClientIpAddress { get; set; } = string.Empty;
-
-		[MaxLength(2000)]
-		public string? PushNotificationEndpoint { get; set; }
-
-		[MaxLength(500)]
-		public string? PushNotificationAuth{ get; set; }
-
-		[MaxLength(500)]
-		public string? P256dh { get; set; }
-
+        
 		public DateTime? ExpiresOn { get; set; }
 
         public ShoppingList ShoppingList { get; set; } = null!;
@@ -59,5 +50,7 @@ namespace HomeAssistant.Infrastructure.Data.Models
         public IEnumerable<Notification> InvokedNotifications { get; set; } =new List<Notification>();
 
         public IEnumerable<UserStep> UserRecipeSteps { get; set; } = new List<UserStep>();
+
+        public IEnumerable<UserSubscribtionData> UserSubscriptions { get; set; } = new List<UserSubscribtionData>();
     }
 }

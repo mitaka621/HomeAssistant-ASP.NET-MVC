@@ -10,21 +10,24 @@ namespace HomeAssistant.Core.Models.Notification
 	public class PushNotificationRegistrationModel
 	{
 		[JsonPropertyName("endpoint")]
-		public string Endpoint { get; set; }
+		public string Endpoint { get; set; }=string.Empty;
 		
 		[JsonPropertyName("expirationTime")]
-		public object? ExpirationTime { get; set; }  // Use 'object' type if the field can be null or another type
+		public object? ExpirationTime { get; set; }
 
 		[JsonPropertyName("keys")]
-		public SubscriptionKeys Keys { get; set; }		
+		public SubscriptionKeys Keys { get; set; } = null!;
+
+		[JsonPropertyName("deviceType")]
+		public string DeviceType { get; set; } = string.Empty;
 	}
 
 	public class SubscriptionKeys
 	{
 		[JsonPropertyName("auth")]
-		public string Auth { get; set; }
+		public string Auth { get; set; } = string.Empty;
 
 		[JsonPropertyName("p256dh")]
-		public string P256dh { get; set; }
+		public string P256dh { get; set; } = string.Empty;
 	}
 }

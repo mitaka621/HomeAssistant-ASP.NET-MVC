@@ -19,9 +19,15 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
                     userVisibleOnly: true,
                     applicationServerKey: urlBase64ToUint8Array('BPD2hgSH5oyXW_fzPmB9nZGuDviCqg1VuNU_PyONX-VUY-Vsf0bLJr8pVT7eFo18fw4cCoNYHZIELnoYZiFTv6I')
                 }).then(function (newSubscription) {
+
+                    let subscribtionObj = JSON.parse(JSON.stringify(newSubscription));
+                    subscribtionObj["deviceType"] = getDeviceType();
+
+                    console.log(subscribtionObj);
+
                     fetch('/api/Notification/Subscribe', {
                         method: 'POST',
-                        body: JSON.stringify(newSubscription),
+                        body: JSON.stringify(subscribtionObj),
                         headers: {
                             'Content-Type': 'application/json'
                         }
@@ -45,4 +51,81 @@ function urlBase64ToUint8Array(base64String) {
         outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;
+}
+
+function getDeviceType() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Detect iOS devices
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return 'iOS';
+    }
+
+    // Detect Android devices
+    if (/android/i.test(userAgent)) {
+        return 'Android';
+    }
+
+    // Detect Windows Phone devices
+    if (/windows phone/i.test(userAgent)) {
+        return 'Windows Phone';
+    }
+
+    // Detect Windows devices
+    if (/windows/i.test(userAgent)) {
+        return 'Windows';
+    }
+
+    // Detect MacOS devices
+    if (/macintosh|mac os x/i.test(userAgent)) {
+        return 'MacOS';
+    }
+
+    // Detect ChromeOS devices
+    if (/CrOS/.test(userAgent)) {
+        return 'ChromeOS';
+    }
+
+    // Detect Linux devices
+    if (/linux/i.test(userAgent)) {
+        return 'Linux';
+    }
+
+    // Detect Kindle devices
+    if (/kindle|silk/i.test(userAgent)) {
+        return 'Kindle';
+    }
+
+    // Detect FireFox OS devices
+    if (/firefox/i.test(userAgent) && /mobile/i.test(userAgent)) {
+        return 'Firefox OS';
+    }
+
+    // Detect BlackBerry devices
+    if (/blackberry|bb/i.test(userAgent)) {
+        return 'BlackBerry';
+    }
+
+    // Detect PlayStation devices
+    if (/playstation/i.test(userAgent)) {
+        return 'PlayStation';
+    }
+
+    // Detect Nintendo devices
+    if (/nintendo/i.test(userAgent)) {
+        return 'Nintendo';
+    }
+
+    // Detect Tizen devices
+    if (/tizen/i.test(userAgent)) {
+        return 'Tizen';
+    }
+
+    // Detect Sailfish OS devices
+    if (/sailfish/i.test(userAgent)) {
+        return 'Sailfish OS';
+    }
+
+    // Detect other unknown platforms
+    return 'Unknown';
 }

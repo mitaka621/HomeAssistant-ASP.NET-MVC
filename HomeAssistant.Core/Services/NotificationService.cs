@@ -279,33 +279,36 @@ namespace HomeAssistant.Core.Services
 				throw new ArgumentNullException(nameof(user));
 			}
 
-			user.P256dh = model.Keys.P256dh;
-			user.PushNotificationAuth = model.Keys.Auth;
-			user.PushNotificationEndpoint = model.Endpoint;
+			_dbcontext.UserSubscriptions.Add(new UserSubscribtionData()
+			{
+				PushNotificationAuth = model.Keys.Auth,
+				DeviceType = model.DeviceType,
+				P256dh = model.Keys.P256dh,
+				PushNotificationEndpoint = model.Endpoint,
+				UserId = userId
+			});
 
 			await _dbcontext.SaveChangesAsync();
 		}
 
 		public async Task<bool> PushNotificationForUser(string userId, string title, string body, string url, string? iconUrl)
 		{
-			var user=await _dbcontext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
+			var userSubscriptions = await _dbcontext.UserSubscriptions.AsNoTracking().Where(x => x.UserId == userId).ToListAsync();
 
-			if (user == null|| user.PushNotificationEndpoint==null|| user.P256dh==null||user.PushNotificationAuth==null)
+			if (userSubscriptions.Count == 0)
 			{
 				return false;
 			}
 
 			string? vapidPublicKey = _configuration.GetSection("VAPID")["PublicKey"];
-			string? vapidPrivateKey =_configuration.GetSection("VAPID")["PrivateKey"];
+			string? vapidPrivateKey = _configuration.GetSection("VAPID")["PrivateKey"];
 			string? vapidEmail = _configuration.GetSection("VAPID")["Mail"];
 
 			if (string.IsNullOrEmpty(vapidPublicKey) || string.IsNullOrEmpty(vapidPrivateKey) || string.IsNullOrEmpty(vapidEmail))
 			{
 				return false;
 			}
-
-			var pushSubscription = new PushSubscription(user.PushNotificationEndpoint, user.P256dh, user.PushNotificationAuth);
-
+		
 			var vapidDetails = new VapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey);
 
 			var payload = new
@@ -313,24 +316,32 @@ namespace HomeAssistant.Core.Services
 				title = title,
 				body = body,
 				url = url,
-				badge= "https://homehub365681.xyz/svg/badge.png",
-				icon =iconUrl?? "https://homehub365681.xyz/favicon.ico",
+				badge = "https://homehub365681.xyz/svg/badge.png",
+				icon = iconUrl ?? "https://homehub365681.xyz/favicon.ico",
 			};
-
 			var payloadJson = JsonSerializer.Serialize(payload);
 
-			var webPushClient = new WebPushClient();
-			try
-			{
-				await webPushClient.SendNotificationAsync(pushSubscription, payloadJson, vapidDetails);
+			List<Task> pushTasks = new();
 
-				return true;
-			}
-			catch (WebPushException exception)
+			foreach (var subscription in userSubscriptions)
 			{
-				_logger.LogError("Failed to send push notification. Http STATUS code" + exception.StatusCode);
-				return false;
+
+				var pushSubscription = new PushSubscription(subscription.PushNotificationEndpoint, subscription.P256dh, subscription.PushNotificationAuth);						
+
+				var webPushClient = new WebPushClient();
+				try
+				{
+					pushTasks.Add(webPushClient.SendNotificationAsync(pushSubscription, payloadJson, vapidDetails));
+				}
+				catch (WebPushException exception)
+				{
+					_logger.LogError("Failed to send push notification. Http STATUS code" + exception.StatusCode);
+				}
 			}
+
+			await Task.WhenAll(pushTasks);
+
+			return true;
 		}
 	}
 }
