@@ -360,5 +360,116 @@ namespace HomeAssistant.Core.Services
 
 			return true;
 		}
+
+		public async Task<bool> PushNotificationForAllUsers(string title, string body, string url, string? iconUrl)
+		{
+			var userSubscriptions = await _dbcontext.UserSubscriptions
+				.AsNoTracking()
+				.ToListAsync();
+
+			if (userSubscriptions.Count == 0)
+			{
+				return false;
+			}
+
+			string? vapidPublicKey = _configuration.GetSection("VAPID")["PublicKey"];
+			string? vapidPrivateKey = _configuration.GetSection("VAPID")["PrivateKey"];
+			string? vapidEmail = _configuration.GetSection("VAPID")["Mail"];
+
+			if (string.IsNullOrEmpty(vapidPublicKey) || string.IsNullOrEmpty(vapidPrivateKey) || string.IsNullOrEmpty(vapidEmail))
+			{
+				return false;
+			}
+
+			var vapidDetails = new VapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey);
+
+			var payload = new
+			{
+				title = title,
+				body = body,
+				url = url,
+				badge = "https://homehub365681.xyz/svg/badge.png",
+				icon = iconUrl ?? "https://homehub365681.xyz/favicon.ico",
+			};
+			var payloadJson = JsonSerializer.Serialize(payload);
+
+			List<Task> pushTasks = new();
+
+			foreach (var subscription in userSubscriptions)
+			{
+
+				var pushSubscription = new PushSubscription(subscription.PushNotificationEndpoint, subscription.P256dh, subscription.PushNotificationAuth);
+
+				var webPushClient = new WebPushClient();
+				try
+				{
+					pushTasks.Add(webPushClient.SendNotificationAsync(pushSubscription, payloadJson, vapidDetails));
+				}
+				catch (WebPushException exception)
+				{
+					_logger.LogError("Failed to send push notification. Http STATUS code" + exception.StatusCode);
+				}
+			}
+
+			await Task.WhenAll(pushTasks);
+
+			return true;
+		}
+
+		public async Task<bool> PushNotificationForAllUsersExcept(string userIdToExclude, string title, string body, string url, string? iconUrl)
+		{
+			var userSubscriptions = await _dbcontext.UserSubscriptions
+				.AsNoTracking()
+				.Where(x => x.UserId != userIdToExclude)
+				.ToListAsync();
+
+			if (userSubscriptions.Count == 0)
+			{
+				return false;
+			}
+
+			string? vapidPublicKey = _configuration.GetSection("VAPID")["PublicKey"];
+			string? vapidPrivateKey = _configuration.GetSection("VAPID")["PrivateKey"];
+			string? vapidEmail = _configuration.GetSection("VAPID")["Mail"];
+
+			if (string.IsNullOrEmpty(vapidPublicKey) || string.IsNullOrEmpty(vapidPrivateKey) || string.IsNullOrEmpty(vapidEmail))
+			{
+				return false;
+			}
+
+			var vapidDetails = new VapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey);
+
+			var payload = new
+			{
+				title = title,
+				body = body,
+				url = url,
+				badge = "https://homehub365681.xyz/svg/badge.png",
+				icon = iconUrl ?? "https://homehub365681.xyz/favicon.ico",
+			};
+			var payloadJson = JsonSerializer.Serialize(payload);
+
+			List<Task> pushTasks = new();
+
+			foreach (var subscription in userSubscriptions)
+			{
+
+				var pushSubscription = new PushSubscription(subscription.PushNotificationEndpoint, subscription.P256dh, subscription.PushNotificationAuth);
+
+				var webPushClient = new WebPushClient();
+				try
+				{
+					pushTasks.Add(webPushClient.SendNotificationAsync(pushSubscription, payloadJson, vapidDetails));
+				}
+				catch (WebPushException exception)
+				{
+					_logger.LogError("Failed to send push notification. Http STATUS code" + exception.StatusCode);
+				}
+			}
+
+			await Task.WhenAll(pushTasks);
+
+			return true;
+		}
 	}
 }

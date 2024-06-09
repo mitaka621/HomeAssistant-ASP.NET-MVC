@@ -6,8 +6,10 @@ using HomeAssistant.Hubs;
 using HomeAssistant.Infrastructure.Data.Enums;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Org.BouncyCastle.Cms;
 using System.Security.Claims;
 
 namespace HomeAssistant.Controllers
@@ -381,9 +383,29 @@ namespace HomeAssistant.Controllers
 
             await _notificationHubContext.Clients
                 .AllExcept(GetUserId())
-                .SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+				.SendAsync("PushNotfication", new NotificationViewModel()
+				{
+					Id = notificationId,
+					CreatedOn = DateTime.Now,
+					Description = "Consumed Products:\r\n" + string.Join("\r\n", products.Select(x => $"{recipe.Products.First(y => y.Id == x.Id).Name}({x.Quantity})")),
+					Invoker = new NotificationUserViewModel()
+					{
+						Id = GetUserId(),
+						FirstName = User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
+						Photo = HttpContext.Items["ProfilePicture"] as byte[] ?? new byte[0]
+					},
+					Source = "/Recipe",
+					Title = "Recipe Finished - " + recipe.Name
+				});
 
-            return RedirectToAction(nameof(Index));
+			await _notificationService.PushNotificationForAllUsersExcept(GetUserId(),
+					 $"{User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty} finished a recipe!",
+					$"Prepared recipe - {recipe.Name}. Consumed Products:\r\n" + string.Join("\r\n", products.Select(x => $"{recipe.Products.First(y => y.Id == x.Id).Name}({x.Quantity})")),
+					"https://homehub365681.xyz/Recipes",
+					"https://homehub365681.xyz/svg/cooking-pot.svg"
+					);
+
+			return RedirectToAction(nameof(Index));
         }
 
         private string GetUserId()

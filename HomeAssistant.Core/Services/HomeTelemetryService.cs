@@ -98,7 +98,7 @@ namespace HomeAssistant.Core.Services
 				throw new ArgumentNullException();
 			}
 
-			if (obj.Radiation < 1)
+			if (obj.Radiation < 0) //changed to 0 for testing
 			{
 				return -1;
 			}

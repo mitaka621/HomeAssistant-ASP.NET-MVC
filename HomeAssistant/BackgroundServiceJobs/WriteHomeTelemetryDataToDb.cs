@@ -1,8 +1,11 @@
 ﻿
 using HomeAssistant.Core.Contracts;
+using HomeAssistant.Core.Models.Notification;
 using HomeAssistant.Core.Services;
 using HomeAssistant.Hubs;
+using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
 namespace HomeAssistant.BackgroundServiceJobs
 {
@@ -46,7 +49,16 @@ namespace HomeAssistant.BackgroundServiceJobs
 
 						if (notificationId != -1)
 						{
-							await _notificationHubContext.Clients.All.SendAsync("PushNotfication", await _notificationService.GetNotification(notificationId));
+							var notificationData = await _notificationService.GetNotification(notificationId);
+
+							await _notificationHubContext.Clients.All.SendAsync("PushNotfication", notificationData);
+
+							await _notificationService.PushNotificationForAllUsers(
+							notificationData.Title,
+							notificationData.Description,
+							"https://homehub365681.xyz/HomeTelemetry/Index?dataRange=None&count=Bars_30&type=Radiation",
+							"https://homehub365681.xyz/svg/radiation.svg"
+							);
 						}
 					}
 				}

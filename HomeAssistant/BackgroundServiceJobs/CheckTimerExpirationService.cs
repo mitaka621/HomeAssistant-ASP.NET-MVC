@@ -46,8 +46,8 @@ namespace HomeAssistant.BackgroundServiceJobs
 							null);
 
 							await _notificationService.PushNotificationForUser(tuple.Item1,
-								$"Timer for {tuple.Item3} expired",
-								"You are ready to porceed to the next step!",
+								$"Timer expired",
+								$"Timer for {tuple.Item3} expired. You are ready to porceed to the next step!",
 								$"https://homehub365681.xyz/Recipe/RecipeStep?recipeId={tuple.Item2}",
 								"https://homehub365681.xyz/svg/cooking-pot.svg"
 							);
