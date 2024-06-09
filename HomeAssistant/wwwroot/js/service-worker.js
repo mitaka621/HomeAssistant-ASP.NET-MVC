@@ -4,6 +4,8 @@ self.addEventListener('push', function (event) {
     var options = {
         body: data.body,
         icon: data.icon,
+        badge: data.badge,
+        vibrate:[100, 50, 100],
         data: {
             url: data.url
         }
