@@ -272,23 +272,40 @@ namespace HomeAssistant.Core.Services
 
 		public async Task SubscribeUserForPush(PushNotificationRegistrationModel model, string userId)
 		{
-			var user = await _dbcontext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+			var user = await _dbcontext.Users
+				.Include(x => x.UserSubscriptions)
+				.FirstOrDefaultAsync(x => x.Id == userId);
 
 			if (user == null)
 			{
 				throw new ArgumentNullException(nameof(user));
 			}
 
-			_dbcontext.UserSubscriptions.Add(new UserSubscribtionData()
-			{
-				PushNotificationAuth = model.Keys.Auth,
-				DeviceType = model.DeviceType,
-				P256dh = model.Keys.P256dh,
-				PushNotificationEndpoint = model.Endpoint,
-				UserId = userId
-			});
+			var subscriptionModel = user.UserSubscriptions.FirstOrDefault(x => x.DeviceType == model.DeviceType);
 
-			await _dbcontext.SaveChangesAsync();
+			if (subscriptionModel == null)
+			{
+				subscriptionModel = new();
+
+				subscriptionModel.PushNotificationAuth = model.Keys.Auth;
+				subscriptionModel.DeviceType = model.DeviceType;
+				subscriptionModel.P256dh = model.Keys.P256dh;
+				subscriptionModel.PushNotificationEndpoint = model.Endpoint;
+				subscriptionModel.UserId=userId;
+
+				_dbcontext.Add(subscriptionModel);
+
+				await _dbcontext.SaveChangesAsync();
+			}
+			else
+			{
+				subscriptionModel.PushNotificationAuth = model.Keys.Auth;
+				subscriptionModel.DeviceType = model.DeviceType;
+				subscriptionModel.P256dh = model.Keys.P256dh;
+				subscriptionModel.PushNotificationEndpoint = model.Endpoint;
+
+				await _dbcontext.SaveChangesAsync();
+			}
 		}
 
 		public async Task<bool> PushNotificationForUser(string userId, string title, string body, string url, string? iconUrl)
@@ -308,7 +325,7 @@ namespace HomeAssistant.Core.Services
 			{
 				return false;
 			}
-		
+
 			var vapidDetails = new VapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey);
 
 			var payload = new
@@ -326,7 +343,7 @@ namespace HomeAssistant.Core.Services
 			foreach (var subscription in userSubscriptions)
 			{
 
-				var pushSubscription = new PushSubscription(subscription.PushNotificationEndpoint, subscription.P256dh, subscription.PushNotificationAuth);						
+				var pushSubscription = new PushSubscription(subscription.PushNotificationEndpoint, subscription.P256dh, subscription.PushNotificationAuth);
 
 				var webPushClient = new WebPushClient();
 				try
