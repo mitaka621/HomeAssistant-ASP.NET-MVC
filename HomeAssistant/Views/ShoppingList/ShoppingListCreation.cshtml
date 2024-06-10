@@ -203,8 +203,9 @@
 				<div class="modal-body">
 					<input class="form-control" type="hidden" name="Id" id="productId" value="-1" />
 					<label for="productName">Product Name</label>
-					<input class="form-control" type="text" name="Name" id="productNametoAdd" />
-					<select name="CategoryName" class="form-control" aria-required="true">
+					<input class="form-control" type="text" name="Name" id="productNametoAdd" required />
+					<label for="new-product-category">Category</label>
+					<select id="new-product-category" name="CategoryName" class="form-control" aria-required="true">
 						@foreach (var category in Model.AllCategories)
 						{
 							<option value="@category.Name">@category.Name</option>
@@ -223,7 +224,9 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary">Add Product</button>
+					<button type="submit" class="btn btn-primary" onclick="var e=this;setTimeout(function(){e.disabled=true;},0); setTimeout(function(){e.disabled=false;},2000);return true;">
+						Add Product
+					</button>
 				</div>
 			</form>
 		</div>
