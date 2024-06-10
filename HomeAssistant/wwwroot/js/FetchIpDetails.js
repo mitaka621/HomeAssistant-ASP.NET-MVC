@@ -19,7 +19,7 @@
 			let newMap = document.createElement("div");
 			newMap.id = "map";
 
-			document.querySelector(".modal-body").insertBefore(newMap, document.querySelector(".ip-details"));
+			document.querySelector(".modal-body").insertBefore(newMap, document.querySelector(".modal-body").firstChild);
 
 			const map = L.map('map').setView([lat, lon], 12);
 
