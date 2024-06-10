@@ -81,7 +81,7 @@ namespace HomeAssistant.Core.Services
 
 		}
 
-		public async Task<NotificationsWithPfpModel> GetNotificationsForUser(string userId, int take = 30, int skip = 0)
+		public async Task<NotificationsWithPfpModel> GetNotificationsForUser(string userId, int take = 10, int skip = 0)
 		{
 			var notifications = await _dbcontext.NotificationsUsers
 				.AsNoTracking()

@@ -101,8 +101,8 @@ function DismissAll() {
 }
 
 
-let skip = 30;
-let take = 30;
+let skip = 10;
+let take = 10;
 
 let notificationsContainer = document.querySelector(".notifications");
 function LoadMoreMessages() {
@@ -111,14 +111,14 @@ function LoadMoreMessages() {
         .then(data => {
             document.querySelector(".spinner-container").remove();
 
-            if (data.length === 0) {
+            if (data.notificationsContent.length === 0) {
                 return;
             }
 
             skip += take;
 
-            data.forEach(notification => {
-                const notificationElement = createNotificationElement(notification);
+            data.notificationsContent.forEach(notification => {
+                const notificationElement = createNotificationElement(notification, data.profilePictures[notification.invoker.id]);
                 notificationsContainer.appendChild(notificationElement);				
             });
             document.querySelector(".notifications").innerHTML += `<div class="spinner-container">
@@ -170,7 +170,8 @@ function formatDuration(createdOn) {
 	return convertedDuration;
 }
 
-function createNotificationElement(notification) {
+function createNotificationElement(notification, imgData) {
+   
     const accordionItem = document.createElement('div');
     accordionItem.classList.add('accordion-item');
 
@@ -206,9 +207,9 @@ function createNotificationElement(notification) {
     const smallpfpContainer = document.createElement('div');
     smallpfpContainer.classList.add('smallpfp');
 
-    if (notification.invoker.photo) {
+    if (imgData) {
         const img = document.createElement('img');
-        img.setAttribute('src', `data:image/jpeg;base64,${notification.invoker.photo}`);
+        img.setAttribute('src', `data:image/jpeg;base64,${imgData}`);
         img.setAttribute('alt', 'Profile Picture');
 
         smallpfpContainer.appendChild(img);
