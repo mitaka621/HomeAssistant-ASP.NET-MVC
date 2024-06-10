@@ -34,7 +34,7 @@
 				radius: 5000
 			}).addTo(map);
 
-			document.getElementById("open-modal").click();
+			document.getElementById("open-map-modal").click();
 
 			setTimeout(() => {
 				map.invalidateSize();
