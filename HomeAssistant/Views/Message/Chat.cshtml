@@ -20,9 +20,7 @@
 		<p>@Model.Username2</p>
 	</div>
 	<div class="card-body">
-		<div class="messages-container">
-			
-			
+		<div class="messages-container">	
 			@foreach (var message in Model.Messages)
 			{
 				if (message.UserId == Model.currentUserId)
@@ -51,7 +49,6 @@
 				}
 			}
 		</div>
-
 	</div>
 	<form class="input-form" onsubmit="Send(); return false;">
 		<input hidden type="text" id="currentUserPhoto" value="data:image/jpeg;base64,@Convert.ToBase64String(Model.currentUserPhoto)" />
@@ -66,8 +63,6 @@
 		</div>
 	</form>
 </div>
-
-
 
 
 @section Scripts {

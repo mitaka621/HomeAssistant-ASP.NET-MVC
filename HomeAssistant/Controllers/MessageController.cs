@@ -25,7 +25,7 @@ namespace HomeAssistant.Controllers
 		{
 			try
 			{
-				return View(await _messageService.GetChatDetails(GetUserId(), recipiantId));
+				return View(await _messageService.GetChatDetails(GetUserId(), recipiantId,20));
 			}
 			catch (InvalidOperationException)
 			{

@@ -87,8 +87,8 @@ function Send() {
     });
 }
 
-let skip = 50;
-let take = 50;
+let skip = 20;
+let take = 20;
 function LoadMoreMessages() {
     fetch(`/Message/LoadMessageRangeJson?chatroomId=${chatRoomId}&skip=${skip}&take=${take}`)
         .then(r => r.json())
@@ -111,7 +111,7 @@ function LoadMoreMessages() {
                     div.innerHTML =
                         `<div class="message-and-time">
 				            <p class="message-text">${message.messageContent}</p>
-				            <p class="message-date">${message.createdOn}</p>
+				            <p class="message-date">${formatDateTime(message.createdOn)}</p>
 			            </div>
 			            <div class="smallpfp">
 				            <img src="${document.getElementById("currentUserPhoto").value}" alt="Profile Picture" />
@@ -129,7 +129,7 @@ function LoadMoreMessages() {
 		            </div>
 		            <div class="message-and-time2">
 			            <p class="message-text">${message.messageContent}</p>
-			            <p class="message-date">${message.createdOn}</p>
+			            <p class="message-date">${formatDateTime(message.createdOn)}</p>
 		            </div>`;
                     document.querySelector(".messages-container").insertAdjacentElement("afterbegin", div);
                 }
@@ -156,5 +156,23 @@ function handleIntersection(entries, observer) {
             LoadMoreMessages();
         }
     });
+}
+
+function formatDateTime(originalDateTime) {
+    const date = new Date(originalDateTime);
+
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear();
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+
+    return `${month}/${day}/${year} ${hours}:${minutes}:${seconds} ${ampm}`;
 }
 
