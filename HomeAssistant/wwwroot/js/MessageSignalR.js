@@ -27,6 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".messages-container").insertBefore(spinnerContainer, document.querySelector(".messages-container").firstChild);
 
     observer.observe(document.querySelector(".spinner-container"));
+
+    document.getElementById("messageToSend").addEventListener("input", (e) => {
+        if (!e.target.value) {
+            document.querySelector(".sendBtn").disabled = true;
+        } else {
+            document.querySelector(".sendBtn").disabled = false;
+        }     
+    })
 });
 
 var chatBox = document.querySelector(".card-body");
@@ -52,14 +60,15 @@ connection.on("LoadMessage", function (message) {
     chatBox.scrollTop = chatBox.scrollHeight;
 });
 
-connection.start().then(() => document.querySelector(".sendBtn").disabled = false).catch(function (err) {
+connection.start().then(() => document.querySelector(".sendBtn").disabled ? false:true).catch(function (err) {
     return console.error(err.toString());
 });
 
 let chatRoomId = parseInt(document.getElementById("chatRoomId").value);
 let recipientId = document.getElementById("recipientId").value;
 
-function Send() {
+const delay = ms => new Promise(res => setTimeout(res, ms));
+async function Send() {
     let message = document.getElementById("messageToSend").value;
 
     var div = document.createElement("div");
@@ -83,8 +92,15 @@ function Send() {
     connection.invoke("SendMessage", chatRoomId, recipientId, message).catch(function (error) {
         div.classList += (" alert alert-danger");
         div.querySelector(".message-date").textContent = "Couldn't send message!";
-
     });
+
+    document.querySelector(".sendBtn").disabled = true;
+    document.getElementById("send-container-form").setAttribute("onsubmit", "return false;");
+    document.querySelector(".sendBtn>svg").style.fill = "red";
+
+    await delay(2000);
+    document.getElementById("send-container-form").setAttribute("onsubmit", "Send(); return false;");
+    document.querySelector(".sendBtn>svg").style.fill = "white";
 }
 
 let skip = 20;

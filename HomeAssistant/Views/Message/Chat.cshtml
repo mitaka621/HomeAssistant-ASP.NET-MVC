@@ -50,7 +50,7 @@
 			}
 		</div>
 	</div>
-	<form class="input-form" onsubmit="Send(); return false;">
+	<form id="send-container-form" class="input-form" onsubmit="Send(); return false;">
 		<input hidden type="text" id="currentUserPhoto" value="data:image/jpeg;base64,@Convert.ToBase64String(Model.currentUserPhoto)" />
 		<input hidden type="text" id="otherUserPhoto" value="data:image/jpeg;base64,@Convert.ToBase64String(Model.UserPhoto2)" />
 		<input hidden type="text" id="chatRoomId" value="@Model.ChatRoomId" />

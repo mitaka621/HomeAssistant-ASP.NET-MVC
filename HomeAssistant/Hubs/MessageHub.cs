@@ -18,7 +18,7 @@ namespace HomeAssistant.Hubs
 		private readonly INotificationService _notificationService;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		private static List<string> connectedClients = new List<string>();
+		private static Dictionary<string,DateTime?> connectedClients = new();
 
 		public MessageHub(IMessageService messageService, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService, IHttpContextAccessor httpContextAccessor)
 		{
@@ -30,16 +30,23 @@ namespace HomeAssistant.Hubs
 
 		public override Task OnConnectedAsync()
 		{
-			connectedClients.Add(GetUserId());
+			connectedClients[GetUserId()]=null;
 			return base.OnConnectedAsync();
 		}
 
 		public async Task SendMessage(int chatRoomId, string recipientId, string message)
 		{
-			await _messageService
+            if (connectedClients[GetUserId()].HasValue&&DateTime.Now - connectedClients[GetUserId()]!.Value < TimeSpan.FromSeconds(1.5))
+            {
+				throw new InvalidOperationException("Message sent too soon.");
+            }
+
+            await _messageService
 					.SendMessage(chatRoomId, GetUserId(), recipientId, message);
 
-			if (connectedClients.Any(x => x == recipientId))
+			
+
+			if (connectedClients.ContainsKey(recipientId))
 			{
 				await Clients.User(recipientId).SendAsync("LoadMessage", message);
 			}
@@ -62,7 +69,9 @@ namespace HomeAssistant.Hubs
 
 				var httpContext = _httpContextAccessor.HttpContext;
 
-				_= _notificationHubContext.Clients
+				connectedClients[GetUserId()] = DateTime.Now;
+
+				_ = _notificationHubContext.Clients
 					.User(recipientId)
 					.SendAsync("PushNotfication", new NotificationViewModel()
 					{
