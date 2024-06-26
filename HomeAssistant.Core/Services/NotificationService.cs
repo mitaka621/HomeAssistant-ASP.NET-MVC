@@ -356,8 +356,17 @@ namespace HomeAssistant.Core.Services
 				}
 			}
 
-			await Task.WhenAll(pushTasks);
+			try
+			{
+				await Task.WhenAll(pushTasks);
+			}
+			catch (WebPushException exception)
+			{
+				await RemoveSubscription(exception.PushSubscription.Endpoint, exception.PushSubscription.Auth);
 
+				_logger.LogWarning("Removing subscription");
+			}
+			
 			return true;
 		}
 
@@ -411,7 +420,17 @@ namespace HomeAssistant.Core.Services
 				}
 			}
 
-			await Task.WhenAll(pushTasks);
+			try
+			{
+				await Task.WhenAll(pushTasks);
+			}
+			catch (WebPushException exception)
+			{
+				await RemoveSubscription(exception.PushSubscription.Endpoint, exception.PushSubscription.Auth);
+
+				_logger.LogWarning("Removing subscription");
+			}
+
 
 			return true;
 		}
@@ -467,9 +486,32 @@ namespace HomeAssistant.Core.Services
 				}
 			}
 
-			await Task.WhenAll(pushTasks);
+			try
+			{
+				await Task.WhenAll(pushTasks);
+			}
+			catch (WebPushException exception)
+			{
+				await RemoveSubscription(exception.PushSubscription.Endpoint, exception.PushSubscription.Auth);
+
+				_logger.LogWarning("Removing subscription");
+			}
 
 			return true;
+		}
+
+		public async Task RemoveSubscription(string endPoint, string auth)
+		{
+			var subscription=await _dbcontext.UserSubscriptions.FirstOrDefaultAsync(x => x.PushNotificationEndpoint == endPoint && x.PushNotificationAuth == auth);
+
+			if (subscription==null)
+			{
+				return;
+			}
+
+			_dbcontext.UserSubscriptions.Remove(subscription);
+
+			await _dbcontext.SaveChangesAsync();
 		}
 	}
 }

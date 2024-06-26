@@ -1,8 +1,10 @@
 ﻿using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Models.Notification;
 using HomeAssistant.Filters;
+using HomeAssistant.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using System.Security.Claims;
 
@@ -16,9 +18,12 @@ namespace HomeAssistant.Controllers
     public class NotificationController : Controller
     {
         private readonly INotificationService _notificationService;
-        public NotificationController(INotificationService notificationService)
+        private readonly HomeAssistantDbContext _dbcontext;
+
+        public NotificationController(INotificationService notificationService, HomeAssistantDbContext dbcontext)
         {
             _notificationService= notificationService;
+            _dbcontext= dbcontext;
         }
 
         [HttpGet]
@@ -47,6 +52,39 @@ namespace HomeAssistant.Controllers
                 return BadRequest();
             }
             return Ok();
+        }
+
+		[HttpPost]
+		[IgnoreAntiforgeryToken]
+		public async Task<IActionResult> RemoveSubscription(string deviceType)
+		{
+            var subscription=await _dbcontext.UserSubscriptions
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.DeviceType == deviceType && x.UserId == GetUserId());
+
+            if (subscription==null)
+            {
+                return BadRequest();
+            }
+
+            _dbcontext.UserSubscriptions.Remove(subscription);
+            await _dbcontext.SaveChangesAsync();
+
+			return Ok();
+		}
+
+		[HttpGet]
+        public async Task<IActionResult> CheckSubscription(string deviceType)
+        {
+            if (await _dbcontext.UserSubscriptions
+                .AsNoTracking()
+                .AnyAsync(x=>x.DeviceType==deviceType&&x.UserId==GetUserId())
+                )
+            {
+                return Ok();
+            }
+
+            return NotFound();
         }
 
 		private string GetUserId()

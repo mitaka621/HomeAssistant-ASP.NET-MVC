@@ -11,31 +11,46 @@
 
 loadToolTips();
 
-if ('serviceWorker' in navigator && 'PushManager' in window) {
-    navigator.serviceWorker.register('/js/service-worker.js').then(function (registration) {
-        registration.pushManager.getSubscription().then(function (subscription) {
-            if (!subscription) {
-                registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlBase64ToUint8Array('BPD2hgSH5oyXW_fzPmB9nZGuDviCqg1VuNU_PyONX-VUY-Vsf0bLJr8pVT7eFo18fw4cCoNYHZIELnoYZiFTv6I')
-                }).then(function (newSubscription) {
+Notification.requestPermission();
 
-                    let subscribtionObj = JSON.parse(JSON.stringify(newSubscription));
-                    subscribtionObj["deviceType"] = getDeviceType();
-
-                    console.log(subscribtionObj);
-
-                    fetch('/api/Notification/Subscribe', {
-                        method: 'POST',
-                        body: JSON.stringify(subscribtionObj),
-                        headers: {
-                            'Content-Type': 'application/json'
+if ('serviceWorker' in navigator && 'PushManager' in window ) {
+    fetch("/api/Notification/CheckSubscription?deviceType=" + getDeviceType())
+        .then(r => {
+            if (r.ok && Notification.permission != "granted") {
+                fetch('/api/Notification/RemoveSubscription?deviceType=' + getDeviceType(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            }
+            if (r.status === 404 && Notification.permission === "granted") {
+                navigator.serviceWorker.register('/js/service-worker.js').then(function (registration) {
+                    registration.pushManager.getSubscription().then(async function (subscription) {
+                        if (subscription) {
+                            await subscription.unsubscribe();
                         }
+                        registration.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: urlBase64ToUint8Array('BPD2hgSH5oyXW_fzPmB9nZGuDviCqg1VuNU_PyONX-VUY-Vsf0bLJr8pVT7eFo18fw4cCoNYHZIELnoYZiFTv6I')
+                        }).then(function (newSubscription) {
+
+                            let subscribtionObj = JSON.parse(JSON.stringify(newSubscription));
+                            subscribtionObj["deviceType"] = getDeviceType();
+
+                            fetch('/api/Notification/Subscribe', {
+                                method: 'POST',
+                                body: JSON.stringify(subscribtionObj),
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                        });
+
                     });
                 });
             }
         });
-    });
 }
 
 function urlBase64ToUint8Array(base64String) {

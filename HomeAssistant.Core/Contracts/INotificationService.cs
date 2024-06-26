@@ -22,6 +22,8 @@ namespace HomeAssistant.Core.Contracts
 
 		Task SubscribeUserForPush(PushNotificationRegistrationModel model,string userId);
 
+		Task RemoveSubscription(string endPoint, string auth);
+
 		Task<bool> PushNotificationForUser(string userId,string title, string body, string url,string? iconUrl);
 
 		Task<bool> PushNotificationForAllUsers(string title, string body, string url, string? iconUrl);
