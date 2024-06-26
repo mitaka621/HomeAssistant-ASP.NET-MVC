@@ -1,5 +1,34 @@
 "use strict";
 
+let options = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+};
+
+let observer = new IntersectionObserver(handleIntersection, options);
+
+document.addEventListener("DOMContentLoaded", () => {
+    const spinnerContainer = document.createElement('div');
+    spinnerContainer.className = 'spinner-container';
+
+    const spinnerBorder = document.createElement('div');
+    spinnerBorder.className = 'spinner-border';
+    spinnerBorder.setAttribute('role', 'status');
+
+    const visuallyHiddenSpan = document.createElement('span');
+    visuallyHiddenSpan.className = 'visually-hidden';
+    visuallyHiddenSpan.innerText = 'Loading...';
+
+    spinnerBorder.appendChild(visuallyHiddenSpan);
+
+    spinnerContainer.appendChild(spinnerBorder);
+
+    document.querySelector(".messages-container").insertBefore(spinnerContainer, document.querySelector(".messages-container").firstChild);
+
+    observer.observe(document.querySelector(".spinner-container"));
+});
+
 var chatBox = document.querySelector(".card-body");
 chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -121,15 +150,6 @@ function LoadMoreMessages() {
         });
 }
 
-let options = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.1
-};
-
-let observer = new IntersectionObserver(handleIntersection, options);
-observer.observe(document.querySelector(".spinner-container"));
-
 function handleIntersection(entries, observer) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -137,3 +157,4 @@ function handleIntersection(entries, observer) {
         }
     });
 }
+
