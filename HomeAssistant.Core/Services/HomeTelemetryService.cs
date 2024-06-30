@@ -64,13 +64,10 @@ namespace HomeAssistant.Core.Services
 				throw new ArgumentNullException();
 			}
 
-			var prevRecord = _dbcontext.homeTelemetries.OrderByDescending(x => x.DateTime).FirstOrDefault();
-
-			if (prevRecord != null &&
-				prevRecord.CPM == obj.CPM &&
-				prevRecord.Temperature == obj.Temperature &&
-				prevRecord.Humidity == obj.Humidity &&
-				prevRecord.Radiation == obj.Radiation)
+			if (obj.CPM == 0 &&
+				obj.Temperature == 0 &&
+				obj.Humidity == 0 &&
+				obj.Radiation == 0)
 			{
 				return;
 			}
@@ -98,7 +95,7 @@ namespace HomeAssistant.Core.Services
 				throw new ArgumentNullException();
 			}
 
-			if (obj.Radiation < 1) 
+			if (obj.Radiation < 1)
 			{
 				return -1;
 			}
@@ -207,12 +204,12 @@ namespace HomeAssistant.Core.Services
 			 })
 			 .ToListAsync();
 
-            if (data.Count==0)
-            {
+			if (data.Count == 0)
+			{
 				return new Dictionary<DateTime, HomeTelemetryViewModel>();
 			}
 
-            DateTime targetDateTime = data[0].DateTime;
+			DateTime targetDateTime = data[0].DateTime;
 
 			if (data[0].DateTime.Minute > 30)
 			{
@@ -226,7 +223,7 @@ namespace HomeAssistant.Core.Services
 			if (dataRange == DataRangeEnum.Month)
 			{
 				targetDateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0)
-					.AddDays(DateTime.Now.Day+(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)- DateTime.Now.Day -1));
+					.AddDays(DateTime.Now.Day + (DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day - 1));
 			}
 			else
 			{
@@ -286,7 +283,7 @@ namespace HomeAssistant.Core.Services
 				}
 			}
 
-			if (dataRange== DataRangeEnum.Month || (count != 0 && !outputData.ContainsKey(targetDateTime)&& targetDateTime<DateTime.Now))
+			if (dataRange == DataRangeEnum.Month || (count != 0 && !outputData.ContainsKey(targetDateTime) && targetDateTime < DateTime.Now))
 			{
 				outputData[targetDateTime] = new HomeTelemetryViewModel()
 				{
