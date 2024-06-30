@@ -98,7 +98,7 @@ async function Send() {
     document.getElementById("send-container-form").setAttribute("onsubmit", "return false;");
     document.querySelector(".sendBtn>svg").style.fill = "red";
 
-    await delay(2500);
+    await delay(1800);
     document.getElementById("send-container-form").setAttribute("onsubmit", "Send(); return false;");
     document.querySelector(".sendBtn>svg").style.fill = "white";
 }
