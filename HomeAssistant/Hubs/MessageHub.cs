@@ -5,6 +5,7 @@ using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Linq;
 using System.Security.Claims;
 
@@ -38,14 +39,14 @@ namespace HomeAssistant.Hubs
 		{
             if (connectedClients[GetUserId()].HasValue&&DateTime.Now - connectedClients[GetUserId()]!.Value < TimeSpan.FromSeconds(1.5))
             {
-				throw new InvalidOperationException("Message sent too soon.");
+				throw new InvalidOperationException("Message sent too soon. - "+ (DateTime.Now - connectedClients[GetUserId()]!.Value).TotalSeconds);
             }
 
-            await _messageService
+			connectedClients[GetUserId()] = DateTime.Now;
+
+			await _messageService
 					.SendMessage(chatRoomId, GetUserId(), recipientId, message);
-
-			
-
+		
 			if (connectedClients.ContainsKey(recipientId))
 			{
 				await Clients.User(recipientId).SendAsync("LoadMessage", message);
@@ -68,8 +69,6 @@ namespace HomeAssistant.Hubs
 
 
 				var httpContext = _httpContextAccessor.HttpContext;
-
-				connectedClients[GetUserId()] = DateTime.Now;
 
 				_ = _notificationHubContext.Clients
 					.User(recipientId)
