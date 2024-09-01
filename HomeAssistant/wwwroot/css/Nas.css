@@ -122,135 +122,135 @@
     margin-bottom:-0.3em;
 }
 
-    .main-photo-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4.9px;
-    }
+.main-photo-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4.9px;
+}
 
-    img.loading {
-        height: 7em !important;
-        width: auto !important;
-    }
+img.loading {
+    height: 7em !important;
+    width: auto !important;
+}
 
-    .btn-add {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #ecf0f1
-    }
+.btn-add {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ecf0f1
+}
 
-    .popup-img {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.9);
-        z-index: 2;
-        padding: 1em;
-    }
+.popup-img {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 2;
+    padding: 1em;
+}
 
-    .parent-img-container {
-        width: 100%;
-        height: 100%;
-    }
+.parent-img-container {
+    width: 100%;
+    height: 100%;
+}
 
-    div.popup-img img {
-        max-height: 90%;
-        max-width: 90%;
-    }
+div.popup-img img {
+    max-height: 90%;
+    max-width: 90%;
+}
 
-    a.close-btn {
-        position: absolute;
-        top: 2vh;
-        right: 2vw;
-    }
+a.close-btn {
+    position: absolute;
+    top: 2vh;
+    right: 2vw;
+}
 
-    main svg {
-        width: 2em;
-        fill: white;
-    }
+main svg {
+    width: 2em;
+    fill: white;
+}
 
-    .prev-btn, .next-btn {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-    }
+.prev-btn, .next-btn {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
 
-    .next-btn {
-        justify-content: flex-end;
-    }
+.next-btn {
+    justify-content: flex-end;
+}
 
-        .prev-btn svg, .next-btn svg {
-            width: 5em;
-            padding: 1em;
-        }
+.prev-btn svg, .next-btn svg {
+    width: 5em;
+    padding: 1em;
+}
 
-    .title-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+.title-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    .download-btn {
-        position: absolute;
-        top: 3vh;
-        left: 2vw;
-    }
+.download-btn {
+    position: absolute;
+    top: 3vh;
+    left: 2vw;
+}
 
-    .modal-body {
-        text-align: center;
-        font-size: 1.3em;
-    }
+.modal-body {
+    text-align: center;
+    font-size: 1.3em;
+}
 
-    .modal-content {
-        max-width: fit-content !important;
-    }
+.modal-content {
+    max-width: fit-content !important;
+}
 
-    .modal-dialog-centered {
-        max-width: fit-content !important;
-    }
+.modal-dialog-centered {
+    max-width: fit-content !important;
+}
 
-    .modal-body h3 {
-        margin-bottom: 1.4em;
-    }
+.modal-body h3 {
+    margin-bottom: 1.4em;
+}
 
-    .modal-body {
-        padding: 0.5em 2em;
-    }
+.modal-body {
+    padding: 0.5em 2em;
+}
 
-        .modal-body span {
-            color: #625151;
-        }
+.modal-body span {
+    color: #625151;
+}
 
-        .modal-body li {
-            margin-bottom: 0.5em;
-            text-align: start;
-        }
+.modal-body li {
+    margin-bottom: 0.5em;
+    text-align: start;
+}
 
-    .flex-body {
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        gap: 3em;
-    }
+.flex-body {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    gap: 3em;
+}
 
-    .modal-footer {
-        justify-content: center;
-    }
+.modal-footer {
+    justify-content: center;
+}
 
-    .form-switch svg {
-        width: 2em;
-        fill: black;
-    }
+.form-switch svg {
+    width: 2em;
+    fill: black;
+}
 
 .form-check {
     display: flex;
@@ -267,21 +267,32 @@
     border-end-start-radius:10px;
 }
 
-        .form-check input {
-            font-size: 1.5em;
-        }
+.form-check input {
+    font-size: 1.5em;
+}
 
-    div.form-check > svg {
-        margin-right: 3em;
-        margin-top: 0.5em;
-    }
+div.form-check > svg {
+    margin-right: 3em;
+    margin-top: 0.5em;
+}
 
-    .form-check-label svg {
-        margin-left: -1em;
-        margin-top: 0.5em;
-    }
+.form-check-label svg {
+    margin-left: -1em;
+    margin-top: 0.5em;
+}
 
-    h1 {
-        text-align: center;
-        margin-top: 0.5em;
-    }
+h1 {
+    text-align: center;
+    margin-top: 0.5em;
+}
+
+.play-icon{
+    width:4em;
+    position:absolute;
+}
+
+video{
+    margin:0 auto;
+    max-width:95vw;
+    max-height:95vh;
+}

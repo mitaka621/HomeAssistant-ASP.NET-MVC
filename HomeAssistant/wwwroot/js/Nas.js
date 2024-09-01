@@ -143,7 +143,7 @@ function GetPhotos(skipnum = 0) {
             }
 
 
-            document.querySelectorAll("img.photo").forEach(x => {
+            document.querySelectorAll("img.photo, img.video").forEach(x => {
                 x.src = "/nas/getimage?path=" + x.id;
                 x.onload = () => {
                     x.classList.remove("loading");
@@ -168,17 +168,24 @@ function loadImage(item) {
 
     return new Promise((resolve, reject) => {
 
-        const validFormats = ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'];
+        const validFormats = ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv', '.webm', '.mpeg', '.3gp', '.m4v'];
         const ext = item.path.slice(item.path.lastIndexOf('.')).toLowerCase();
 
         if (item.isFile !== 1 || !validFormats.includes(ext)) {
             resolve();
+            return;
         } else {
             const currentImg = document.createElement("img");
 
             currentImg.id = item.path;
-            currentImg.classList = "photo loading";
 
+            if (isFileVideo(ext)) {
+                currentImg.classList = "video loading";
+            }
+            else {
+                currentImg.classList = "photo loading";
+            }
+            
             currentImg.onload = () => {
                 resolve();
             };
@@ -196,7 +203,24 @@ function loadImage(item) {
 
             btn.id = `b${counter++}`;
 
-            btn.setAttribute("onclick", "DisplayImageFull(this)");
+            if (isFileVideo(ext)) {
+                btn.setAttribute("onclick", "DisplayVideo(this)")
+
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+                svg.setAttribute("viewBox", "0 0 512 512");
+                svg.classList.add('play-icon');
+
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                path.setAttribute("d", "M464 256A208 208 0 1 0 48 256a208 208 0 1 0 416 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c7.6-4.2 16.8-4.1 24.3 .5l144 88c7.1 4.4 11.5 12.1 11.5 20.5s-4.4 16.1-11.5 20.5l-144 88c-7.4 4.5-16.7 4.7-24.3 .5s-12.3-12.2-12.3-20.9l0-176c0-8.7 4.7-16.7 12.3-20.9z");
+
+                svg.appendChild(path);
+
+                btn.appendChild(svg);
+            }
+            else {
+                btn.setAttribute("onclick", "DisplayImageFull(this)");
+            }
 
             btn.classList = "btn btn-add";
             let reducePercentage = (20000.0 / item.height) / 100;
@@ -247,7 +271,6 @@ function loadImage(item) {
                 photosOnRow = [];
             }
 
-
             btn.style.width = `${width}px`;
             btn.style.height = `${height}px`;
             btn.appendChild(currentImg);
@@ -263,13 +286,135 @@ function loadImage(item) {
     });
 }
 
+function isFileVideo(ext) {
+    const videoFormats = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv', '.webm', '.mpeg', '.3gp', '.m4v'];
+    return videoFormats.includes(ext)
+}
+
 function DownloadImg(path) {
     return fetch(`/NAS/GetImage?path=${path}`);
 }
 
+async function DisplayVideo(e) {
 
+    if (document.querySelector("a.close-btn")) {
+        document.querySelector("a.close-btn").click();
+    }
+
+    disableScroll();
+
+    let closeBtn = document.createElement("a");
+
+    closeBtn.classList = "btn close-btn";
+    closeBtn.setAttribute("onclick", "closePopUp(this)");
+
+    closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>`;
+
+    let div = document.createElement("div");
+
+    div.classList = "popup-img";
+
+    let videoPath;
+
+    if (e.querySelector("img")) {
+        videoPath = e.querySelector("img").id;
+    } else {
+        videoPath = e.id;
+    }
+
+    let nextBtn, prevBtn;
+    await fetch("/Nas/GetPrevAndNextPathsForPhoto?path=" + videoPath)
+        .then(x => x.json())
+        .then(x => {
+
+            if (x.nextImg) {
+                let nextImgExt = x.nextImg.slice(x.nextImg.lastIndexOf('.')).toLowerCase();
+
+                nextBtn = document.createElement("a");
+
+                nextBtn.classList = "btn next-btn";
+                if (isFileVideo(nextImgExt)) {
+                    nextBtn.setAttribute("onclick", `DisplayVideo(this)`);
+                    nextBtn.id = x.nextImg;
+                }
+                else {
+                    nextBtn.setAttribute("onclick", `DisplayImageFull(this)`);
+                    nextBtn.id = x.nextImg;
+                }
+
+
+                nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM294.6 135.1c-4.2-4.5-10.1-7.1-16.3-7.1C266 128 256 138 256 150.3V208H160c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32h96v57.7c0 12.3 10 22.3 22.3 22.3c6.2 0 12.1-2.6 16.3-7.1l99.9-107.1c3.5-3.8 5.5-8.7 5.5-13.8s-2-10.1-5.5-13.8L294.6 135.1z"/></svg>`;
+            }
+            else {
+                nextBtn = document.createElement("a");
+
+                nextBtn.classList = "btn next-btn";
+            }
+
+            if (x.prevImg) {
+                let prevImgExt = x.prevImg.slice(x.prevImg.lastIndexOf('.')).toLowerCase();
+
+                prevBtn = document.createElement("a");
+
+                prevBtn.classList = "btn prev-btn";
+
+                if (isFileVideo(prevImgExt)) {
+                    prevBtn.setAttribute("onclick", `DisplayVideo(this)`);
+                    prevBtn.id = x.prevImg;
+                }
+                else {
+                    prevBtn.setAttribute("onclick", `DisplayImageFull(this)`);
+                    prevBtn.id = x.prevImg;
+                }
+
+                prevBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M48 256a208 208 0 1 1 416 0A208 208 0 1 1 48 256zm464 0A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM217.4 376.9c4.2 4.5 10.1 7.1 16.3 7.1c12.3 0 22.3-10 22.3-22.3V304h96c17.7 0 32-14.3 32-32V240c0-17.7-14.3-32-32-32H256V150.3c0-12.3-10-22.3-22.3-22.3c-6.2 0-12.1 2.6-16.3 7.1L117.5 242.2c-3.5 3.8-5.5 8.7-5.5 13.8s2 10.1 5.5 13.8l99.9 107.1z"/></svg>`;
+
+            }
+            else {
+                prevBtn = document.createElement("a");
+
+                prevBtn.classList = "btn prev-btn";
+            }
+        })
+    
+    const video = document.createElement('video');
+    video.height = 600;
+    video.controls = true;
+
+    const source = document.createElement('source');
+    source.src = `/nas/PlayVideo?path=${videoPath}`;
+    source.type = `video/${videoPath.split(".").pop()}`;
+
+    video.appendChild(source);
+
+    video.innerHTML += 'Your browser does not support the video tag.';
+
+    div.appendChild(closeBtn);
+
+    div.innerHTML += `<button class="btn btn-primary download-btn" onclick="OpenModal()">
+	                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+                                 </button>`;
+
+    if (prevBtn) {
+        div.appendChild(prevBtn);
+    }
+
+    div.appendChild(video);
+
+    if (nextBtn) {
+        div.appendChild(nextBtn);
+    }
+
+    let main = document.querySelector("main");
+
+    main.insertBefore(div, main.firstChild);
+}
 
 async function DisplayImageFull(e) {
+
+    if (document.querySelector("a.close-btn")) {
+        document.querySelector("a.close-btn").click();
+    }
 
     disableScroll();
 
@@ -288,20 +433,35 @@ async function DisplayImageFull(e) {
 
     let img = document.createElement("img")
 
-    let actualimg = e.querySelector("img");
+    let imgPath;
+
+    if (e.querySelector("img")) {
+        imgPath = e.querySelector("img").id;
+    } else {
+        imgPath = e.id;
+    }
 
     let nextBtn, prevBtn;
 
-    await fetch("/Nas/GetPrevAndNextPathsForPhoto?path=" + actualimg.id)
+    await fetch("/Nas/GetPrevAndNextPathsForPhoto?path=" + imgPath)
         .then(x => x.json())
         .then(x => {
 
             if (x.nextImg) {
+                let nextImgExt = x.nextImg.slice(x.nextImg.lastIndexOf('.')).toLowerCase();
+
                 nextBtn = document.createElement("a");
 
                 nextBtn.classList = "btn next-btn";
-                nextBtn.setAttribute("onclick", `OpenNextPhotoFull(this)`);
-                nextBtn.id = x.nextImg;
+                if (isFileVideo(nextImgExt)) {
+                    nextBtn.id = x.nextImg;
+                    nextBtn.setAttribute("onclick", `DisplayVideo(this)`);
+                }
+                else {
+                    nextBtn.id = x.nextImg;
+                    nextBtn.setAttribute("onclick", `OpenNextPhotoFull(this)`);
+                }
+               
 
                 nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM294.6 135.1c-4.2-4.5-10.1-7.1-16.3-7.1C266 128 256 138 256 150.3V208H160c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32h96v57.7c0 12.3 10 22.3 22.3 22.3c6.2 0 12.1-2.6 16.3-7.1l99.9-107.1c3.5-3.8 5.5-8.7 5.5-13.8s-2-10.1-5.5-13.8L294.6 135.1z"/></svg>`;
             }
@@ -312,12 +472,20 @@ async function DisplayImageFull(e) {
             }
 
             if (x.prevImg) {
+                let prevImgExt = x.prevImg.slice(x.prevImg.lastIndexOf('.')).toLowerCase();
+
                 prevBtn = document.createElement("a");
 
                 prevBtn.classList = "btn prev-btn";
-                prevBtn.setAttribute("onclick", `OpenNextPhotoFull(this)`);
 
-                prevBtn.id = x.prevImg;
+                if (isFileVideo(prevImgExt)) {
+                    prevBtn.id = x.prevImg;
+                    prevBtn.setAttribute("onclick", `DisplayVideo(this)`);
+                }
+                else {
+                    prevBtn.setAttribute("onclick", `OpenNextPhotoFull(this)`);
+                    prevBtn.id = x.prevImg;
+                }
 
                 prevBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M48 256a208 208 0 1 1 416 0A208 208 0 1 1 48 256zm464 0A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM217.4 376.9c4.2 4.5 10.1 7.1 16.3 7.1c12.3 0 22.3-10 22.3-22.3V304h96c17.7 0 32-14.3 32-32V240c0-17.7-14.3-32-32-32H256V150.3c0-12.3-10-22.3-22.3-22.3c-6.2 0-12.1 2.6-16.3 7.1L117.5 242.2c-3.5 3.8-5.5 8.7-5.5 13.8s2 10.1 5.5 13.8l99.9 107.1z"/></svg>`;
 
@@ -329,7 +497,7 @@ async function DisplayImageFull(e) {
             }
         })
 
-    img.src = `/nas/getimage?path=${actualimg.id}&isFull=true`;
+    img.src = `/nas/getimage?path=${imgPath}&isFull=true`;
 
     
     div.appendChild(closeBtn);
@@ -368,9 +536,16 @@ async function OpenNextPhotoFull(e) {
             .then(x => x.json())
             .then(x => {
                 if (x.nextImg) {
+                    let nextImgExt = x.nextImg.slice(x.nextImg.lastIndexOf('.')).toLowerCase();
 
-                    document.querySelector(".next-btn").setAttribute("onclick", `OpenNextPhotoFull(this)`);
-                    document.querySelector(".next-btn").id = x.nextImg;
+                    if (isFileVideo(nextImgExt)) {
+                        document.querySelector(".next-btn").setAttribute("onclick", `DisplayVideo(this)`);
+                        document.querySelector(".next-btn").id = x.nextImg;
+                    }
+                    else {
+                        document.querySelector(".next-btn").setAttribute("onclick", `OpenNextPhotoFull(this)`);
+                        document.querySelector(".next-btn").id = x.nextImg;
+                    }
 
                     document.querySelector(".next-btn").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM294.6 135.1c-4.2-4.5-10.1-7.1-16.3-7.1C266 128 256 138 256 150.3V208H160c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32h96v57.7c0 12.3 10 22.3 22.3 22.3c6.2 0 12.1-2.6 16.3-7.1l99.9-107.1c3.5-3.8 5.5-8.7 5.5-13.8s-2-10.1-5.5-13.8L294.6 135.1z"/></svg>`;
 
@@ -384,21 +559,25 @@ async function OpenNextPhotoFull(e) {
 
                 if (x.prevImg) {
 
-                    document.querySelector(".prev-btn").id = x.prevImg;
-                    document.querySelector(".prev-btn").setAttribute("onclick", `OpenNextPhotoFull(this)`);
+                    let prevImgExt = x.prevImg.slice(x.prevImg.lastIndexOf('.')).toLowerCase();
+
+                    if (isFileVideo(prevImgExt)) {
+                        document.querySelector(".prev-btn").id = x.prevImg;
+                        document.querySelector(".prev-btn").setAttribute("onclick", `DisplayVideo(this)`);
+                    }
+                    else {
+                        document.querySelector(".prev-btn").id = x.prevImg;
+                        document.querySelector(".prev-btn").setAttribute("onclick", `OpenNextPhotoFull(this)`);
+                    }
 
                     document.querySelector(".prev-btn").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M48 256a208 208 0 1 1 416 0A208 208 0 1 1 48 256zm464 0A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM217.4 376.9c4.2 4.5 10.1 7.1 16.3 7.1c12.3 0 22.3-10 22.3-22.3V304h96c17.7 0 32-14.3 32-32V240c0-17.7-14.3-32-32-32H256V150.3c0-12.3-10-22.3-22.3-22.3c-6.2 0-12.1 2.6-16.3 7.1L117.5 242.2c-3.5 3.8-5.5 8.7-5.5 13.8s2 10.1 5.5 13.8l99.9 107.1z"/></svg>`;
 
 
                 }
                 else {
-
                     document.querySelector(".prev-btn").setAttribute("onclick", ``);
 
-
                     document.querySelector(".prev-btn").innerHTML = ``;
-
-
                 }
             })
 
@@ -446,7 +625,14 @@ function enableScroll() {
 
 function OpenModal() {
 
-    const url = document.querySelector("div.popup-img img").src.split("&")[0];
+    let url;
+    
+    if (document.querySelector("div.popup-img img")) {
+        url = document.querySelector("div.popup-img img").src.split("&")[0];
+    }
+    else {
+        url = document.querySelector("source").src;
+    }
 
     let currentpath = url.split("=")[1];
 

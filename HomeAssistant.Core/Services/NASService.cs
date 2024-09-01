@@ -119,6 +119,25 @@ namespace HomeAssistant.Core.Services
 
 		}
 
+		public async Task<HttpResponseMessage?> GetVideoRange(string path, string rangeHeader)
+		{
+			try
+			{
+				httpClient.Timeout = TimeSpan.FromSeconds(10);
+
+				httpClient.DefaultRequestHeaders.Add("Range", rangeHeader);
+
+				return await httpClient
+				.GetAsync($"http://{currentHostIp}:3000/play?path={path}");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogInformation(ex, $"Host {currentHostIp} unavailable. Trying to look for other host");
+
+				return null;
+			}
+		}
+
 		public async Task<DirViewModel?> GetPhotoInfo(string path)
 		{
 			try
@@ -225,7 +244,7 @@ namespace HomeAssistant.Core.Services
 			{
 				_logger.LogInformation(ex, $"Error - NAS host is not there");
 			}
-			
+
 
 			foreach (var item in tasks)
 			{
