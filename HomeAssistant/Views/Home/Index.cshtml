@@ -197,7 +197,7 @@
 
 
 @section Scripts {
-	@if (User.IsInRole("HomeTelemetryAccess") || User.IsInRole("WakeOnLanAccess"))
+	@if (User.IsInRole("HomeTelemetryAccess") || User.IsInRole("WakeOnLanAccess") || User.IsInRole("NASUser"))
 	{
 		<script src="~/js/HomeTelemetry.js" asp-append-version="true"></script>
 	}
