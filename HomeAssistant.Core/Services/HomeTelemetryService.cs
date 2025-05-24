@@ -26,7 +26,7 @@ namespace HomeAssistant.Core.Services
             }
             else
             {
-                serverIp = configuration.GetSection("HomeTelemetryServerIp").Value;
+                serverIp = configuration.GetSection("HomeTelemetryServerIp").Value!;
             }
 
             httpClient = _httpClient;

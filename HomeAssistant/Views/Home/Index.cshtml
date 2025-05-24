@@ -31,7 +31,6 @@
 		{
 			<div id="wakeOnLanContainer" class="container">
 				<h3>Registered computers WOL</h3>
-
 			</div>
 
 		}
@@ -169,35 +168,40 @@
 			</div>
 		</div>
 
-
-		<div class="telemetry">
-			<div class="telemetry-top">
-				<div class="status">
-					<svg class="error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" /></svg>
+		@if (User.IsInRole("HomeTelemetryAccess"))
+		{
+			<div class="telemetry">
+				<div class="telemetry-top">
+					<div class="status">
+						<svg class="error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" /></svg>
+					</div>
+					<a class="btn chart-btn" asp-controller="HomeTelemetry" asp-action="Index">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z" /></svg>
+					</a>
 				</div>
-				<a class="btn chart-btn" asp-controller="HomeTelemetry" asp-action="Index">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by  - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zM160 224c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm128-64V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V160c0-17.7 14.3-32 32-32s32 14.3 32 32zm64 32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32zM480 96V320c0 17.7-14.3 32-32 32s-32-14.3-32-32V96c0-17.7 14.3-32 32-32s32 14.3 32 32z" /></svg>
-				</a>
+
+				<h2>House Telemetry</h2>
+				<h3>Indoor Tempreture: <span id="house-temp">--</span> &degC</h3>
+				<h3>Indoor Humidity: <span id="house-humidity">-- </span> %</h3>
+				<div class="rad">
+					<h3>Indoor Radiation: <span id="house-rad">--</span> μSv</h3>
+					<h3>CPM (Counts per min): <span id="house-cpm">--</span></h3>
+				</div>
+				<div class="info">
+					<p class="text-warning">The telemetry system has not been set up. More info <a href="https://github.com/mitaka621/HomeTelemetryStation">GitHub</a></p>
+				</div>
 			</div>
-			
-			<h2>House Telemetry</h2>
-			<h3>Indoor Tempreture: <span id="house-temp">--</span> &degC</h3>
-			<h3>Indoor Humidity: <span id="house-humidity">-- </span> %</h3>
-			<div class="rad">
-				<h3>Indoor Radiation: <span id="house-rad">--</span> μSv</h3>
-				<h3>CPM (Counts per min): <span id="house-cpm">--</span></h3>
-			</div>
-			<div class="info">
-				<p class="text-warning">The telemetry system has not been set up. More info <a href="https://github.com/mitaka621/HomeTelemetryStation">GitHub</a></p>
-			</div>
-		</div>
+		}
 	</div>
 </div>
 
 
 @section Scripts {
+	@if (User.IsInRole("HomeTelemetryAccess") || User.IsInRole("WakeOnLanAccess"))
+	{
+		<script src="~/js/HomeTelemetry.js" asp-append-version="true"></script>
+	}
 	<script src="~/js/Clock.js" asp-append-version="true"></script>
-	<script src="~/js/HomeTelemetry.js" asp-append-version="true"></script>
 	<script src="~/js/weather.js" asp-append-version="true"></script>
 	<script src="~/js/signalr/dist/browser/signalr.js" asp-append-version="true"></script>
 	<script src="~/js/NotificationsSignalR.js" asp-append-version="true"></script>
