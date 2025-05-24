@@ -2,22 +2,30 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading;
+using System.Threading.Tasks;
 using HomeAssistant.Core.ValidationAttributes;
 using HomeAssistant.Infrastructure.Data;
 using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
 namespace HomeAssistant.Areas.Identity.Pages.Account
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles ="Admin")]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<HomeAssistantUser> _signInManager;
@@ -25,14 +33,14 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
         private readonly IUserStore<HomeAssistantUser> _userStore;
         private readonly IUserEmailStore<HomeAssistantUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender<HomeAssistantUser> _emailSender;
+        private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<HomeAssistantUser> userManager,
             IUserStore<HomeAssistantUser> userStore,
             SignInManager<HomeAssistantUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender<HomeAssistantUser> emailSender)
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -67,13 +75,13 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            [Required]
-            public string Username { get; set; }
+			[Required]
+			public string Username { get; set; }
 
-            [Required]
+			[Required]
             [StringLength(Constants.NameMaxLenght,
-                MinimumLength = Constants.NameMinLenght,
-                ErrorMessage = ErrorMessages.InvalidLength)]
+                MinimumLength =Constants.NameMinLenght,
+                ErrorMessage =ErrorMessages.InvalidLength)]
             [DisplayName("First Name")]
             public string FirstName { get; set; }
 
@@ -133,12 +141,12 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                user.ClientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+				user.ClientIpAddress = HttpContext.Connection.RemoteIpAddress.ToString();
 
-                user.FirstName = Input.FirstName;
-                user.LastName = Input.LastName;
-                user.CreatedOn = DateTime.Now;
-                user.ExpiresOn = Input.ExpiresOn;
+				user.FirstName= Input.FirstName;
+                user.LastName= Input.LastName;
+                user.CreatedOn=DateTime.Now;
+                user.ExpiresOn=Input.ExpiresOn;
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -146,7 +154,7 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-
+                  
 
                     _logger.LogInformation("User created a new account with password.");
 
@@ -159,13 +167,16 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
                     {
-                        return LocalRedirect("/UserConfiguration");
+						return LocalRedirect("/UserConfiguration");
                     }
                 }
                 foreach (var error in result.Errors)

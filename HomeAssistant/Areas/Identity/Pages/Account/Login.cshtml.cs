@@ -2,15 +2,25 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using HomeAssistant.Infrastructure.Data;
-using HomeAssistant.Infrastructure.Data.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using HomeAssistant.Infrastructure.Data.Models;
+using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
+using HomeAssistant.Infrastructure.Data;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Amazon.Auth.AccessControlPolicy;
+using System.Security.Claims;
 
 namespace HomeAssistant.Areas.Identity.Pages.Account
 {
@@ -58,7 +68,7 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-
+       
         public class InputModel
         {
             /// <summary>
@@ -85,7 +95,7 @@ namespace HomeAssistant.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-
+       
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
             var record = await _homeAssistantDbContext.BlacklistedIPs.FirstOrDefaultAsync(x => x.Ip == HttpContext.Connection.RemoteIpAddress.ToString());

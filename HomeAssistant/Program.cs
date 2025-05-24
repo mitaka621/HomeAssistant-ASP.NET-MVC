@@ -1,7 +1,6 @@
 using HomeAssistant.BackgroundServiceJobs;
 using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Services;
-using HomeAssistant.Extensions;
 using HomeAssistant.Filters;
 using HomeAssistant.Hubs;
 using HomeAssistant.Infrastructure.Data;
@@ -18,15 +17,16 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HomeAssistantDbContext>(options =>
 options.UseSqlServer(connectionString));
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddSignalR();
 builder.Services.AddHostedService<CheckTimerExpirationService>();
 builder.Services.AddHostedService<WriteHomeTelemetryDataToDb>();
 
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IShoppingListService, ShoppingListService>();
-builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IRecipeService,RecipeService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IWakeOnLanService, WakeOnLanService>();
@@ -46,7 +46,7 @@ o.ValidationInterval = TimeSpan.FromMinutes(1));
 
 
 builder.Services.AddSingleton<IMongoClient, MongoClient>(s =>
-    new MongoClient(MongoClientSettings.FromConnectionString(builder.Configuration.GetConnectionString("MongoUri"))));
+	new MongoClient(builder.Configuration.GetConnectionString("MongoUri")));
 builder.Services.AddScoped<IimageService, ImageService>();
 
 
@@ -56,37 +56,38 @@ builder.Services.AddControllersWithViews(o =>
     o.Filters.Add<LogUserInteractionAttribute>();
 });
 
-builder.Services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+builder.Services.AddMvc(options=>options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
 builder.Services
     .AddHttpClient<IWeatherService, WeatherService>();
 
 builder.Services
-    .AddHttpClient<IHomeTelemetryService, HomeTelemetryService>();
+	.AddHttpClient<IHomeTelemetryService, HomeTelemetryService>();
 
 builder.Services
     .AddHttpClient<INASHostService, NASHostService>();
 
-var app = builder.Build();
 
-app.MigrateDatabase<HomeAssistantDbContext>();
+
+var app = builder.Build();
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+	ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseMigrationsEndPoint();
     app.UseDeveloperExceptionPage();
 }
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseStatusCodePagesWithRedirects("/Home/StatusCode/{0}");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+	app.UseStatusCodePagesWithRedirects("/Home/StatusCode/{0}");
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	app.UseHsts();
 }
 
 //app.UseHttpsRedirection();
