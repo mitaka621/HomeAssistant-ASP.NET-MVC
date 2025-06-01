@@ -32,12 +32,9 @@
 									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#s@(count)" aria-expanded="false" aria-controls="collapseOne">
 										<p class="total-products">Total Products: @list.Products.Count()</p>
 										<div class="small-info">
-											@if (list.ProfilePicture != null)
-											{
-												<p class="smallpfp">
-													<img src="data:image/jpeg;base64,@Convert.ToBase64String(list.ProfilePicture)" alt="Profile Picture" />
-												</p>
-											}
+											<p class="smallpfp">
+												<img src="/Image/Profile/@(list.UserId)" alt="Profile Picture" />
+											</p>
 											<p class="name">@list.FirstName @list.LastName</p>
 										</div>
 										<p>Progress:</p>

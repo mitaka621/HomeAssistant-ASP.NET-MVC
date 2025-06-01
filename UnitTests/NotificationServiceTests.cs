@@ -15,7 +15,7 @@ namespace UnitTests
     {
         private HomeAssistantDbContext _dbContext;
         private Mock<IUserService> _mockUserService;
-        private Mock<IimageService> _mockImageService;
+        private Mock<IImageService> _mockImageService;
         private INotificationService _notificationService;
         private Mock<ILogger<INotificationService>> _mockLogger;
         private Mock<IConfiguration> _mockConfiguration;
@@ -30,7 +30,7 @@ namespace UnitTests
             _mockUserService = new Mock<IUserService>();
             _mockLogger = new Mock<ILogger<INotificationService>>();
             _mockConfiguration = new Mock<IConfiguration>();
-            _mockImageService = new Mock<IimageService>();
+            _mockImageService = new Mock<IImageService>();
 
             _mockImageService.Setup(x => x.GetPfpRange(It.IsAny<string>())).ReturnsAsync(new Dictionary<string, byte[]>()
             {

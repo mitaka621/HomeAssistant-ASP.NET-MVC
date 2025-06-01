@@ -11,7 +11,7 @@ namespace UnitTests
     public class MessageServiceTests
     {
         private HomeAssistantDbContext _dbContext;
-        private Mock<IimageService> _mockImageService;
+        private Mock<IImageService> _mockImageService;
         private IMessageService _messageService;
 
         [SetUp]
@@ -21,7 +21,7 @@ namespace UnitTests
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
             _dbContext = new HomeAssistantDbContext(options);
-            _mockImageService = new Mock<IimageService>();
+            _mockImageService = new Mock<IImageService>();
 
             _mockImageService.Setup(x => x.GetPFP(It.IsAny<string>()))
             .ReturnsAsync(new byte[0]);

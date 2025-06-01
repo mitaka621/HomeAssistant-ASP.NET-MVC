@@ -1,6 +1,6 @@
 ﻿namespace HomeAssistant.Core.Contracts
 {
-	public interface IimageService
+	public interface IImageService
 	{
 		Task SavePFP(string userId, byte[] imageData);
 

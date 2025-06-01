@@ -3,22 +3,14 @@
 @inject SignInManager<HomeAssistantUser> SignInManager
 @inject UserManager<HomeAssistantUser> UserManager
 
-@{
-	byte[]? profilePicture = ViewContext.HttpContext.Items["ProfilePicture"] as byte[];
-}
-
 <ul class="navbar-nav">
 	@if (SignInManager.IsSignedIn(User))
 	{
-		@if (profilePicture != null && profilePicture.Length > 0)
-		{
-			<li>
-				<a class="smallpfp" asp-area="Identity" asp-page="/Account/Manage/Index">
-					<img src="data:image/jpeg;base64,@Convert.ToBase64String(profilePicture)" alt="Profile Picture" />
-				</a>
-			</li>
-		}
-
+		<li>
+			<a class="smallpfp" asp-area="Identity" asp-page="/Account/Manage/Index">
+				<img src="/Image/ProfileLoggedUser" alt="Profile Picture" />
+			</a>
+		</li>	
 		<li class="nav-item">
 			<a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @User.Identity?.Name</a>
 		</li>

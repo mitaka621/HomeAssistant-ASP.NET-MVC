@@ -15,8 +15,8 @@ namespace HomeAssistant.Controllers
 	public class UserConfigurationController : Controller
 	{
 		IUserService userService;
-		IimageService _ImageService;
-		public UserConfigurationController(IUserService _userService, IimageService ImageService)
+		IImageService _ImageService;
+		public UserConfigurationController(IUserService _userService, IImageService ImageService)
 		{
 			userService = _userService;
 			_ImageService = ImageService;

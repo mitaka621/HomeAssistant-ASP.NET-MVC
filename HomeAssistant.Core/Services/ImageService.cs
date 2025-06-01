@@ -7,7 +7,7 @@ using MongoDB.Driver.GridFS;
 
 namespace HomeAssistant.Core.Services
 {
-    public class ImageService : IimageService
+    public class ImageService : IImageService
     {
         private readonly IMongoClient _client;
         private IGridFSBucket _gridFS = null!;
@@ -251,6 +251,12 @@ namespace HomeAssistant.Core.Services
         }
 
         private async Task<byte[]> GetDefaultPfp()
+        {
+            var imagePath = Path.Combine(_env.WebRootPath, "images", "default-profile.png");
+            return File.Exists(imagePath) ? await File.ReadAllBytesAsync(imagePath) : [];
+        }
+
+        private async Task<byte[]> GetDefaultRecipeImage()
         {
             var imagePath = Path.Combine(_env.WebRootPath, "images", "default-profile.png");
             return File.Exists(imagePath) ? await File.ReadAllBytesAsync(imagePath) : [];

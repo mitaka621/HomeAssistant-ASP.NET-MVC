@@ -16,7 +16,7 @@
 	{
 		<a class="user btn" asp-controller="Message" asp-action="Chat" asp-route-recipiantId="@user.Id">
 			<div class="smallpfp smallpfp2" asp-area="Identity" asp-page="/Account/Manage/Index">
-				<img src="data:image/jpeg;base64,@Convert.ToBase64String(user.Photo)" alt="Profile Picture" />
+				<img src="/Image/Profile/@(user.Id)" alt="Profile Picture" />
 			</div>
 			<p>@user.FirstName @user.LastName</p>
 			<p><b>@user.Username</b></p>

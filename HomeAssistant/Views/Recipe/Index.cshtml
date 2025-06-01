@@ -20,14 +20,7 @@
 
 			<div class="card" style="width: 18rem;">
 				<div class="img-container">
-					@if (item.Photo != null && item.Photo.Length > 0)
-					{
-						<img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" />
-					}
-					else
-					{
-						<p>No image!</p>
-					}
+					<img src="/Image/Recipe/@(item.Id)" />
 				</div>
 				<div class="card-body">
 					<h5 class="card-title"><b>@item.Name</b></h5>
@@ -63,14 +56,7 @@
 
 		<div class="card recipe" style="width: 18rem;">
 			<div class="img-container">
-				@if (item.Photo != null && item.Photo.Length > 0)
-				{
-					<img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" />
-				}
-				else
-				{
-					<p>No image!</p>
-				}
+				<img src="/Image/Recipe/@(item.Id)" />
 			</div>
 			<div class="card-body">
 				<h5 class="card-title"><b>@item.Name</b></h5>
@@ -109,14 +95,7 @@
 							</div>
 							<div class="modal-body">
 								<div class="img-container-modal">
-									@if (item.Photo != null && item.Photo.Length > 0)
-									{
-										<img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Photo)" />
-									}
-									else
-									{
-										<p>No image!</p>
-									}
+									<img src="/Image/Recipe/@(item.Id)" />
 								</div>
 								<h5 class="card-title"><b>@item.Name</b></h5>
 								<p class="card-text">@item.Description</p>

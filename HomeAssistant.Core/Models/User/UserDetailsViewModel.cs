@@ -1,8 +1,8 @@
 ﻿namespace HomeAssistant.Core.Models
 {
-	public class UserDetailsViewModel
+    public class UserDetailsViewModel
     {
-        public string Id { get; set; }=string.Empty;
+        public string Id { get; set; } = string.Empty;
 
         public string FirstName { get; set; } = string.Empty;
 
@@ -16,9 +16,7 @@
 
         public string CreatedOn { get; set; } = string.Empty;
 
-		public string? DeletedOn { get; set; } = string.Empty;
-
-        public byte[] Photo { get; set; } = new byte[0];
+        public string? DeletedOn { get; set; } = string.Empty;
 
         public string Ip { get; set; } = string.Empty;
 

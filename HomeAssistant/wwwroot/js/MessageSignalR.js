@@ -42,13 +42,13 @@ chatBox.scrollTop = chatBox.scrollHeight;
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/messageHub").build();
 
-connection.on("LoadMessage", function (message) {
+connection.on("LoadMessage", function (recipientId, message) {
     var div = document.createElement("div");
     div.classList.add("other-user-message");
     div.innerHTML =
         `
 		<div class="smallpfp">
-			<img src="${document.getElementById("otherUserPhoto").value}" alt="Profile Picture" />
+			<img src="/Image/Profile/${recipientId}" alt="Profile Picture" />
 		</div>
 		<div class="message-and-time2">
 			<p class="message-text">${message}</p>

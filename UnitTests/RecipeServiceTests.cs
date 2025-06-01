@@ -15,7 +15,7 @@ namespace UnitTests
     {
         private HomeAssistantDbContext _dbContext;
         private IRecipeService _service;
-        private Mock<IimageService> _imageService;
+        private Mock<IImageService> _imageService;
 
         [SetUp]
         public void Setup()
@@ -25,7 +25,7 @@ namespace UnitTests
                     .Options;
             _dbContext = new HomeAssistantDbContext(options);
 
-            _imageService = new Mock<IimageService>();
+            _imageService = new Mock<IImageService>();
 
             _imageService.Setup(x =>
                 x.GetRecipeImageRange(It.IsAny<int[]>()))

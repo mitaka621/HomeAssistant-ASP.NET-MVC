@@ -43,7 +43,7 @@ namespace UnitTests
 
             _logger = new Mock<ILogger<IHomeTelemetryService>>();
 
-            _notificationService = new NotificationService(_dbContext, new Mock<IUserService>().Object, new Mock<IimageService>().Object, _mockConfiguration.Object, _mockLogger.Object);
+            _notificationService = new NotificationService(_dbContext, new Mock<IUserService>().Object, new Mock<IImageService>().Object, _mockConfiguration.Object, _mockLogger.Object);
 
             _mockConfiguration = new Mock<IConfiguration>();
 

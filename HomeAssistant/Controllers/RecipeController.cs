@@ -1,16 +1,12 @@
-﻿using HomeAssistant.Core.Contracts;
+﻿using System.Security.Claims;
+using HomeAssistant.Core.Contracts;
 using HomeAssistant.Core.Models.Notification;
 using HomeAssistant.Core.Models.Recipe;
-using HomeAssistant.Core.Services;
 using HomeAssistant.Hubs;
 using HomeAssistant.Infrastructure.Data.Enums;
-using HomeAssistant.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Org.BouncyCastle.Cms;
-using System.Security.Claims;
 
 namespace HomeAssistant.Controllers
 {
@@ -21,15 +17,20 @@ namespace HomeAssistant.Controllers
         private readonly IHubContext<NotificationsHub> _notificationHubContext;
         private readonly INotificationService _notificationService;
         private readonly IProductService _productService;
-
-        public RecipeController(IRecipeService recipeService, IHubContext<NotificationsHub> notificationHubContext, INotificationService notificationService, IProductService productService)
+        private readonly IConfiguration _configuration;
+        public RecipeController(
+            IRecipeService recipeService,
+            IHubContext<NotificationsHub> notificationHubContext,
+            INotificationService notificationService,
+            IProductService productService,
+            IConfiguration configuration)
         {
             _recipeService = recipeService;
             _notificationHubContext = notificationHubContext;
             _notificationService = notificationService;
-			_productService= productService;
-
-		}
+            _productService = productService;
+            _configuration = configuration;
+        }
 
         public async Task<IActionResult> Index(int page = 1)
         {
@@ -41,7 +42,7 @@ namespace HomeAssistant.Controllers
         {
             ViewBag.Categories = await _productService.GetAllCategories();
 
-			return View();
+            return View();
         }
 
         [HttpPost]
@@ -252,17 +253,16 @@ namespace HomeAssistant.Controllers
                     .All
                     .SendAsync("PushNotfication", new NotificationViewModel()
                     {
-                        CreatedOn=DateTime.Now,
-                        Description= recipeToDelete.Description,
-                        Id=notificationId,
-                        Invoker=new NotificationUserViewModel()
+                        CreatedOn = DateTime.Now,
+                        Description = recipeToDelete.Description,
+                        Id = notificationId,
+                        Invoker = new NotificationUserViewModel()
                         {
-                            Id= GetUserId(),
-                            FirstName= User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
-                            Photo = (byte[])(HttpContext.Items["ProfilePicture"]??new byte[0])
-			            },
+                            Id = GetUserId(),
+                            FirstName = User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty
+                        },
                         Title = "Recipe Deleted - " + recipeToDelete.Name
-					});
+                    });
 
                 await _recipeService.DeleteRecipe(recipeId);
 
@@ -376,36 +376,35 @@ namespace HomeAssistant.Controllers
 
             var notificationId = await _notificationService.CreateNotificationForAllUsersExceptOne(
                 "Recipe Finished - " + recipe.Name,
-                 "Consumed Products:\r\n"+ string.Join("\r\n", products.Select(x=>$"{recipe.Products.First(y=>y.Id==x.Id).Name}({x.Quantity})")),
+                 "Consumed Products:\r\n" + string.Join("\r\n", products.Select(x => $"{recipe.Products.First(y => y.Id == x.Id).Name}({x.Quantity})")),
                  GetUserId(),
                  HttpContext.Request.Path.ToString(),
                  GetUserId());
 
             await _notificationHubContext.Clients
                 .AllExcept(GetUserId())
-				.SendAsync("PushNotfication", new NotificationViewModel()
-				{
-					Id = notificationId,
-					CreatedOn = DateTime.Now,
-					Description = "Consumed Products:\r\n" + string.Join("\r\n", products.Select(x => $"{recipe.Products.First(y => y.Id == x.Id).Name}({x.Quantity})")),
-					Invoker = new NotificationUserViewModel()
-					{
-						Id = GetUserId(),
-						FirstName = User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
-						Photo = HttpContext.Items["ProfilePicture"] as byte[] ?? new byte[0]
-					},
-					Source = "/Recipe",
-					Title = "Recipe Finished - " + recipe.Name
-				});
+                .SendAsync("PushNotfication", new NotificationViewModel()
+                {
+                    Id = notificationId,
+                    CreatedOn = DateTime.Now,
+                    Description = "Consumed Products:\r\n" + string.Join("\r\n", products.Select(x => $"{recipe.Products.First(y => y.Id == x.Id).Name}({x.Quantity})")),
+                    Invoker = new NotificationUserViewModel()
+                    {
+                        Id = GetUserId(),
+                        FirstName = User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty,
+                    },
+                    Source = "/Recipe",
+                    Title = "Recipe Finished - " + recipe.Name
+                });
 
-			await _notificationService.PushNotificationForAllUsersExcept(GetUserId(),
-					 $"{User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty} finished a recipe!",
-					$"Prepared recipe - {recipe.Name}.\r\nConsumed Products:\r\n" + string.Join("\r\n", products.Select(x => $"{recipe.Products.First(y => y.Id == x.Id).Name}({x.Quantity})")),
-					"https://homehub365681.xyz/Recipe",
-					"https://homehub365681.xyz/svg/cooking-pot.svg"
-					);
+            await _notificationService.PushNotificationForAllUsersExcept(GetUserId(),
+                     $"{User.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty} finished a recipe!",
+                    $"Prepared recipe - {recipe.Name}.\r\nConsumed Products:\r\n" + string.Join("\r\n", products.Select(x => $"{recipe.Products.First(y => y.Id == x.Id).Name}({x.Quantity})")),
+                    $"{_configuration.GetSection("Configuration")["PublicURL"]}/Recipe",
+                    $"{_configuration.GetSection("Configuration")["PublicURL"]}/svg/cooking-pot.svg"
+                    );
 
-			return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         private string GetUserId()

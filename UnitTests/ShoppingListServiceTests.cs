@@ -13,7 +13,7 @@ namespace UnitTests
     {
         private HomeAssistantDbContext _dbContext;
         private IProductService _productService;
-        private Mock<IimageService> _imageServiceMock;
+        private Mock<IImageService> _imageServiceMock;
         private IShoppingListService _service;
 
         [SetUp]
@@ -29,7 +29,7 @@ namespace UnitTests
 
             _productService = new ProductService(_dbContext);
 
-            _imageServiceMock = new Mock<IimageService>();
+            _imageServiceMock = new Mock<IImageService>();
             _service = new ShoppingListService(_dbContext, _productService, _imageServiceMock.Object);
         }
 

@@ -16,14 +16,7 @@
 <div class="container2">
 	<div>
 		<div class="img-container-edit">
-			@if (Model.Photo != null && Model.Photo.Length > 0)
-			{
-				<img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Photo)" />
-			}
-			else
-			{
-				<p>No image!</p>
-			}
+			<img src="/Image/Recipe/@(Model.Id)" />
 		</div>
 
 		<h2>@Model.Name</h2>
