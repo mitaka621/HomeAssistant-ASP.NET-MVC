@@ -189,7 +189,7 @@ namespace HomeAssistant.Core.Services
                 }
             }
 
-            return [];
+            return await GetDefaultRecipeImage();
         }
 
         public async Task<Dictionary<int, byte[]>> GetRecipeImageRange(int[] recipeIds)
@@ -258,7 +258,7 @@ namespace HomeAssistant.Core.Services
 
         private async Task<byte[]> GetDefaultRecipeImage()
         {
-            var imagePath = Path.Combine(_env.WebRootPath, "images", "default-profile.png");
+            var imagePath = Path.Combine(_env.WebRootPath, "images", "default-recipe.jpg");
             return File.Exists(imagePath) ? await File.ReadAllBytesAsync(imagePath) : [];
         }
     }
